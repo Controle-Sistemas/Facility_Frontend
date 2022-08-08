@@ -1,3 +1,4 @@
+//Importações
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableHead from '@mui/material/TableHead';
@@ -7,7 +8,8 @@ import { TablePaginationActions } from '../Paginacao';
 import { TableHeaderCell, TableRow, TableCell, TableCellActions } from '../styledComponents/table';
 import { useState } from 'react';
 
-interface Props {
+
+interface Props { //Interface dos props do componente
 	idTable: number;
 	rows: any[];
 	columns: any[];
@@ -28,18 +30,18 @@ export default function DefaultTable({
 	handleOpenModalAction,
 	handleOpenModalMore
 }: Props) {
-	const [ order, setOrder ] = useState('asc');
-	const [ orderBy, setOrderBy ] = useState(localStorage.getItem('fieldSort').trim() || 'ID');
-	const [ page, setPage ] = useState(0);
-	const [ rowsPerPage, setRowsPerPage ] = useState(5);
+	const [ order, setOrder ] = useState('asc'); //Estado para ordenação da tabela
+	const [ orderBy, setOrderBy ] = useState(localStorage.getItem('fieldSort').trim() || 'ID'); //Estado para ordenação da tabela
+	const [ page, setPage ] = useState(0); //Estado para paginação da tabela
+	const [ rowsPerPage, setRowsPerPage ] = useState(5); //Estado para paginação da tabela
 
-	const handleRequestSort = (event) => {
+	const handleRequestSort = (event) => { //Função para definir a ordenação da tabela
 		setOrder(order === 'asc' ? 'desc' : 'asc');
 		setOrderBy(event.target.id);
 	};
 
 	//Ordenação
-	const sortData = (data) => {
+	const sortData = (data) => {  //Função para ordenar os dados da tabela
 		if (order === 'asc') {
 			return data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
 		} else {
@@ -48,15 +50,15 @@ export default function DefaultTable({
 	};
 
 	//Linhas vazias para preencher a tabela quando não há dados
-	const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+	const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0; //Linhas vazias para preencher a tabela quando não há dados
 
 	//Função para mudar a página
-	const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+	const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => { //Função para mudar a página
 		setPage(newPage);
 	};
 
 	//Função para mudar a quantidade de linhas por página
-	const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+	const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => { //Função para mudar a quantidade de linhas por página
 		setRowsPerPage(parseInt(event.target.value, 10));
 		setPage(0);
 	};

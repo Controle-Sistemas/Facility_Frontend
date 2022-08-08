@@ -59,7 +59,7 @@ export const HeaderContactsSocialMedia = styled.div`
 		transition: all 0.5s ease-in-out;
 	}
 	& > a:hover {
-		color: #00377f;
+		color: #3A79C2;
 	}
     @media (max-width: 900px) {
         padding: 0 .5rem;

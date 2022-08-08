@@ -10,10 +10,17 @@ interface Props {
 
 export function ImagePostIt({image, type}:Props) {
   
-  const imageType = type === 1 ? PDF : type === 3 ? Docs : type === 5 ? Excel : type === 2 ? image : File
+  const imageType = type === 1 ? PDF : type === 3 ? Docs : type === 5 ? Excel : type === 2 ? image : File //verifica o tipo de arquivo e retorna a imagem correta
   return (
     <Image>
         {image ? <img src={`https://raw.githubusercontent.com/Controle-Sistemas/PortalClientes/master/backend/temp/uploads/${image}?token=GHSAT0AAAAAABWBKCXQSWVQNDC3KA77UJGAYXCWG7A`} alt="" style={{height:"100%",width:"100%"}}/> : <img src={imageType} alt="" style={{height:"90%",width:"90%"}}/>}
     </Image>
   )
 }
+
+
+/*
+
+ARRUMAR APÓS A PUBLICAÇÃO DA API
+
+*/

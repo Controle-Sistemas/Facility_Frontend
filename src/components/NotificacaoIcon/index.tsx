@@ -1,3 +1,4 @@
+//Importações
 import { Popper } from '@mui/material';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
@@ -10,34 +11,33 @@ import { NotificationIconContainer } from './styled';
 
 export function NotificationIcon() {
 	const [ pendingDocuments, setPendingDocuments ] = useState([]); // estado para armazenar os documentos pendentes
-	const navigation = useNavigate();
+	const navigation = useNavigate(); // hook para navegar entre as páginas
 
-	const [ anchorEl, setAnchorEl ] = useState<null | HTMLElement>(null);
+	const [ anchorEl, setAnchorEl ] = useState<null | HTMLElement>(null); // estado para abrir e fechar a box de notificações
 
-	const cnpj = localStorage.getItem('cnpj');                   
+	const cnpj = localStorage.getItem('cnpj'); // pega o cnpj do usuário logado
 
 
-    function handleOpenNotification(event) {
+    function handleOpenNotification(event) { // abre e fecha a box de notificações
 		setAnchorEl(anchorEl ? null : event.currentTarget);
 	}
-
-	const isNotificationOpen = Boolean(anchorEl);
+ 
+	const isNotificationOpen = Boolean(anchorEl); 
     
 
-	function handleChangeVisto(id){
-		const aux = pendingDocuments.filter(doc => doc.ID === id)
-		console.log(aux)
-		axios.patch(BASE_URL + `/documentos/${id}`,{
+	function handleChangeVisto(id){ // marca como visto a notificação 
+		const aux = pendingDocuments.filter(doc => doc.ID === id) 
+		axios.patch(BASE_URL + `/documentos/${id}`,{ // faz o patch para marcar como visto a notificação
 			VISTO: aux[0].VISTO ? 0 : 1,
 			STATUS: aux[0].STATUS === 0 ? 1 : 0
 		})
 		.then(res => {
-			navigation('/user/documentos/'+id);
+			navigation('/user/documentos/'+id); // navega para a página do documento
 		})
 	}
-    setTimeout(() => {
+    setTimeout(() => { // seta o tempo para atualizar as notificações pendentes a cada 1 segundo
 		axios
-			.get(BASE_URL + `/documentos/cnpj/${cnpj}`)
+			.get(BASE_URL + `/documentos/cnpj/${cnpj}`) // faz a requisição para buscar as notificações pendentes
 			.then((res) => {
 
 				setPendingDocuments(res.data.data.filter((document) => document.STATUS === 0)); // seta os documentos pendentes

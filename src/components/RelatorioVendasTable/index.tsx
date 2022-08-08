@@ -4,7 +4,6 @@ import { LoadingComponent } from '../Loading'
 import Paper from '@mui/material/Paper';
 import FilterComponent from '../filterComponent';
 import { FilterContainer } from '../styledComponents/containers'
-import cookie from 'js-cookie'
 import DefaultTable from '../Table'
 
  export function RelatoriosVendasTable() {

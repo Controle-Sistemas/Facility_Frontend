@@ -1,11 +1,13 @@
+//Importações
 import { useState } from 'react';
 import Popover from '@mui/material/Popover';
 import { PostItContainer, PostItHeader, PostItBody, PostItFooter, FileContainer, PostItData,PostItMainText } from './styled';
 import { ImagePostIt } from '../PostItImageComponent/index';
 import ListItemText from '@mui/material/ListItemText';
 import Swal from 'sweetalert2';
+import {formatData} from '../../utils/Masks';
 
-
+//Propridades do componente 
 interface PostItCardProps {
 	ID: number;
 	TIPO: number;
@@ -51,25 +53,21 @@ export function PostItCard({
 	handleArchiveDocument,
 	STATUS
 }: PostItCardProps) {
-	if(EMPRESA === undefined){
+	if(EMPRESA === undefined){ //Verifica se a empresa é undefined, caso for retorna um objeto vazio
 		EMPRESA = {}
 	}
-	function formatData(data: string) {
-		const dataSplit = data.split('-');
-		const dataFormatada = `${dataSplit[2]}/${dataSplit[1]}/${dataSplit[0]}`;
-		return dataFormatada;
-	}
+	
 
 
-	const [ anchorEl, setAnchorEl ] = useState(null);
+	const [ anchorEl, setAnchorEl ] = useState(null); //Estado que controla o popover
 
 	
 
-	const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+	const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => { //Função que abre o popover
 		setAnchorEl(event.currentTarget);
 	};
 
-	const handlePopoverClose = () => {
+	const handlePopoverClose = () => { //Função que fecha o popover
 		setAnchorEl(null);
 	};
 
@@ -77,12 +75,12 @@ export function PostItCard({
 
 
 	const open = Boolean(anchorEl);
-	const fileName = FILE ? FILE.split('-')[FILE.split('-').length - 1].replace('.undefined', '') : '';
+	const fileName = FILE ? FILE.split('-')[FILE.split('-').length - 1].replace('.undefined', '') : ''; //Pega o nome do arquivo do postit
 
-	let aux = new Date(DATAINCLUSAO);
-	let aux2 = new Date(DATAATUAL);
-	let diferenca = aux2.getTime() - aux.getTime();
-	let dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
+	let aux = new Date(DATAINCLUSAO);  //Transforma a data de inclusão em um objeto Date
+	let aux2 = new Date(DATAATUAL); //Transforma a data atual em um objeto Date
+	let diferenca = aux2.getTime() - aux.getTime(); //Calcula a diferença entre as datas
+	let dias = Math.floor(diferenca / (1000 * 60 * 60 * 24)); //Calcula a diferença em dias
 
 	return (
 		<PostItContainer magnitude={PRIORIDADE} id={ID.toString()}>
@@ -178,11 +176,7 @@ export function PostItCard({
 							confirmButtonText: 'Ok'
 						});
 
-					} else if(STATUS === 2) {
-						handleArchiveDocument(ID,STATUS);
-
 					} 
-					
 					else {
 						handleArchiveDocument(ID,STATUS);
 					}
@@ -199,3 +193,8 @@ export function PostItCard({
 		</PostItContainer>
 	);
 }
+/*
+
+ARRUMAR APÓS A PUBLICAÇÃO DA API
+
+*/

@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-const StoreContext = createContext({ 
+const StoreContext = createContext({ //Cria um hook para o storage do usuário
     token: null,
     setToken: () => {},
     admin: null,
