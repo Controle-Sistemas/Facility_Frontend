@@ -1,0 +1,65 @@
+*{
+    list-style: none;
+    text-decoration: none;
+}
+
+.container-sidebar{
+    display: flex;
+    flex-direction: column;
+
+    margin: 0;
+    width: 80%;
+}
+
+.logo{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: .2rem;
+}
+
+.buttons-sidebar{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #e3e3e3;
+}
+
+.links{
+    text-decoration: none;
+    color: #fff;
+}
+
+.logo-img{
+    width: 70%;
+    margin: 0;
+}
+
+.item-list{
+    display: block;
+    width: 100%;
+    overflow: auto;
+    font-family: 'Roboto', sans-serif;
+    color: #6f6f7f;
+}
+
+.item-list .item{
+    display: block;
+    padding: 0.5rem 1rem;
+    margin: 0;
+    border: none;
+    border-radius: 0 16px 16px 0;
+    cursor: pointer;
+    transition: all .2s ease;
+    
+}
+.item-list .item:hover{
+   color: #003577;
+   background-color: #f5f5f5;
+}
+.css-hyum1k-MuiToolbar-root{
+    min-height: 0;
+    padding: 0;
+}

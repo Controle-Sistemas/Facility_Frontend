@@ -1,0 +1,476 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap');
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body {
+	font-family: 'Open Sans', sans-serif;
+}
+.container-login {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background-color: #ecf0f1;
+}
+.content-login {
+	background-color: #fff;
+	border-radius: 15px;
+	width: 60%;
+	height: 90vh;
+	justify-content: space-between;
+	align-items: center;
+	position: relative;
+}
+.content-login::before {
+	content: "";
+	position: absolute;
+	background-color: #003775;
+	width: 40%;
+	height: 100%;
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+	left: 0;
+}
+.title {
+	font-size: 1.8rem;
+	font-weight: bold;
+	text-transform: capitalize;
+}
+.title-primary {
+	color: #fff;
+}
+.title-second {
+	color: #003775;
+}
+
+.description-primary {
+	color: #fff;
+}
+.description-second {
+	color: #7f8c8d;
+}
+.btn-form {
+	box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+	border-radius: 15px;
+	/*Deixar redondinho*/
+	text-transform: uppercase;
+	/*transformar todas as letras em maiusculas*/
+	color: #fff;
+	/*cor da letra do botão*/
+	font-size: .7rem;
+	/*tamanho da letra do botão*/
+	padding: .5rem 3rem;
+	/* distancia das letras do topo e laterais respectivamente */
+	width: 10rem;
+	/*largura do botão*/
+	align-self: center;
+	/*fazer o botão se alinhar ao centro baseado nos outros itens*/
+	border: none;
+	/*deixar sem borda*/
+	margin: .5rem;
+	/*dar uma distancia de 1rem do elemento acima dele*/
+}
+
+.btn-form:disabled {
+	background-color: #292929;
+	/*mudar a cor do botão para cinza*/
+	border: none;
+	transition: all .3s;
+	color: #fff;
+	/*deixar sem borda*/
+	cursor: not-allowed;
+}
+
+.btn-form:disabled:hover {
+	background-color: #424242;
+	color: #fff;
+}
+
+.btn-form-primary {
+	background-color: transparent;
+	/*deixar o fundo transparente*/
+	border: 1px solid #fff;
+	/* borda de 1px branca*/
+	cursor: pointer;
+	/*fazer o cursor mudar ao entrar em contato com o botão*/
+	font-weight: bold;
+	/*deixar a fonte em negrito*/
+	transition: background-color .5s;
+	/*colocar uma transição de 0.5 seg para dar um efeito massa*/
+}
+
+.btn-form-primary:hover {
+	/*pseudo elemento que faz algo caso passe o cursor por cima do item*/
+	background-color: #fff;
+	color: #003775;
+}
+
+.btn-form-second {
+	background-color: #003775;
+	border: 1px solid #003775;
+	transition: background-color 0.5s;
+}
+
+.btn-form-second:hover {
+	/*pseudo elemento que faz algo caso passe o cursor por cima do item*/
+	background-color: #fff;
+	border-color: 1px solid #003775;
+	color: #003775;
+}
+
+.first-content {
+	display: flex;
+}
+.first-content .second-column {
+	z-index: 11;
+}
+.first-column {
+	text-align: center;
+	width: 40%;
+	z-index: 10;
+}
+
+.direitos {
+	font-size: .7rem;
+	/*tamanho da fonte dos direitos*/
+	font-weight: 300;
+	color: #fff;
+	/*setar a cor dos direitos*/
+	line-height: 1.5rem;
+	/*altura da linha para dar espaçamento*/
+	text-align: center;
+	/*alinhar o texto ao centro*/
+	margin-top: 1rem;
+	/*dar uma distancia de 1rem do elemento acima dele*/
+}
+
+.logo-container {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.logo-container img {
+	width: 70%;
+}
+
+.second-column {
+	width: 60%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.form-login {
+	display: flex;
+	/*deixar os elementos lado a lado*/
+	flex-direction: column;
+	/*mudar a direção para ao invés de lado a lado um acima do outro, como uma coluna*/
+	align-items: center;
+	/*alinhar os itens ao centro*/
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+}
+
+.form-login input {
+	width: 100%;
+	border: 1px solid rgb(192, 192, 192);
+	border-radius: 8px;
+	background-color: #fff;
+	margin: 0 .3rem 0 0;
+	padding: .7rem;
+}
+.form-login label {
+	display: flex;
+	align-items: start;
+	justify-content: start;
+	flex-direction: column;
+}
+
+.form-login label .input-form{
+	width: 100%;
+}
+.form-groups {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+.form-group,
+.form-groups {
+	width: 90%;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: flex-start;
+	margin: 0 .4rem;
+}
+.form-group-double {
+	width: 90%;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+	align-items: center;
+	gap: 1rem;
+}
+.form-group-double .input-form {
+	width: 50%;
+	padding: .91rem;
+	border-radius: 4px;
+}
+
+.form-group-double .select-input-form {
+	width: 50%;
+	margin: 0;
+}
+
+.captcha {
+	margin: .3rem auto;
+}
+.password {
+	color: #999999;
+	font-size: .9rem;
+	text-align: center;
+}
+/* second content*/
+
+.second-content {
+	position: absolute;
+	display: flex;
+}
+.second-content .first-column {
+	order: 2;
+	z-index: -1;
+}
+.second-content .second-column {
+	order: 1;
+	z-index: -1;
+}
+
+.sign-in-js .first-content .first-column {
+	z-index: -1;
+}
+
+.sign-in-js .second-content .second-column {
+	z-index: 11;
+}
+.sign-in-js .second-content .first-column {
+	z-index: 13;
+}
+
+.sign-in-js .content-login::before {
+	left: 60%;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	border-top-right-radius: 15px;
+	border-bottom-right-radius: 15px;
+	animation: slidein .3s; /*MODIFIQUEI DE 3s PARA 1.3s*/
+
+	z-index: 12;
+}
+
+.sign-up-js .content-login::before {
+	animation: slideout .1s; /*MODIFIQUEI DE 3s PARA 1.3s*/
+
+	z-index: 12;
+}
+
+.sign-up-js .second-content .first-column,
+.sign-up-js .second-content .second-column {
+	z-index: -1;
+}
+
+.sign-up-js .first-content .second-column {
+	z-index: 11;
+}
+
+.sign-up-js .first-content .first-column {
+	z-index: 13;
+}
+
+/* DESLOCAMENTO CONTEÚDO ATRÁS DO CONTENT:BEFORE*/
+.sign-in-js .first-content .second-column {
+	z-index: -1;
+	position: relative;
+	animation: deslocamentoEsq .5s; /*MODIFIQUEI DE 3s PARA 1.3s*/
+}
+
+.sign-up-js .second-content .second-column {
+	position: relative;
+	z-index: -1;
+	animation: deslocamentoDir .5s; /*MODIFIQUEI DE 3s PARA 1.3s*/
+}
+
+/*ANIMAÇÃOO CSS PARA O CONTEÚDO*/
+
+@keyframes deslocamentoEsq {
+	from {
+		left: 0;
+		opacity: .1;
+		z-index: 12;
+	}
+
+	to {
+		left: -110px;
+		opacity: 0;
+		z-index: -1;
+	}
+}
+
+@keyframes deslocamentoDir {
+	from {
+		left: 0;
+		opacity: .1;
+
+		z-index: 12;
+	}
+
+	to {
+		left: 110px;
+		opacity: 0;
+
+		z-index: -1;
+	}
+}
+
+/*ANIMAÇÃO CSS*/
+
+@keyframes slidein {
+	from {
+		left: 0;
+		width: 40%;
+	}
+
+	to {
+		left: 60%;
+		width: 40%;
+	}
+}
+
+@keyframes slideout {
+	from {
+		left: 60%;
+		width: 40%;
+	}
+
+	to {
+		left: 0;
+		width: 40%;
+	}
+}
+
+/*VERSÃO MOBILE*/
+@media screen and (max-width: 1040px) {
+	.content-login {
+		width: 100%;
+		height: 100%;
+	}
+
+	.content-login::before {
+		width: 100%;
+		height: 35%;
+		margin: 0;
+		padding: 0;
+		top: 0;
+		border-radius: 0;
+	}
+
+	.logo-container {
+		display: none;
+	}
+
+	.first-content,
+	.second-content {
+		flex-direction: column;
+		justify-content: space-around;
+	}
+
+	.first-column,
+	.second-column {
+		width: 100%;
+	}
+
+	.sign-in-js .content-login::before {
+		top: 72%;
+		left: 0;
+		border-radius: 0;
+	}
+
+	.form-login {
+		width: 90%;
+	}
+
+	/* ANIMAÇÃO MOBILE CSS*/
+
+	@keyframes deslocamentoEsq {
+		from {
+			top: 0;
+			opacity: .1;
+			z-index: 12;
+		}
+
+		to {
+			top: -110px;
+			opacity: 0;
+			z-index: -1;
+		}
+	}
+
+	@keyframes deslocamentoDir {
+		from {
+			opacity: .1;
+
+			top: 0;
+			z-index: 12;
+		}
+
+		to {
+			opacity: 0;
+
+			top: 110px;
+			z-index: -1;
+		}
+	}
+
+	@keyframes slidein {
+		from {
+			top: 0;
+			height: 35%;
+		}
+
+		to {
+			top: 72%;
+			height: 35%;
+		}
+	}
+
+	@keyframes slideout {
+		from {
+			top: 72%;
+			height: 35%;
+		}
+
+		to {
+			top: 0;
+			height: 35%;
+		}
+	}
+}
+
+@media screen and (max-width: 740px) {
+	.form-login {
+		width: 50%;
+	}
+}
+
+@media screen and (max-width: 425px) {
+	.form-login {
+		width: 100%;
+	}
+}

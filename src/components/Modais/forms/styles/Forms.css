@@ -1,0 +1,94 @@
+.form-modules {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	margin-top: .5rem;
+	padding: 0 .5rem;
+}
+
+.form-edit {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	margin-top: .5rem;
+	padding: 0 .5rem;
+	height: 70vh;
+}
+
+.form-delete {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	margin-top: .5rem;
+	padding: 0 .5rem;
+}
+
+
+.form-control {
+	padding: .3rem .8rem;
+	border-radius: .3rem;
+	border: none;
+	background: #f3f3f3;
+	font-size: .5rem;
+	margin-bottom: .5rem;
+	margin-right: .3rem;
+	width: 100%;
+}
+input[type="text"][disabled] {
+	border: 1px solid rgb(192, 192, 192);
+	background-color: #ebebeb;
+	cursor: not-allowed;
+}
+input:disabled::placeholder {
+	color: #003775;
+}
+
+.form-group input:focus {
+	background-color: #ffffaf;
+	
+}
+
+
+@media (max-width: 1040px) {
+	.form-group,
+	.form-group-double {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+	.data-group {
+		margin-bottom: 7rem;
+	}
+	.form-control,
+    .disabled-group,
+    .form-group-double label  {
+		width: 90%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+	.form-edit .button-form-group {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		width: 100%;
+		margin-top: 2rem;
+	}
+
+	.btn-modal {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 90%;
+	}
+}
