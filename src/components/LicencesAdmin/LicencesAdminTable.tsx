@@ -1,3 +1,4 @@
+//Importações
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../../utils/requests';
@@ -6,23 +7,15 @@ import { FormEditEmpresa } from '../Modais/forms/FormEditEmpresa';
 import { FormTerminal } from '../Modais/forms/FormEditTerminal'
 import { FormCadEmpresa } from '../Modais/forms/FormCadEmpresa';
 import { LoadingComponent } from '../Loading'
-//Importações
-
 import Paper from '@mui/material/Paper';
 import Swal from 'sweetalert2'
-
-
 import FilterComponent from '../filterComponent';
 import { PrimaryButton } from '../styledComponents/buttons'
-
 import { FilterContainer } from '../styledComponents/containers'
 import {CepMask, cnpjMask} from '../../utils/Masks'
 import { FormMostrarColunas } from '../Modais/forms/FormMostrarColunas'
 import DefaultTable from '../Table'
 import cookie from 'js-cookie'
-
-
-
 
 export function LicencesAdminTable() {
 	//variaveis de estado
@@ -39,6 +32,7 @@ export function LicencesAdminTable() {
 	const [columns, setColumns] = useState([]);
 	const [clientIdCloud, setClientIdCloud] = useState(0)
 	const [filterParam, setFilterParam] = useState('All')
+	//Colunas Padrões para a tabela
 	const defaultColumns = [
 		{fieldName:"ID", fieldCaption:"ID",id:"ID",visible:1},
 		{fieldName:"NOMECONTATO", fieldCaption:"Nome",id:"Nome",visible:1},
@@ -70,9 +64,9 @@ export function LicencesAdminTable() {
 		})
 	}, [columns, idUser]);
 
-	const editColumns = (data) =>{
+	const editColumns = (data) =>{ //edita as colunas do usuario
 		console.log(data)
-		axios.patch(`${BASE_URL}/tabelas/${idUser}`, data).then((response:any) => {
+		axios.patch(`${BASE_URL}/tabelas/${idUser}`, data).then((response:any) => {	//edita as colunas do usuario
 			Swal.fire({
 				title: 'Sucesso',
 				text: response.message,
@@ -102,7 +96,7 @@ export function LicencesAdminTable() {
 
 
 
-	const handleClear = () => {
+	const handleClear = () => { //limpa o filtro
 		if (filterText) {
 			setResetPaginationToggle(!resetPaginationToggle);
 			setFilterText('');
@@ -148,7 +142,7 @@ export function LicencesAdminTable() {
 
 
 
-	function searchNew(items) { //filtra os dados
+	function searchNew(items) { //filtra os dados 
 		if(items){ 
 			return items.filter((item) => {
 				if(item !== undefined){
@@ -169,44 +163,43 @@ export function LicencesAdminTable() {
 	}
 
 
-	if (loading) {
+	if (loading) { //se estiver carregando
 		return (
-			<LoadingComponent />
+			<LoadingComponent /> //carregando
 		);
-	} else if (error) {
+	} else if (error) { //se der erro
 		Swal.fire({
 			icon: "error",
 			title: "Erro!",
 			text: error.message,
 
-		})
+		}) //mostra o erro
 		return <div>Error: {error.message}</div>;
 	} else {
-		let filteredItems = licences.filter((item) => {
-			return JSON.stringify(item).toLowerCase().includes(filterText.toLowerCase());
+		let filteredItems = licences.filter((item) => { //filtra os dados
+			return JSON.stringify(item).toLowerCase().includes(filterText.toLowerCase()); //se o texto for igual ao filtro retorna os dados
 		});
-		const extension = []
+		const extension = [] 
 		columns.forEach((col) => {
 			extension.push(col.fieldName.trim())
 		})
-		console.log(extension)
-		extension.push('NOVO')
-		let rows = filteredItems.map((item) => {
+		extension.push('NOVO') //adiciona a coluna novo
+		let rows = filteredItems.map((item) => { //pega os dados da tabela a partir das colunas
 			let row = {}
-			if(extension.length > 1){
-			extension.forEach((ext) => {
+			if(extension.length > 1){ //se tiver mais de uma coluna
+			extension.forEach((ext) => { 
 				if(ext === 'CEP'){
-					row[ext] = CepMask(item[ext])
+					row[ext] = CepMask(item[ext]) //adiciona o cep formatado
 				} else if(ext === 'CNPJ'){
-					row[ext] = cnpjMask(item[ext])
+					row[ext] = cnpjMask(item[ext]) //adiciona o cnpj formatado
 				} else {
-					row[ext] = item[ext]
+					row[ext] = item[ext] //adiciona o dado
 
 				}
 			
 				}) 
-				} else {
-					row['IDCLOUD'] = item.IDCLOUD
+				} else {  //se tiver apenas uma coluna adiciona os dados padroes
+					row['IDCLOUD'] = item.IDCLOUD 
 					row['RAZAOSOCIAL'] = item.RAZAOSOCIAL
 					row['NOMEFANTASIA'] = item.NOMEFANTASIA
 					row["CNPJ"] = cnpjMask(item.CNPJ)
@@ -216,7 +209,7 @@ export function LicencesAdminTable() {
 					row['NOVO'] = item.NOVO
 				}
 
-			return row
+			return row //retorna os dados
 		})
 
 		return (

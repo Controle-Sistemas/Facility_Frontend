@@ -1,10 +1,11 @@
+//importações
 import React, { useState } from 'react';
 import { CardContainer, CardBody, CardHeader } from '../styledComponents/containers';
 import { CardDescription, CardValue } from '../styledComponents/Texts';
 import { ButtonCloseDiv } from '../styledComponents/buttons';
 import Swal from 'sweetalert2';
 
-interface Props {
+interface Props { //interface para receber os dados do componente pai
 	id: number;
 	title: string;
 	typeCard?: number;
@@ -17,13 +18,8 @@ interface Props {
 }
 
 export function CardPortal({ id, title, children, icon, typeCard, typeValue, value, isChecked, removeCard }: Props) {
-	const [ status, setStatus ] = useState(isChecked);
 
-	function handleClick(event) {
-		setStatus(!status);
-	}
-
-	function handleDeleteCard(event) {
+	function handleDeleteCard(event) { //função para deletar o card
 		Swal.fire({
 			title: 'Deseja excluir este cartão?',
 			text: 'Você não poderá reverter isso!',
@@ -35,13 +31,14 @@ export function CardPortal({ id, title, children, icon, typeCard, typeValue, val
 			cancelButtonText: 'Cancelar',
 			
 		}).then((result) => {
-			if (result.value) {
-				removeCard(id);
+			if (result.value) { //se o usuário confirmar a exclusão
+				removeCard(id); //chama a função passada pelo componente pai de remover o card 
 			}
 		});
 	}
+
 	return (
-		<CardContainer id={id.toString()} typeCard={typeCard} isChecked={isChecked} onClick={handleClick}>
+		<CardContainer id={id.toString()} typeCard={typeCard} isChecked={isChecked}>
 			<CardBody>
 				{isChecked ? (
 					<ButtonCloseDiv>

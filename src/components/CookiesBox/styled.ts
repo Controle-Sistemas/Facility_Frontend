@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-export const CookieContainer = styled.div`
+//Estilização do componente de Cookies
+
+export const CookieContainer = styled.div` 
 	position: absolute;
 	bottom: 1rem;
 	right: 1rem;
@@ -18,13 +20,17 @@ export const CookieContainer = styled.div`
 	border-radius: 10px;
 	border-top-left-radius: 0;
 	border: 1px solid rgba(255, 255, 255, 0.18);
-`;
+
+	@media (max-width: 940px) {
+		width: 100%;
+	}
+`; 
 
 export const CookieHeader = styled.div`
-margin: .5rem;
+	margin: 0;
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-between;
 	width: 100%;
     `
 

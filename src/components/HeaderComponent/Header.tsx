@@ -1,3 +1,4 @@
+//Importações
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -47,16 +48,14 @@ export default function Header() {
 	
 
 	const handleLogout = () => {
-		localStorage.removeItem('cnpj');
-		localStorage.removeItem('token');
-		cookie.remove('id');
+		localStorage.removeItem('cnpj'); // remove o cnpj do usuário logado
+		localStorage.removeItem('token'); // remove o token do usuário logado
+		cookie.remove('id'); // remove o cookie do usuário logado
 	};
 
 	
 	return (
 		<div className="header-container">
-			
-
 			<div className="header-content">
 				<div className="header-content-left" />
 				<div className="header-content-left-icons">

@@ -1,21 +1,21 @@
 import Logo from '../../assets/logo.png';
-
+import {HeaderContainer,HeaderContactsContainer,HeaderFixedMenu,HeaderFixed,HeaderContactsItem,HeaderContactsSocialMedia,HeaderContactsText,} from './MainPageHeaderStyle';
 import {Link} from 'react-router-dom'
 export function MainPageHeader(Props) {
 	return (
-			<div className="main-page-header">
-				<div className="main-page-header-contact">
-					<div className="main-page-header-contacts">
-						<div className="main-page-header-contact-item">
+			<HeaderContainer>
+				<HeaderContactsContainer>
+					<HeaderContactsText>
+						<HeaderContactsItem>
 							<i className="fa-solid fa-envelope" />
 							<span>contato@controleautomacao.com.br</span>
-						</div>
-						<div className="main-page-header-contact-item">
+						</HeaderContactsItem>
+						<HeaderContactsItem>
 							<i className="fa-solid fa-phone" />
 							<span>+55 (45) 3039-1786 | +55 (45) 99934-3293</span>
-						</div>
-					</div>
-					<div className="main-page-header-social-media">
+						</HeaderContactsItem>
+					</HeaderContactsText>
+					<HeaderContactsSocialMedia>
 						<a href="https://www.facebook.com/ControleSistemas/">
 							{' '}
 							<i className="fa-brands fa-facebook" />{' '}
@@ -36,17 +36,16 @@ export function MainPageHeader(Props) {
 							{' '}
 							<i className="fa-brands fa-linkedin" />{' '}
 						</a>
-					</div>
-				</div>
-				<div className="main-page-header-fixed">
+					</HeaderContactsSocialMedia>
+				</HeaderContactsContainer>
+				<HeaderFixed>
 					<div className="main-page-header-logo">
 						<img
 							src={Logo}
 							alt="Controle Automacao"
 						/>
 					</div>
-					<div className="main-page-header-menu">
-						<ul>
+					<HeaderFixedMenu>
 							<li>
 								{' '}
 								<a href="#">O SISTEMA</a>{' '}
@@ -62,10 +61,9 @@ export function MainPageHeader(Props) {
 							<li>
 								<Link to="/login">LOGIN</Link>
 							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
+						</HeaderFixedMenu>
+				</HeaderFixed>
+			</HeaderContainer>
 			
 	);
 }

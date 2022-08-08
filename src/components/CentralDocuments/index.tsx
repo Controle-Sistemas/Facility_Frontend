@@ -1,3 +1,4 @@
+//Importações
 import {  useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
@@ -5,9 +6,8 @@ import { BASE_URL } from '../../utils/requests';
 import { PostItCard } from '../PostItCard';
 import ModalForm from '../Modais/modalForm';
 import { FormEditDocument } from '../Modais/forms/FormEditDocument';
-
 import Swal from 'sweetalert2';
-interface Props {
+interface Props { //Interface para o componente 
 	order: string;
 	orderBy: string;
 	filterBy: string;
@@ -17,37 +17,37 @@ interface Props {
 }
 
 export function CentralDocuments({ documents, setDocuments, isAdmin, order, orderBy, filterBy }: Props) {
-	const [ documentId, setDocumentId ] = useState(null);
-	const [ modalEditDocumentIsOpen, setModalEditDocumentIsOpen ] = useState(false);
-	const cnpj = localStorage.getItem('cnpj');
-	const navigation = useNavigate();
+	const [ documentId, setDocumentId ] = useState(null); //Estado para o id do documento
+	const [ modalEditDocumentIsOpen, setModalEditDocumentIsOpen ] = useState(false); //Estado para abrir o modal de edição de documento
+	const cnpj = localStorage.getItem('cnpj'); //Pega o cnpj do usuário logado
+	const navigation = useNavigate(); 
 
 
-	function handleChangeVisto(event: any, VISTO, ID) {
+	function handleChangeVisto(event: any, VISTO, ID) { //Função para mudar o status do documento para visto
 		if (event.target.id === 'btn-action' || event.target.parentNode.id === 'btn-action' || event.target.parentNode.parentNode.id === 'btn-action') {
 			return;
 		} else {
 			if (ID) {
 				axios
 					.patch(`${BASE_URL}/documentos/${ID}`, {
-						VISTO: VISTO === 0 ? 1 : VISTO,
-						STATUS: VISTO === 1 ? 1 : 0
+						VISTO: VISTO === 0 ? 1 : VISTO, //Muda o status do documento para visto 
+						STATUS: VISTO === 1 ? 1 : 0 //Muda o status do documento para ok
 					})
 					.then((res) => {
 						if (isAdmin) {
-							navigation('/admin/documentos/' + ID);
+							navigation('/admin/documentos/' + ID); //Redireciona para a página do documento
 						} else {
-							navigation('/user/documentos/' + ID);
+							navigation('/user/documentos/' + ID); 
 						}
 					});
 			}
 		}
 	}
-	function handleArchiveDocument(ID: number, oldStatus: number) {
+	function handleArchiveDocument(ID: number, oldStatus: number) { //Função para arquivar o documento
 		if (ID) {
 			axios
 				.patch(`${BASE_URL}/documentos/${ID}`, {
-					STATUS: oldStatus === 1 ? 2 : 1
+					STATUS: oldStatus === 1 ? 2 : 1 //Muda o status do documento para arquivado
 				})
 				.then((res) => {
 					Swal.fire({
@@ -56,14 +56,14 @@ export function CentralDocuments({ documents, setDocuments, isAdmin, order, orde
 						icon: 'success',
 						confirmButtonText: 'Ok'
 					});
-					axios.get(`${BASE_URL}/documentos/cnpj/${cnpj}`).then((res) => {
-						setDocuments(res.data.data);
+					axios.get(`${BASE_URL}/documentos/cnpj/${cnpj}`).then((res) => { //Pega os documentos do usuário logado
+						setDocuments(res.data.data); //Atualiza o estado com os documentos
 					});
 				});
 		}
 	}
 
-	function handleOpenModalDeleteDocument(ID: number) {
+	function handleOpenModalDeleteDocument(ID: number) { //Função para abrir o modal de exclusão de documento
 		Swal.fire({
 			title: 'Você tem certeza?',
 			text: 'Você não poderá reverter isso!',
@@ -73,35 +73,35 @@ export function CentralDocuments({ documents, setDocuments, isAdmin, order, orde
 			cancelButtonColor: '#DC354f',
 			confirmButtonText: 'Sim, deletar!'
 		}).then((result) => {
-			if (result.value) {
-				axios.delete(`${BASE_URL}/documentos/${ID}`).then((res) => {
+			if (result.value) { //Se o usuário confirmar a exclusão
+				axios.delete(`${BASE_URL}/documentos/${ID}`).then((res) => { //Deleta o documento
 					Swal.fire('Deletado!', 'O documento foi deletado.', 'success');
-					axios.get(`${BASE_URL}/documentos/`).then((res) => {
-						setDocuments(res.data.data);
+					axios.get(`${BASE_URL}/documentos/`).then((res) => { //Pega os documentos do usuário logado
+						setDocuments(res.data.data); //Atualiza o estado com os documentos
 					});
 				});
 			}
 		});
 	}
 
-	function handleOpenModalEditDocument(ID: number) {
+	function handleOpenModalEditDocument(ID: number) { //Função para abrir o modal de edição de documento
 		setModalEditDocumentIsOpen(!modalEditDocumentIsOpen);
-		setDocumentId(ID);
+		setDocumentId(ID); //Atualiza o estado com o id do documento
 	}
 
-	function onEdit(document) {
-		axios.patch(`${BASE_URL}/documentos/${documentId}`, document).then((res) => {
-			axios.get(`${BASE_URL}/documentos/`).then((res) => {
+	function onEdit(document) { //Função para editar o documento
+		axios.patch(`${BASE_URL}/documentos/${documentId}`, document).then((res) => { //Edita o documento
+			axios.get(`${BASE_URL}/documentos/`).then((res) => { //Pega os documentos do usuário logado
 				Swal.fire('Atualizado!', 'O documento foi atualizado.', 'success');
-				setDocuments(res.data.data);
+				setDocuments(res.data.data); //Atualiza o estado com os documentos
 			});
 		});
 	}
 
-	const sortDocuments = (documents: any) => {
-		if (order === 'asc') {
-			return documents.sort((a, b) => {
-				if (a[orderBy] < b[orderBy]) {
+	const sortDocuments = (documents: any) => { //Função para ordenar os documentos
+		if (order === 'asc') { //verifica se o tipo de ordenação é ascendente ou descendente
+			return documents.sort((a, b) => { //Ordena os documentos pelo campo orderBy 
+				if (a[orderBy] < b[orderBy]) { 
 					return -1;
 				}
 				if (a[orderBy] > b[orderBy]) {
@@ -122,10 +122,10 @@ export function CentralDocuments({ documents, setDocuments, isAdmin, order, orde
 		}
 	};
 
-	const filterDocuments = (documents: any) => {
-		if (filterBy === 'TODOS') {
+	const filterDocuments = (documents: any) => { //Função para filtrar os documentos
+		if (filterBy === 'TODOS') { //Se o filtro for TODOS, retorna todos os documentos 
 			return documents;
-		} else if (filterBy === 'REGULARIZADOS') {
+		} else if (filterBy === 'REGULARIZADOS') { //Se o filtro for REGULARIZADOS, retorna os documentos regularizados e assim por diante
 			return documents.filter((document) => {
 				return document.STATUS === 1;
 			});
@@ -144,13 +144,13 @@ export function CentralDocuments({ documents, setDocuments, isAdmin, order, orde
 		}
 	};
 
-	const diaAtual = new Date().getDate().toString();
+	const diaAtual = new Date().getDate().toString(); //Pega o dia atual
 	const mesAtual =
 		new Date().getMonth().toString().length < 2
 			? '0' + (new Date().getMonth() + 1).toString()
-			: (new Date().getMonth() + 1).toString();
-	const anoAtual = new Date().getFullYear().toString();
-	const dataAtual = `${anoAtual}-${mesAtual}-${diaAtual}`;
+			: (new Date().getMonth() + 1).toString(); //Pega o mês atual
+	const anoAtual = new Date().getFullYear().toString(); //Pega o ano atual
+	const dataAtual = `${anoAtual}-${mesAtual}-${diaAtual}`; //Cria a data atual 
 
 	return (
 		<div>

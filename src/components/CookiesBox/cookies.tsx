@@ -4,33 +4,33 @@ import Modal from 'react-modal'
 import {PrimaryButton} from '../styledComponents/buttons';
 import {CookieForm,CookieContainer,CookieLink,CookieText,CookieTitle,CookieHeader,CookieButton} from './styled'
 
-const CookieComponent = (props) => {
+const CookieComponent = (props) => { 
 
-    const [CookiesState, setCookiesOpen] = useState(true);
+    const [CookiesState, setCookiesOpen] = useState(true); //Estado da modal de cookies
 
-    function closeModalCookie() {
+    function closeModalCookie() { //Fechar modal de cookies
         setCookiesOpen(false);
     }
 
 
     function handleAccept() {
-        Cookies.set('cookies', 'true');
+        Cookies.set('cookies', 'true'); //Salvar cookie
     }
 
-    function handleSubmit(e) {
+    function handleSubmit(e) { 
         e.preventDefault();
         closeModalCookie();
 
     }
 
-    if (Cookies.get('cookies') === undefined) {
+    if (Cookies.get('cookies') === undefined) { //Se não existir cookie, exibe modal de cookies
         return (
             <Modal
                 isOpen={CookiesState}
                 onRequestClose={closeModalCookie}
                 ariaHideApp={false}
                 overlayClassName="overlay"
-                className="modal-cookies" >
+                className="modal-cookies" > 
 
                 <CookieContainer>
                     <CookieHeader>
@@ -38,7 +38,7 @@ const CookieComponent = (props) => {
                         <button className="btn-close close" onClick={closeModalCookie}></button>
                     </CookieHeader>
                     <CookieText>
-                            Eles são usados para aprimorar a sua experiência. Ao fechar este banner ou continuar na página, você concorda com o uso de cookies.
+                            Eles são usados para aprimorar a sua experiência e em algumas funcionalidades do site. Ao fechar este banner ou continuar na página, você concorda com o uso de cookies.
                             <CookieLink href="https://ufu.br/politica-de-cookies-e-politica-de-privacidade" target="_blank" >Saber mais</CookieLink>
                     </CookieText>
                     <CookieForm onSubmit={handleSubmit}>
@@ -56,7 +56,7 @@ const CookieComponent = (props) => {
             </Modal>
         )
     } else {
-        return null;
+        return null; 
     }
 }
 
