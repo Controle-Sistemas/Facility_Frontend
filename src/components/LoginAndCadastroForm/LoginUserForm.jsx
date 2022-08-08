@@ -149,7 +149,7 @@ export function LoginUserForm() {
                             <><div className="captcha">
 
                         <ReCAPTCHA
-                            sitekey="6LdY-E4hAAAAABF0eaKRYe1rAeAfFFZImkJMAEGk"
+                            sitekey="6LeS-1khAAAAAOWzMs0OiUBnynUM9zCXQsJZumGz"
                             onChange={handleChaptchaVerify}
                         />
                     </div>

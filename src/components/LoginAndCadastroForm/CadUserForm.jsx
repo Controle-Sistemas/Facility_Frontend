@@ -169,7 +169,7 @@ export function CadUserForm() {
                     <div className="captcha">
 
                         <ReCAPTCHA
-                            sitekey="6LcPZ50fAAAAANJlxUXchqi2thnB-GsAY_LJ0X5N"
+                            sitekey="6LeS-1khAAAAAOWzMs0OiUBnynUM9zCXQsJZumGz"
                             onChange={handleChange}
                         />
                     </div>
