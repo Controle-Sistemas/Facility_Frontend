@@ -1,7 +1,7 @@
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableHead from '@mui/material/TableHead';
-import { PrimaryButton, ButtonActionTable } from '../styledComponents/buttons';
+import {  ButtonActionTable } from '../styledComponents/buttons';
 import TablePagination from '@mui/material/TablePagination';
 import { TablePaginationActions } from '../Paginacao';
 import { TableHeaderCell, TableRow, TableCell, TableCellActions } from '../styledComponents/table';

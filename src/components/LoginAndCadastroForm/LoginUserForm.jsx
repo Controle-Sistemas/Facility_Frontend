@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 //Importações
-import { useNavigate, Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import ReCAPTCHA from "react-google-recaptcha";
 import { useContext, useState } from "react";
 import MaskedInput from "../cnpjInput"

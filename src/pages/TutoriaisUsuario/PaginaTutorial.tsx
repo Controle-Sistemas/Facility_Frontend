@@ -1,5 +1,4 @@
 import axios from 'axios';
-import cookie from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { LoadingComponent } from '../../components/Loading';

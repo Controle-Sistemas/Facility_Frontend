@@ -1,42 +1,16 @@
-import { useEffect, useState, useMemo,useRef } from 'react';
-import axios from 'axios';
-import { BASE_URL } from '../../utils/requests';
-import ModalForm from '../Modais/modalForm'
-import { FormEditEmpresa } from '../Modais/forms/FormEditEmpresa';
-import { FormTerminal } from '../Modais/forms/FormEditTerminal'
-import { FormCadEmpresa } from '../Modais/forms/FormCadEmpresa';
+import { useEffect, useState,useRef } from 'react';
 import { LoadingComponent } from '../Loading'
 //Importações
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import Paper from '@mui/material/Paper';
-import Swal from 'sweetalert2'
-
-import TablePagination from '@mui/material/TablePagination';
-import { TablePaginationActions } from '../Paginacao'
 import FilterComponent from '../filterComponent';
-import { PrimaryButton, ButtonActionTable } from '../styledComponents/buttons'
-import { TableHeaderCell, TableRow, TableCell, TableCellActions, TableFooter} from '../styledComponents/table'
 import { FilterContainer } from '../styledComponents/containers'
-import {CepMask, cnpjMask} from '../../utils/Masks'
-import { FormMostrarColunas } from '../Modais/forms/FormMostrarColunas'
 import cookie from 'js-cookie'
 import DefaultTable from '../Table'
 
-
  export function RelatoriosVendasTable() {
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
-	
 	const [filterText, setFilterText] = useState('');
-	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
-	const [modalMoreIsOpen, setModalMoreIsOpen] = useState(false);
-
 	const idTable = 3; //id da tabela
-	const idUser = cookie.get('id'); //id do usuario logado
-
-    
     const data = useRef<any[]>([{
         "id":1,
         "groupName":"BEBIDAS",
@@ -106,7 +80,6 @@ import DefaultTable from '../Table'
                     columns={columns}  
                     />      
         </Paper>
-        {/*  */}
         </>
                         
      )

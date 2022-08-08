@@ -5,7 +5,6 @@ import { Input, DisabledInputBox } from '../../styledComponents/inputs';
 import { BASE_URL } from '../../../utils/requests';
 import axios from 'axios';
 import cookie from 'js-cookie';
-import Swal from 'sweetalert2';
 
 interface Colunas {
 	id: number | undefined;

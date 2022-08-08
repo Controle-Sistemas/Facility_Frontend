@@ -13,7 +13,7 @@ import Swal from 'sweetalert2'
 
 
 import FilterComponent from '../filterComponent';
-import { PrimaryButton, ButtonActionTable } from '../styledComponents/buttons'
+import { PrimaryButton } from '../styledComponents/buttons'
 
 import { FilterContainer } from '../styledComponents/containers'
 import {CepMask, cnpjMask} from '../../utils/Masks'
@@ -161,7 +161,8 @@ export function LicencesAdminTable() {
 							JSON.stringify(item).toLowerCase().includes(filterText.toLowerCase())  //se o texto for igual ao filtro  retorna todos
 						);
 					}
-				}
+				} 
+				
 			});
 		}
 		

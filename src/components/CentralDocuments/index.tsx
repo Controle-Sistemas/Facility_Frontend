@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import { BASE_URL } from '../../utils/requests';
@@ -7,7 +7,6 @@ import ModalForm from '../Modais/modalForm';
 import { FormEditDocument } from '../Modais/forms/FormEditDocument';
 
 import Swal from 'sweetalert2';
-import { Link } from 'react-router-dom';
 interface Props {
 	order: string;
 	orderBy: string;

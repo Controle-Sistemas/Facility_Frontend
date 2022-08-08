@@ -1,13 +1,10 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CategorysActions,TreeViewItem, TreeViewContainer,TreeViewItemChild, TreeViewItemLabel, TreeViewItemChildLabel,TreeViewItemChildTitle,TreeViewItemTutorialLength } from './styled';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import {formatData} from '../../utils/Masks';
 import {ButtonActionTable} from '../../components/styledComponents/buttons';
 import ModalForm from '../../components/Modais/modalForm';
-import { LoadingComponent } from '../../components/Loading';
 import {FormEditCategory} from '../../components/Modais/forms/FormEditCategory';
 import {BASE_URL} from '../../utils/requests';
 import Swal from 'sweetalert2';

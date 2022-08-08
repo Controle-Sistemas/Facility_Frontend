@@ -1,13 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Popover from '@mui/material/Popover';
 import { PostItContainer, PostItHeader, PostItBody, PostItFooter, FileContainer, PostItData,PostItMainText } from './styled';
-import { cnpjMask } from '../../utils/Masks';
 import { ImagePostIt } from '../PostItImageComponent/index';
-import { BASE_URL } from '../../utils/requests';
 import ListItemText from '@mui/material/ListItemText';
 import Swal from 'sweetalert2';
-import cookie from 'js-cookie';
-import axios from 'axios';
+
 
 interface PostItCardProps {
 	ID: number;

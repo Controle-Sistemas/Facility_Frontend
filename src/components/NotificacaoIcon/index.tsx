@@ -9,7 +9,6 @@ import { BellIcon } from '../styledComponents/Texts';
 import { NotificationIconContainer } from './styled';
 
 export function NotificationIcon() {
-    const [ documents, setDocuments ] = useState([]); // estado para armazenar os documentos
 	const [ pendingDocuments, setPendingDocuments ] = useState([]); // estado para armazenar os documentos pendentes
 	const navigation = useNavigate();
 
@@ -40,7 +39,6 @@ export function NotificationIcon() {
 		axios
 			.get(BASE_URL + `/documentos/cnpj/${cnpj}`)
 			.then((res) => {
-				setDocuments(res.data.data); // seta os documentos
 
 				setPendingDocuments(res.data.data.filter((document) => document.STATUS === 0)); // seta os documentos pendentes
 			})

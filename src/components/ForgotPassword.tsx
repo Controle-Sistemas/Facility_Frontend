@@ -1,10 +1,9 @@
 import {FormContainer,ButtonGroup,InputContainer} from './styledComponents/containers'
 import CnpjInput from './cnpjInput'
-import {MainTitle} from './styledComponents/Texts'
 import {PrimaryButton} from './styledComponents/buttons'
 import axios from 'axios'
 import {BASE_URL} from '../utils/requests'
-import {useState,useEffect} from 'react'
+import {useState} from 'react'
 import Swal from 'sweetalert2'
 
 export function ForgotPassword({isVisible}) {

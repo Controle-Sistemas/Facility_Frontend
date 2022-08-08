@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "//facility.controleautomacao.com.br/static/css/main.324ca977.css",
-    "main.js": "//facility.controleautomacao.com.br/static/js/main.b9c05699.js",
-    "static/media/fontawesome-webfont.svg?v=4.7.0": "//facility.controleautomacao.com.br/static/media/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg",
-    "static/media/fontawesome-webfont.eot": "//facility.controleautomacao.com.br/static/media/fontawesome-webfont.8b43027f47b20503057d.eot",
-    "static/media/fontawesome-webfont.ttf?v=4.7.0": "//facility.controleautomacao.com.br/static/media/fontawesome-webfont.1e59d2330b4c6deb84b3.ttf",
-    "static/media/fontawesome-webfont.woff?v=4.7.0": "//facility.controleautomacao.com.br/static/media/fontawesome-webfont.f691f37e57f04c152e23.woff",
-    "static/media/fontawesome-webfont.woff2?v=4.7.0": "//facility.controleautomacao.com.br/static/media/fontawesome-webfont.20fd1704ea223900efa9.woff2",
-    "static/media/logoBranca.png": "//facility.controleautomacao.com.br/static/media/logoBranca.7d5dfffbd546d74fdeaa.png",
-    "static/media/logo.png": "//facility.controleautomacao.com.br/static/media/logo.2b66ec970c10f3e46f25.png",
-    "static/media/pdfIcon.svg": "//facility.controleautomacao.com.br/static/media/pdfIcon.fe7a1728514121e3f56d9013a89f2427.svg",
-    "static/media/docIcon.svg": "//facility.controleautomacao.com.br/static/media/docIcon.9dfb9ebbf0666b73c66946ffe36c93d3.svg",
-    "static/media/excelIcon.svg": "//facility.controleautomacao.com.br/static/media/excelIcon.d25b0496c0784a14bc7c439a5a271c14.svg",
-    "static/media/file.svg": "//facility.controleautomacao.com.br/static/media/file.5caf215134e250d683a020a65ed55d8c.svg",
-    "static/media/question.svg": "//facility.controleautomacao.com.br/static/media/question.a177a00fbae915084a96c7bc2547fa74.svg",
-    "index.html": "//facility.controleautomacao.com.br/index.html",
-    "static/media/Background.svg": "//facility.controleautomacao.com.br/static/media/Background.1604aea3216442624ba9e856c3230a44.svg",
-    "main.324ca977.css.map": "//facility.controleautomacao.com.br/static/css/main.324ca977.css.map",
-    "main.b9c05699.js.map": "//facility.controleautomacao.com.br/static/js/main.b9c05699.js.map"
+    "main.css": "/static/css/main.8bfb4ef5.css",
+    "main.js": "/static/js/main.1dd57643.js",
+    "static/media/fontawesome-webfont.svg?v=4.7.0": "/static/media/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg",
+    "static/media/fontawesome-webfont.eot": "/static/media/fontawesome-webfont.8b43027f47b20503057d.eot",
+    "static/media/fontawesome-webfont.ttf?v=4.7.0": "/static/media/fontawesome-webfont.1e59d2330b4c6deb84b3.ttf",
+    "static/media/fontawesome-webfont.woff?v=4.7.0": "/static/media/fontawesome-webfont.f691f37e57f04c152e23.woff",
+    "static/media/fontawesome-webfont.woff2?v=4.7.0": "/static/media/fontawesome-webfont.20fd1704ea223900efa9.woff2",
+    "static/media/logoBranca.png": "/static/media/logoBranca.7d5dfffbd546d74fdeaa.png",
+    "static/media/logo.png": "/static/media/logo.2b66ec970c10f3e46f25.png",
+    "static/media/pdfIcon.svg": "/static/media/pdfIcon.fe7a1728514121e3f56d9013a89f2427.svg",
+    "static/media/docIcon.svg": "/static/media/docIcon.9dfb9ebbf0666b73c66946ffe36c93d3.svg",
+    "static/media/excelIcon.svg": "/static/media/excelIcon.d25b0496c0784a14bc7c439a5a271c14.svg",
+    "static/media/file.svg": "/static/media/file.5caf215134e250d683a020a65ed55d8c.svg",
+    "static/media/question.svg": "/static/media/question.a177a00fbae915084a96c7bc2547fa74.svg",
+    "index.html": "/index.html",
+    "static/media/Background.svg": "/static/media/Background.1604aea3216442624ba9e856c3230a44.svg",
+    "main.8bfb4ef5.css.map": "/static/css/main.8bfb4ef5.css.map",
+    "main.1dd57643.js.map": "/static/js/main.1dd57643.js.map"
   },
   "entrypoints": [
-    "static/css/main.324ca977.css",
-    "static/js/main.b9c05699.js"
+    "static/css/main.8bfb4ef5.css",
+    "static/js/main.1dd57643.js"
   ]
 }

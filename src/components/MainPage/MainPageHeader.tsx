@@ -16,23 +16,23 @@ export function MainPageHeader(Props) {
 						</div>
 					</div>
 					<div className="main-page-header-social-media">
-						<a href="#">
+						<a href="https://www.facebook.com/ControleSistemas/">
 							{' '}
 							<i className="fa-brands fa-facebook" />{' '}
 						</a>
-						<a href="#">
+						<a href="https://www.facebook.com/ControleSistemas/">
 							{' '}
 							<i className="fa-brands fa-instagram" />{' '}
 						</a>
-						<a href="#">
+						<a href="https://www.facebook.com/ControleSistemas/">
 							{' '}
 							<i className="fa-brands fa-twitter" />{' '}
 						</a>
-						<a href="#">
+						<a href="https://www.facebook.com/ControleSistemas/">
 							{' '}
 							<i className="fa-brands fa-youtube" />{' '}
 						</a>
-						<a href="#">
+						<a href="https://www.linkedin.com/in/daniel-paixao-592bb72a/">
 							{' '}
 							<i className="fa-brands fa-linkedin" />{' '}
 						</a>
