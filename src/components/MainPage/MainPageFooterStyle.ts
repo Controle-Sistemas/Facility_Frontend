@@ -6,13 +6,14 @@ export const FooterContainer = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 8rem;
-    height: 60vh;
+    height: 70vh;
 
     @media (max-width: 900px) {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 100vh;
+        height: 110vh;
+        gap: 2rem;
     }
 
 
@@ -30,6 +31,7 @@ export const FooterRight = styled.div`
     @media (max-width: 900px) {
         width: 100%;
         height: 70%;
+        gap: .3rem;
 
     }
 `;

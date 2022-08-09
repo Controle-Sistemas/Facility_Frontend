@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-const Input = styled.input.attrs(props => ({
+
+const Input = styled.input.attrs(props => ({ //Estilização do input
   type: "text",
   size: props.small ? 5 : undefined
 }))`
@@ -15,7 +16,7 @@ const Input = styled.input.attrs(props => ({
   margin: 0;
 `;
 
-const ClearButton = styled.button`
+const ClearButton = styled.button` 
   border: 1px solid #003775;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
@@ -39,8 +40,9 @@ const ClearButton = styled.button`
 
 `;
 
-const FilterComponent = ({ filterText, onFilter, onClear }) => (
-  <div style={{display:"flex",alignItems:"center",width:"100%"}}>
+
+const FilterComponent = ({ filterText, onFilter, onClear }) => ( //Componente para filtrar os dados
+  <div style={{display:"flex",alignItems:"center",width:"100%"}}> 
     <Input
       id="search"
       type="text"

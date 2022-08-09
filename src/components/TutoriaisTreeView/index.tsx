@@ -6,6 +6,7 @@ import {formatData} from '../../utils/Masks';
 import {ButtonActionTable} from '../../components/styledComponents/buttons';
 import ModalForm from '../../components/Modais/modalForm';
 import {FormEditCategory} from '../../components/Modais/forms/FormEditCategory';
+//Importações
 import {BASE_URL} from '../../utils/requests';
 import Swal from 'sweetalert2';
 import TreeViewComponent from '@mui/lab/TreeView';
@@ -14,7 +15,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 
 
-interface Props {
+interface Props { //Propriedades do componente TutoriaisTreeView
 	tutorialData: any[];
 	isAdmin: boolean;
 	categorias: any[];
@@ -35,7 +36,7 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
 	const [ targetId, setTargetId ] = useState('');
 	const TreeViewData: any[] = [];
 
-
+    //Verifica se as categorias foram abertas, se sim, o filtro funciona apenas nos tutoriais, se não, o filtro funciona apenas nas categorias
     switch(filterField){
         case 1:
             categorias = categorias.filter((categoria:any) => {
@@ -56,26 +57,27 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
                         
     }
 
+    //Organiza os dados em treeview
 	const TreeViewDataOrganize = () => {
-		tutorialData.forEach((tutorial) => {
-			categorias.forEach((categoria) => {
-				if (categoria.ID === tutorial.CATEGORIA) {
-					if (TreeViewData.length === 0) {
-						TreeViewData.push({
-							ID: categoria.ID,
-							NOME: categoria.NOME,
-							TUTORIALS: [ tutorial ]
+		tutorialData.forEach((tutorial) => { //Percorre todos os tutoriais
+			categorias.forEach((categoria) => { //Percorre todas as categorias
+				if (categoria.ID === tutorial.CATEGORIA) { //Verifica se a categoria do tutorial é igual a categoria atual
+					if (TreeViewData.length === 0) { //Se ainda não tiver nenhum dado na TreeView, adiciona o primeiro item
+						TreeViewData.push({ 
+							ID: categoria.ID, //ID da categoria
+							NOME: categoria.NOME, //Nome da categoria
+							TUTORIALS: [ tutorial ] //Tutoriais da categoria
 						});
 					} else {
-						let isFound = false;
-						TreeViewData.forEach((item) => {
-							if (item.ID === categoria.ID) {
-								item.TUTORIALS.push(tutorial);
-								isFound = true;
+						let isFound = false; //Variável para verificar se a categoria já foi adicionada
+						TreeViewData.forEach((item) => { //Percorre todos os itens da TreeView
+							if (item.ID === categoria.ID) { //Verifica se a categoria já foi adicionada
+								item.TUTORIALS.push(tutorial); //Adiciona o tutorial na categoria
+								isFound = true; 
 							}
 						});
-						if (!isFound) {
-							TreeViewData.push({
+						if (!isFound) { //Se a categoria não foi adicionada, adiciona ela
+							TreeViewData.push({ 
 								ID: categoria.ID,
 								NOME: categoria.NOME,
 								TUTORIALS: [ tutorial ]
@@ -87,14 +89,14 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
 		});
 	};
 
-	console.log(TreeViewData);
+	// console.log(TreeViewData);
 
     function handleOpenModalEdit(id: string) {
         setIsModalEditOpen(!isModalEditOpen);
         setTargetId(id);
     }
 
-    function handleDeleteCategory(id: string) {
+    function handleDeleteCategory(id: string) { //Função para deletar uma categoria
 
         Swal.fire({
             title: 'Você tem certeza?',
@@ -117,7 +119,7 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
                             confirmButtonText: 'Ok'
                         }                       
                         );
-                        setCategorias(categorias.filter((categoria) => categoria.ID !== id));
+                        setCategorias(categorias.filter((categoria) => categoria.ID !== id)) //Remove a categoria da lista de categorias atual
                     }
                 }).catch((error) => {
                     Swal.fire({
@@ -131,11 +133,11 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
         })
     }
 
-    const onEditCategory = (category: any) => {
+    const onEditCategory = (category: any) => { //Função para editar uma categoria
         axios.patch(`${BASE_URL}/categorias/${targetId}`, category)
             .then(res => {
                 axios.get(`${BASE_URL}/categorias`)
-                    .then(res => {
+                    .then(res => { 
                         setCategorias(res.data);
                         setIsModalEditOpen(!isModalEditOpen);
                         setIsCategoryOpen(!isCategoryOpen);
@@ -162,30 +164,28 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
     }
 
 
-    function handleOpenCategory(e,nome:string) {
-        if(nodeName === ''){
+    function handleOpenCategory(e,nome:string) { //Função para abrir a categoria
+        if(nodeName === ''){ //Se não tiver nenhuma categoria aberta, abre a categoria selecionada
+            setNodeName(nome) //Nome da categoria selecionada
+            setFilterField(2) //Filtra por tutorial
+        } else if(nodeName !== nome ){ //Se a categoria selecionada for diferente da categoria aberta, seta outro nome e filtra por tutorial
+            setFilterField(2) 
             setNodeName(nome)
-            setFilterField(2)
-        } else if(nodeName !== nome ){
-            setFilterField(2)
-            setNodeName(nome)
-        } else {
+        } else { //Se a categoria selecionada for igual a categoria aberta, seta nome vazio e filtra por categoria
             setNodeName('')
             setFilterField(1)
-
         }
 
     }
 
 
-    const sortTutorials = (data: any) => {
-        console.log(orderBy)
-		if(parentSort === 'CATEGORIA'){
-            if(orderBy === 'QUANTIDADE'){
+    const sortTutorials = (data: any) => { //Função para ordenar os tutoriais
+		if(parentSort === 'CATEGORIA'){ //Se o campo de ordenação pai for categoria, ordena as categorias
+            if(orderBy === 'QUANTIDADE'){  //Se o campo de ordenação for quantidade, ordena por quantidade
                  data.forEach((item) => {
-                        item.QUANTIDADE = item.TUTORIALS.length
+                        item.QUANTIDADE = item.TUTORIALS.length //Adiciona a quantidade de tutoriais na categoria
                     })
-                if (order === 'asc') {
+                if (order === 'asc') { //Verifica se a ordenação é ascendente ou descendente
                    
                     return data.sort((a, b) => {
                         if (a[orderBy] < b[orderBy]) {
@@ -209,8 +209,8 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
 
                 }
                 
-            } else {
-                if (order === 'asc') {
+            } else { //Se o campo de ordenação for diferente de quantidade, ordena pela opção selecionada
+                if (order === 'asc') { 
                     return data.sort((a, b) => {
                         if (a[orderBy] < b[orderBy]) {
                             return -1;
@@ -232,11 +232,10 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
                     });
                 }
             }
-        } else {
-               data.TUTORIALS = data.map(categoria => {
+        } else { //Se o campo de ordenação pai for diferente de categoria, ordena os tutoriais
+               data.TUTORIALS = data.map(categoria => { //Percorre todas as categorias
                     if (order === 'asc') {
-
-                        return categoria.TUTORIALS.sort((a, b) => {
+                        return categoria.TUTORIALS.sort((a, b) => { //Ordena os tutoriais
 
                             if (a[orderBy] < b[orderBy]) {
                                 return -1;
@@ -262,12 +261,12 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
         }
 	};
 
-	const filterTutorials = (data: any) => {
+	const filterTutorials = (data: any) => { //Função para filtrar os tutoriais
         console.log(filterBy)
-		if (filterBy === 'TODOS') {
+		if (filterBy === 'TODOS') { //Se o campo de filtro for todos, retorna todos os tutoriais
 			return data;
-		} else {
-            data = data.map((categoria) => {
+		} else { //Se o campo de filtro for diferente de todos, retorna os tutoriais filtrados
+            data = data.map((categoria) => { 
                 if(filterBy === 'VIDEOS'){
                     categoria.TUTORIALS = categoria.TUTORIALS.filter((tutorial) => tutorial.TIPO === 3)
                 } else if(filterBy === 'TEXTOS'){
@@ -285,7 +284,6 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
 
     TreeViewDataOrganize()
 
-    console.log(filterField)
 	return (
 		<TreeViewContainer>
             <ModalForm

@@ -6,12 +6,12 @@ import {BASE_URL} from '../utils/requests'
 import {useState} from 'react'
 import Swal from 'sweetalert2'
 
-export function ForgotPassword({isVisible}) {
-    const [cnpj,setCNPJ] = useState('')
+export function ForgotPassword({isVisible}) { //Componente para recuperar a senha
+    const [cnpj,setCNPJ] = useState('') 
     
-    function handleSubmit(event){
+    function handleSubmit(event){ //Função para enviar o cnpj para o backend
         event.preventDefault()
-        axios.patch(BASE_URL+`/clientes/forgot-password/${cnpj}`).then(response=>{
+        axios.patch(BASE_URL+`/clientes/forgot-password/${cnpj}`).then(response=>{ 
             Swal.fire({
                 title: 'Sucesso',
                 text: response.data.message ,
@@ -27,11 +27,11 @@ export function ForgotPassword({isVisible}) {
         })
     }
 
-    function handleChangeCNPJ(cnpj){
+    function handleChangeCNPJ(cnpj) {
         setCNPJ(cnpj)
     }
 
-    if(!isVisible) return null;
+    if(!isVisible) return null; //Se o componente não estiver visível, retorna nulo
 
     return (
             <FormContainer animation={isVisible}>

@@ -12,6 +12,8 @@ export const CookieContainer = styled.div`
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	margin: 0;
+	z-index: 100;
 
 	background: rgba(255, 255, 255, 0.45);
 	box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
@@ -23,6 +25,8 @@ export const CookieContainer = styled.div`
 
 	@media (max-width: 940px) {
 		width: 100%;
+		right: 0;
+		bottom: 0;
 	}
 `; 
 

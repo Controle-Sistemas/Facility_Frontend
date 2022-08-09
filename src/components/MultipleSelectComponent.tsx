@@ -1,3 +1,4 @@
+//Importações
 import * as React from 'react';
 import { Theme, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -8,7 +9,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
 
-function getStyles(name: string, ramo: readonly string[], theme: Theme) {
+function getStyles(name: string, ramo: readonly string[], theme: Theme) { 
   return {
     fontWeight:
       ramo.indexOf(name) === -1
@@ -18,9 +19,9 @@ function getStyles(name: string, ramo: readonly string[], theme: Theme) {
   };
 }
 
-export function MultipleSelect(props) {
+export function MultipleSelect(props) { 
   const data = props.data;
-  if(!data.find(x => x.descricao === 'Todos')) {
+  if(!data.find(x => x.descricao === 'Todos')) { //Se não existir o item 'Todos' no array, adiciona
     data.push({
       descricao: 'Todos',
       ativo:1
@@ -29,24 +30,24 @@ export function MultipleSelect(props) {
   
 
   const theme = useTheme();
-  const [ramo, setRamo] = React.useState<string[]>([]);
+  const [ramo, setRamo] = React.useState<string[]>([]); //Array de ramos selecionados
 
 
-  const handleChange = (event: SelectChangeEvent<typeof ramo>) => {
+  const handleChange = (event: SelectChangeEvent<typeof ramo>) => { 
 
     const {
-      target: { value },
-    } = event;
+      target: { value }, 
+    } = event; //Pega o valor do evento
     
-    if (value === 'Todos') {
+    if (value === 'Todos') { //Se o valor for 'Todos', seleciona todos os ramos
       setRamo(data.filter(item => item !== 'Todos').toString());
     }
 
     setRamo(
       typeof value === 'string' ? value.split(',') : value,
 
-    );
-    props.setValues({
+    ); //Se o valor for uma string, separa os ramos por vírgula, se não, mantém o valor
+    props.setValues({ //Envia os ramos selecionados para o componente pai
       ...props.values,
       RAMODEATIVIDADE:  ramo,
     });
@@ -54,7 +55,7 @@ export function MultipleSelect(props) {
 
   };
 
-  const handleChangeMultiple = (event) => {
+  const handleChangeMultiple = (event) => { 
     props.setValues({
       ...props.values,
       RAMODEATIVIDADE: ramo,

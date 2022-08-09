@@ -76,13 +76,31 @@ export const HeaderFixed = styled.div`
 	padding: 1rem 2rem 1rem 2rem;
 	font-size: 1.2rem;
     position: relative;
+
     @media (max-width: 900px) {
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        height: 30vh;
+        justify-content: flex-start;
+        height: 100%;
         padding: .5rem 0;
     }
+`;
+
+export const HeaderLogoContainer = styled.span`
+display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+	`
+
+export const HeaderLogo = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: .5rem;
+	& > img {
+		width: 80%;
+	}
 `;
 
 export const HeaderFixedMenu = styled.ul`
@@ -91,7 +109,6 @@ export const HeaderFixedMenu = styled.ul`
 	justify-content: center;
 	margin: 0;
     padding: .2rem;
-
 
 	& > li {
 		display: inline;
@@ -114,7 +131,7 @@ export const HeaderFixedMenu = styled.ul`
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 30vh;
+        height: 20vh;
         width: 100%;
 
         & > li {

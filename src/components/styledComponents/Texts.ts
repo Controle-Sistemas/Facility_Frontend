@@ -9,6 +9,14 @@ export const MainTitle = styled.h1`
     color: #003775;
     text-shadow: 0 .1rem .2rem rgba(0, 0, 0, 0.4);
 `
+
+export const MainParagraph = styled.p`
+    font-size: 1.2rem;
+    text-align: center;
+    color: #003775;
+    text-shadow: 0 .1rem .2rem rgba(0, 0, 0, 0.2);
+`
+
 export const ForgotPasswordSpan = styled.span`
     font-size: 1rem;
     text-decoration: underline;

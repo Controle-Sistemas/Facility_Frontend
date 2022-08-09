@@ -3,8 +3,6 @@ import { styled } from '@mui/material/styles';
 import Switch, { SwitchProps } from '@mui/material/Switch';
 
 //Componente de estilização do input para um switch
-
-
 function SwitchIos(props) {
   const IOSSwitch = styled((props: SwitchProps) => (
     <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -58,8 +56,7 @@ function SwitchIos(props) {
   }));
 
   function handleChangeStatus(event) {
-    
-    props.activation(props.id, event.target.checked);    
+    props.activation(props.id, event.target.checked); //Atualiza o estado do switch 
   }
 
   return (
