@@ -40,7 +40,7 @@ export function ForgotPassword({isVisible}) { //Componente para recuperar a senh
 
                 <CnpjInput  value={cnpj} onSend={handleChangeCNPJ} required/>
                 </InputContainer>
-                <ButtonGroup >
+                <ButtonGroup justifyContent="center">
                     <PrimaryButton onClick={handleSubmit}>Enviar Solicitação</PrimaryButton>
                 </ButtonGroup>
             </FormContainer>
