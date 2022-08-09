@@ -126,10 +126,9 @@ export function CadUserForm() {
                 Para continuar conectado conosco<br />
                 por favor, logue com suas informações
             </p>
+
             <button id="sign-in" className="btn-form btn-form-primary" onClick={handleChangePage}>Logar</button>
-            <div className="direitos">
-                <p>©2022 Controle Sistemas. Todos os direitos reservados.</p>
-            </div>
+
         </div><div className="second-column">
 
                 <h2 className="title title-second">Solicitar uma conta</h2>
