@@ -17,9 +17,7 @@ export const PostItContainer = styled.div`
 	cursor: pointer;
 	transition: all .2s ease-in-out;
     border-top-left-radius: .5rem;
-	:hover {
-		transform: scale(1.05);
-	}
+	
 	
 `;
 
@@ -74,6 +72,7 @@ export const PostItBody = styled.div`
     display: flex;  
     flex-direction: row;
     align-items: center;
+	justify-content: ${props => props.justifyContent };
     gap: .5rem;
     width: 100%;
     background-color: transparent;

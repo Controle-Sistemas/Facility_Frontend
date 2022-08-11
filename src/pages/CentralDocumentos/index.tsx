@@ -18,6 +18,11 @@ import { LoadingComponent } from '../../components/Loading';
 import Cookies from 'js-cookie';
 import { BASE_URL } from '../../utils/requests';
 import FilterComponent from '../../components/filterComponent';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import SortIcon from '@mui/icons-material/Sort';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -77,6 +82,7 @@ export function CentralDocumentosPageAdmin() {
 	const [ order, setOrder ] = useState('asc');
 	const [ searchText, setSearchText ] = useState('');
 	const [ orderBy, setOrderBy ] = useState('DATAINCLUSAO');
+	const [ typeOfView, setTypeOfView ] = useState('module');
 
 	function handleOpenModal() {
 		setModalIsOpen(!modalIsOpen);
@@ -92,6 +98,10 @@ export function CentralDocumentosPageAdmin() {
 	const handleRequestSort = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
 		setOrder(order === 'asc' ? 'desc' : 'asc');
 	};
+
+	function handleSetTypeOfView(e){
+		setTypeOfView(typeOfView === 'module' ? 'list' : 'module');
+	}
 
 	function onAdd(document){
 		axios.post(`${BASE_URL}/documentos/`, document).then((res) => {
@@ -143,13 +153,16 @@ export function CentralDocumentosPageAdmin() {
 
 						<ButtonRow>
 							<PrimaryButton onClick={handleOpenModalFilter}>
-								<i className="fa fa-filter" />
+								<FilterAltIcon />
 							</PrimaryButton>
 							<PrimaryButton onClick={handleOpenModalSort}>
-								<i className="fa-solid fa-list-ul" />
+								<FormatListBulletedIcon />
 							</PrimaryButton>
 							<PrimaryButton onClick={handleRequestSort}>
-								<i className="fa fa-sort-amount-down" />
+								<SortIcon />
+							</PrimaryButton>
+							<PrimaryButton onClick={handleSetTypeOfView}>
+							{typeOfView === 'module' ? <ViewModuleIcon /> : <ViewListIcon />}
 							</PrimaryButton>
 						</ButtonRow>
 					</ButtonGroup>
@@ -158,7 +171,7 @@ export function CentralDocumentosPageAdmin() {
 						isModalOpen={modalIsOpen}
 						isModalClosed={handleOpenModal}
 						title="Adicionar Documento"
-						height="80vh"
+						height="75vh"
 						width="50%"
 					>
 						<FormAddDocument handleClose={handleOpenModal} adicionar={onAdd} />
@@ -197,6 +210,7 @@ export function CentralDocumentosPageAdmin() {
 						filterBy={filterBy}
 						order={order}
 						orderBy={orderBy}
+						typeOfView={typeOfView}
 					/>
 				</ContainerAdminContas>
 			</ContainerAdmin>

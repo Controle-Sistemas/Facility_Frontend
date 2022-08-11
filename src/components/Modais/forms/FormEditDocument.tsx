@@ -10,6 +10,7 @@ import {
 } from '../../styledComponents/containers';
 import { BASE_URL } from '../../../utils/requests';
 import axios from 'axios';
+import {Editor} from '@tinymce/tinymce-react';
 
 export function FormEditDocument({ id, atualizar, handleClose }) {
 	const [ document, setDocument ] = useState<any>({});
@@ -19,6 +20,13 @@ export function FormEditDocument({ id, atualizar, handleClose }) {
 		setDocument({
 			...document,
 			[name]: value
+		});
+	}
+
+	const handleChangeText = (content, editor) => {
+		setDocument({	
+			...document,
+			COMUNICADO: content
 		});
 	}
 
@@ -79,15 +87,17 @@ export function FormEditDocument({ id, atualizar, handleClose }) {
 				{document.TIPO === 6 && (
 					<InputContainer>
 					<label>Comunicado</label>
-					<textarea
-						className="form-control"
-						name="COMUNICADO"
-						value={document.COMUNICADO}
-						onChange={handleChangeValues}
-						maxLength={300}
-					/>
+						<Editor
+							value={document.COMUNICADO}
+							init={{
+								height: 150,
+								width: '100%',
+								menubar: false,
+							}}
+							onEditorChange={handleChangeText}
+								/>
 				</InputContainer>
-				) }
+				)}
 
 				<InputContainer>
 					<label htmlFor="nomeestabelecimento">Nivel de prioridade</label>

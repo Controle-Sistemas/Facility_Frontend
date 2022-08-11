@@ -3,6 +3,7 @@ import axios from 'axios';
 import { FormContainer,ButtonGroup,InputContainer } from '../../styledComponents/containers';
 import { PrimaryButton } from '../../styledComponents/buttons';
 import { BASE_URL } from '../../../utils/requests';
+import {Editor} from '@tinymce/tinymce-react';
 
 
 export function FormEditTutorial({id, atualizar}) {
@@ -23,6 +24,11 @@ export function FormEditTutorial({id, atualizar}) {
         setTutorial({...tutorial, [e.target.name]: e.target.value});
     }
 
+    function handleChangeText(content, editor) {
+		setTutorial({ ...tutorial, TEXTO: content });
+
+	}
+
     function onSubmit(e){
         e.preventDefault()
         atualizar(tutorial)
@@ -41,7 +47,15 @@ export function FormEditTutorial({id, atualizar}) {
             {tutorial.TIPO === 1 ? (
                 <InputContainer>
                     <label htmlFor="TEXTO">Texto</label>
-                    <textarea name="TEXTO" className='form-control' id="TEXTO" value={tutorial.TEXTO} onChange={handleChange}></textarea>
+                    <Editor
+                        value={tutorial.TEXTO}
+                        init={{
+                            height: 150,
+                            width: '100%',
+                            menubar: false
+                        }}
+                        onEditorChange={handleChangeText}
+                    />
                 </InputContainer>
             ) : tutorial.TIPO === 3 ? (
                 <InputContainer>

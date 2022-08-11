@@ -26,6 +26,7 @@ interface PostItCardProps {
 	DATAATUAL: string;
 	STATUS: number;
 	EMPRESA: any;
+	typeOfView: string;
 	handleOpenModalEditDocument: (ID:number) => void;
 	handleOpenModalDeleteDocument: (ID:number) => void;
 	handleArchiveDocument: (ID:number,STATUS:number) => void;
@@ -48,6 +49,7 @@ export function PostItCard({
 	VISTO,
 	DATAATUAL,
 	EMPRESA,
+	typeOfView,
 	handleOpenModalEditDocument,
 	handleOpenModalDeleteDocument,
 	handleArchiveDocument,
@@ -82,116 +84,230 @@ export function PostItCard({
 	let diferenca = aux2.getTime() - aux.getTime(); //Calcula a diferença entre as datas
 	let dias = Math.floor(diferenca / (1000 * 60 * 60 * 24)); //Calcula a diferença em dias
 
-	return (
-		<PostItContainer magnitude={PRIORIDADE} id={ID.toString()}>
-			<span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-				<PostItData>
-					{dias < 7 && <i className="fa-solid fa-star" style={{ color: PRIORIDADE !== 4 ? '#DC354f' : "#FFF" }} />}{' '}
-					{formatData(DATAINCLUSAO)}{' '}
-				</PostItData>
-				{isAdmin && (
-					<span onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
-						<i className="fa-solid fa-info" />
-					</span>
-				)}
-				<Popover
-					id="mouse-over-popover"
-					sx={{
-						pointerEvents: 'none'
-					}}
-					open={open}
-					anchorEl={anchorEl}
-					anchorOrigin={{
-						vertical: 'bottom',
-						horizontal: 'left'
-					}}
-					transformOrigin={{
-						vertical: 'top',
-						horizontal: 'left'
-					}}
-					onClose={handlePopoverClose}
-					disableRestoreFocus
-				>
-					<ListItemText primary="CNPJ" secondary={`${CNPJ}`} />
-					{Object.keys(EMPRESA).length > 0 && (
+	if(typeOfView === 'module') {
+		return (
+			<PostItContainer magnitude={PRIORIDADE} id={ID.toString()}>
+				<span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+					<PostItData>
+						{dias < 7 && <i className="fa-solid fa-star" style={{ color: PRIORIDADE !== 4 ? '#DC354f' : "#FFF" }} />}{' '}
+						{formatData(DATAINCLUSAO)}{' '}
+					</PostItData>
+					{isAdmin && (
+						<span onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
+							<i className="fa-solid fa-info" />
+						</span>
+					)}
+					<Popover
+						id="mouse-over-popover"
+						sx={{
+							pointerEvents: 'none'
+						}}
+						open={open}
+						anchorEl={anchorEl}
+						anchorOrigin={{
+							vertical: 'bottom',
+							horizontal: 'left'
+						}}
+						transformOrigin={{
+							vertical: 'top',
+							horizontal: 'left'
+						}}
+						onClose={handlePopoverClose}
+						disableRestoreFocus
+					>
+						<ListItemText primary="CNPJ" secondary={`${CNPJ}`} />
+						{Object.keys(EMPRESA).length > 0 && (
+							<>
+								<ListItemText primary="Nome Contato" secondary={`${EMPRESA.NOMECONTATO}`} />
+								 <ListItemText primary="Email" secondary={`${EMPRESA.EMAIL}`} />
+								<ListItemText primary="Nome Fantasia" secondary={`${EMPRESA.NOMEFANTASIA}`} />
+							</>
+							
+						)}
+						
+					</Popover>
+				</span>
+	
+				<PostItHeader>
+					<PostItMainText>{NOME}</PostItMainText>
+					{isAdmin && (
+						<div style={{display:"flex"}}>
+							<button className="btn btn-sm btn-primary" onClick={() => handleOpenModalEditDocument(ID)} 
+					id="btn-action"
+					>
+								<i className="fa fa-edit" />
+							</button>
+							<button className="btn btn-sm btn-danger" onClick={() => handleOpenModalDeleteDocument(ID)}
+					id="btn-action"
+					>
+								<i className="fa fa-trash" />
+							</button>
+						</div>
+					)}
+				</PostItHeader>
+				<PostItBody>
+					{TIPO === 6 ? (
+					<p className="description" dangerouslySetInnerHTML={{__html:COMUNICADO}}></p>
+	
+					) : (
 						<>
-							<ListItemText primary="Nome Contato" secondary={`${EMPRESA.NOMECONTATO}`} />
-						 	<ListItemText primary="Email" secondary={`${EMPRESA.EMAIL}`} />
-							<ListItemText primary="Nome Fantasia" secondary={`${EMPRESA.NOMEFANTASIA}`} />
+							<p className="description">{DESCRICAO}</p>
+							<a href={`https://github.com/Controle-Sistemas/PortalClientes/raw/master/backend/temp/uploads/${FILE}`} target="_blank" rel="noopener noreferrer">
+								<FileContainer>
+									<ImagePostIt image={TIPO === 2 && FILE} type={TIPO} />
+									<div className="text-container">
+										<span>{fileName}</span>
+										<i className="fa-solid fa-cloud-arrow-down" />
+									</div>
+								</FileContainer>
+							</a>
 						</>
 						
 					)}
-					
-				</Popover>
-			</span>
-
-			<PostItHeader>
-				<PostItMainText>{NOME}</PostItMainText>
-				{isAdmin && (
-					<div style={{display:"flex"}}>
-						<button className="btn btn-sm btn-primary" onClick={() => handleOpenModalEditDocument(ID)} 
-				id="btn-action"
-				>
-							<i className="fa fa-edit" />
-						</button>
-						<button className="btn btn-sm btn-danger" onClick={() => handleOpenModalDeleteDocument(ID)}
-				id="btn-action"
-				>
-							<i className="fa fa-trash" />
-						</button>
-					</div>
-				)}
-			</PostItHeader>
-			<PostItBody>
-				{TIPO === 6 ? (
-				<p className="description">{COMUNICADO}</p>
-
-				) : (
-					<>
-						<p className="description">{DESCRICAO}</p>
-						<a href={`https://github.com/Controle-Sistemas/PortalClientes/raw/master/backend/temp/uploads/${FILE}`} target="_blank" rel="noopener noreferrer">
-							<FileContainer>
-								<ImagePostIt image={TIPO === 2 && FILE} type={TIPO} />
-								<div className="text-container">
-									<span>{fileName}</span>
-									<i className="fa-solid fa-cloud-arrow-down" />
-								</div>
-							</FileContainer>
-						</a>
-					</>
-					
-				)}
-			</PostItBody>
-			<PostItFooter>
-				<PostItData>
-					<i className="fa fa-calendar" />
-					{formatData(DATAVENCIMENTO)}
-				</PostItData>
-				<span onClick={() => {
-					if(STATUS === 0 || STATUS === 3) {
-						Swal.fire({
-							title: 'Não é possível arquivar o documento',
-							text: `O documento está ${STATUS === 0 ? 'Pendente' : STATUS === 3 && 'Atrasado'}`,
-							icon: 'warning',
-							confirmButtonText: 'Ok'
-						});
-
-					} 
-					else {
-						handleArchiveDocument(ID,STATUS);
-					}
-				}}
-				id="btn-action"
-				>
-
-				<i 
-					className="fa-solid fa-box-archive"
+				</PostItBody>
+				<PostItFooter>
+					<PostItData>
+						<i className="fa fa-calendar" />
+						{formatData(DATAVENCIMENTO)}
+					</PostItData>
+					<span onClick={() => {
+						if(STATUS === 0 || STATUS === 3) {
+							Swal.fire({
+								title: 'Não é possível arquivar o documento',
+								text: `O documento está ${STATUS === 0 ? 'Pendente' : STATUS === 3 && 'Atrasado'}`,
+								icon: 'warning',
+								confirmButtonText: 'Ok'
+							});
+	
+						} 
+						else {
+							handleArchiveDocument(ID,STATUS);
+						}
+					}}
 					id="btn-action"
-				/>
+					>
+	
+					<i 
+						className="fa-solid fa-box-archive"
+						id="btn-action"
+					/>
+					</span>
+				</PostItFooter>
+			</PostItContainer>
+		);
+	} else {
+		return (
+			<PostItContainer magnitude={PRIORIDADE} id={ID.toString()}>
+				<span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+					<PostItData>
+						{dias < 7 && <i className="fa-solid fa-star" style={{ color: PRIORIDADE !== 4 ? '#DC354f' : "#FFF" }} />}{' '}
+						{formatData(DATAINCLUSAO)}{' '}
+					</PostItData>
+					{isAdmin && (
+						<span onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
+							<i className="fa-solid fa-info" />
+						</span>
+					)}
+					<Popover
+						id="mouse-over-popover"
+						sx={{
+							pointerEvents: 'none'
+						}}
+						open={open}
+						anchorEl={anchorEl}
+						anchorOrigin={{
+							vertical: 'bottom',
+							horizontal: 'left'
+						}}
+						transformOrigin={{
+							vertical: 'top',
+							horizontal: 'left'
+						}}
+						onClose={handlePopoverClose}
+						disableRestoreFocus
+					>
+						<ListItemText primary="CNPJ" secondary={`${CNPJ}`} />
+						{Object.keys(EMPRESA).length > 0 && (
+							<>
+								<ListItemText primary="Nome Contato" secondary={`${EMPRESA.NOMECONTATO}`} />
+								 <ListItemText primary="Email" secondary={`${EMPRESA.EMAIL}`} />
+								<ListItemText primary="Nome Fantasia" secondary={`${EMPRESA.NOMEFANTASIA}`} />
+							</>
+							
+						)}
+						
+					</Popover>
 				</span>
-			</PostItFooter>
-		</PostItContainer>
-	);
+	
+				<PostItHeader>
+					<PostItMainText>{NOME}</PostItMainText>
+					{isAdmin && (
+						<div style={{display:"flex"}}>
+							<button className="btn btn-sm btn-primary" onClick={() => handleOpenModalEditDocument(ID)} 
+					id="btn-action"
+					>
+								<i className="fa fa-edit" />
+							</button>
+							<button className="btn btn-sm btn-danger" onClick={() => handleOpenModalDeleteDocument(ID)}
+					id="btn-action"
+					>
+								<i className="fa fa-trash" />
+							</button>
+						</div>
+					)}
+				</PostItHeader>
+				<PostItBody>
+					{TIPO === 6 ? (
+					<p className="description" dangerouslySetInnerHTML={{__html:COMUNICADO}}></p>
+	
+					) : (
+						<>
+							<p className="description">{DESCRICAO}</p>
+							<a href={`https://github.com/Controle-Sistemas/PortalClientes/raw/master/backend/temp/uploads/${FILE}`} target="_blank" rel="noopener noreferrer">
+								<FileContainer>
+									<ImagePostIt image={TIPO === 2 && FILE} type={TIPO} />
+									<div className="text-container">
+										<span>{fileName}</span>
+										<i className="fa-solid fa-cloud-arrow-down" />
+									</div>
+								</FileContainer>
+							</a>
+						</>
+						
+					)}
+				</PostItBody>
+				<PostItFooter justifyContent="end">
+					<PostItData>
+						<i className="fa fa-calendar" />
+						{formatData(DATAVENCIMENTO)}
+					</PostItData>
+					<span onClick={() => {
+						if(STATUS === 0 || STATUS === 3) {
+							Swal.fire({
+								title: 'Não é possível arquivar o documento',
+								text: `O documento está ${STATUS === 0 ? 'Pendente' : STATUS === 3 && 'Atrasado'}`,
+								icon: 'warning',
+								confirmButtonText: 'Ok'
+							});
+	
+						} 
+						else {
+							handleArchiveDocument(ID,STATUS);
+						}
+					}}
+					id="btn-action"
+					>
+	
+					<i 
+						className="fa-solid fa-box-archive"
+						id="btn-action"
+					/>
+					</span>
+				</PostItFooter>
+			</PostItContainer>
+		)
+	}
+	
 }
 /*
 

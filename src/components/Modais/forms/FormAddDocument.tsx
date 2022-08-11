@@ -9,6 +9,8 @@ import { PrimaryButton, DangerButton } from '../../styledComponents/buttons';
 import { useState } from 'react';
 import CnpjInput from '../../cnpjInput';
 import Cookies from 'js-cookie';
+import { Editor } from '@tinymce/tinymce-react';
+
 
 export function FormAddDocument({ handleClose, adicionar }) {
 	const idUser = Cookies.get('id');
@@ -66,11 +68,19 @@ export function FormAddDocument({ handleClose, adicionar }) {
 	function handleChangeCNPJ(cnpj) {
 		setDocumento({ ...documento, CNPJ: cnpj });
 	}
+	function handleChangeText(content, editor) {
+		setDocumento({ ...documento, COMUNICADO: content });
+	}
 
 	
 
 	function handleSubmit(e) {
 		e.preventDefault();
+		const date = new Date();
+		const ano = date.getFullYear();
+		const mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;	
+		const dia = date.getDate();
+		documento.DATAINCLUSAO = `${ano}-${mes}-${dia}`;
 		const data = new FormData();
 		data.append('COMUNICADO', documento.COMUNICADO);
 		data.append('CNPJ', documento.CNPJ);
@@ -84,8 +94,10 @@ export function FormAddDocument({ handleClose, adicionar }) {
 		data.append('DATAINCLUSAO', documento.DATAINCLUSAO);
 		data.append('ENVIAREMAIL', documento.ENVIAREMAIL.toString());
 
-		for(let i = 0; i < documento.files.length; i++) {
-			data.append('files', documento.files[i]);
+		if (documento.files) {
+			for(let i = 0; i < documento.files.length; i++) {
+				data.append('files', documento.files[i]);
+			}
 		}
 		
 
@@ -93,7 +105,7 @@ export function FormAddDocument({ handleClose, adicionar }) {
 		adicionar(data);
 		
 	}
-
+	
 	return (
 		<FormRowContainer onSubmit={handleSubmit} encType="multipart/form-data">
 			<DataGroup>
@@ -135,7 +147,16 @@ export function FormAddDocument({ handleClose, adicionar }) {
 				{documento.TIPO === '6' ? (
 					<InputContainer>
 						<label>Comunicado</label>
-						<textarea className="form-control" name="COMUNICADO" onChange={handleChange} maxLength={300} required />
+						<Editor
+						value={documento.COMUNICADO}
+						init={{
+							height: 150,
+							width: '100%',
+							menubar: false
+						}}
+                        
+						onEditorChange={handleChangeText}
+					/>
 					</InputContainer>
 				) : (
 					<InputContainer>
@@ -152,11 +173,6 @@ export function FormAddDocument({ handleClose, adicionar }) {
 						/>
 					</InputContainer>
 				)}
-
-				<InputContainer>
-					<label>Data</label>
-					<input type="date" className="form-control" name="DATAINCLUSAO" onChange={handleChange} required />
-				</InputContainer>
 				<InputGroupContainer>
 					<InputContainer>
 						<label>Prioridade</label>

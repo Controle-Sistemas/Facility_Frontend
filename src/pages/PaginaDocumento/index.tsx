@@ -185,8 +185,8 @@ export function PaginaDocumento() {
                             }
                             {
                                 documento.COMUNICADO ? (
-                                    <p>
-                                        {documento.COMUNICADO}
+                                    <p dangerouslySetInnerHTML={{__html:documento.COMUNICADO}}>
+                                        
                                     </p>
                                 ) : documentFileList.map((file, index) =>{
                                     if(file !== ""){
