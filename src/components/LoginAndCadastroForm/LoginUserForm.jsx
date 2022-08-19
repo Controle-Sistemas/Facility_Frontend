@@ -71,7 +71,12 @@ export function LoginUserForm() {
     }
 
     async function login(CNPJ, PASSWORD) {
-        await axios.post(BASE_URL+'/clientes/login', { CNPJ, PASSWORD }) //Fazendo a requisição
+        await axios.post(BASE_URL+'/clientes/login', { CNPJ, PASSWORD }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Allow-Control-Allow-Origin': '*'
+            }
+        }) //Fazendo a requisição
             .then(res => {                
                 console.log(res)
                 if (res.status === 200) { 
@@ -87,7 +92,7 @@ export function LoginUserForm() {
                 } else {
                     Swal.fire({
                         title: 'Erro',
-                        text: res.data.message,
+                        text: 'Erro ao logar',
                         icon: 'error',
                     })
                 }
