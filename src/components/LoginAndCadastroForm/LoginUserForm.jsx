@@ -11,7 +11,7 @@ import {ForgotPassword} from '../ForgotPassword'
 import axios from 'axios'
 import cookie from 'js-cookie'
 import {ForgotPasswordSpan} from '../styledComponents/Texts'
-
+import {BASE_URL} from '../../utils/requests'
 //Definindo um valor inicial para o estado
 function initialState() {
     return {
@@ -71,7 +71,7 @@ export function LoginUserForm() {
     }
 
     async function login(CNPJ, PASSWORD) {
-        await axios.post('http://localhost:8000/clientes/login', { CNPJ, PASSWORD }) //Fazendo a requisição
+        await axios.post(BASE_URL+'/clientes/login', { CNPJ, PASSWORD }) //Fazendo a requisição
             .then(res => {                
                 console.log(res)
                 if (res.status === 200) { 
