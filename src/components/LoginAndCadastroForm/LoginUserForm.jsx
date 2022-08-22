@@ -12,6 +12,7 @@ import axios from 'axios'
 import cookie from 'js-cookie'
 import {ForgotPasswordSpan} from '../styledComponents/Texts'
 import {BASE_URL} from '../../utils/requests'
+import {TabGroup, Tab} from '../styledComponents/containers'
 //Definindo um valor inicial para o estado
 function initialState() {
     return {
@@ -20,10 +21,19 @@ function initialState() {
     }
 }
 
+function initialInternalState(){
+    return {
+        USUARIO:"",
+        SENHA:""
+    }
+}
+
 export function LoginUserForm() {
     //Estado do captcha
     const [state, setState] = useState({ isVerified: false });
     const [isForgotPasswordVisible, setIsForgotPasswordVisible] = useState(false)
+    const [isInternal, setIsInternal] = useState(false)
+    
 
     //Mudar o estado do captcha
     function handleChaptchaVerify(value) {
@@ -35,6 +45,8 @@ export function LoginUserForm() {
 
     //Estado dos valores do formulário
     const [values, setValues] = useState(initialState)
+    const [internalValues,setInternalValues] = useState(initialInternalState)
+    
     //Token de autenticação
     const { setToken,setAdmin } = useContext(StoreContext);
     const navigate = useNavigate();
@@ -51,6 +63,12 @@ export function LoginUserForm() {
         setIsForgotPasswordVisible(!isForgotPasswordVisible)
     }
 
+    function handleChangeInternalValues(event) {
+        setInternalValues({
+            ...internalValues,
+            [event.target.name]: event.target.value
+        })
+    }
 
 
     function handleChangePassword(event) {
@@ -73,7 +91,6 @@ export function LoginUserForm() {
     async function login(CNPJ, PASSWORD) {
         await axios.post(BASE_URL+'/clientes/login', { CNPJ, PASSWORD }, {
             headers: {
-                'Content-Type': 'application/json',
                 'Allow-Control-Allow-Origin': '*'
             }
         }) //Fazendo a requisição
@@ -107,6 +124,29 @@ export function LoginUserForm() {
             })
     }
 
+    async function loginInterno(USUARIO, SENHA){
+        axios.post(BASE_URL+'/internos/login', {USUARIO,SENHA})
+        .then(res => {
+            console.log(res)
+            if (res.status === 200) { 
+                cookie.set('id', res.data.id)
+                setToken(res.data.token) //Setando o token nos cookies
+                navigate("/interno/chamados")
+            }
+            return { token:res.data.token} //Retornando o token
+
+        })
+        .catch(err => {
+            console.log(err)
+            Swal.fire({
+                title: 'Erro',
+                text: err.response.data.message,
+                icon: 'error',
+                confirmButtonText: 'Fechar'
+            })
+        })
+    }
+
     function handleSubmit(event){
         event.preventDefault();
         localStorage.setItem('cnpj', values.CNPJ)
@@ -114,11 +154,17 @@ export function LoginUserForm() {
 
 
     }
+
+    function handleSubmitInternal(e){
+        e.preventDefault()
+        localStorage.setItem('usuario',internalValues.USUARIO)
+        loginInterno(internalValues.USUARIO,internalValues.SENHA)
+    }
     
     
 
     return (
-
+        
         <><div className="first-column">
             <div className="logo-container">
                 <img src={Logo} alt="logo" />
@@ -132,11 +178,18 @@ export function LoginUserForm() {
             <p className="direitos">©2022 Controle Sistemas. Todos os direitos reservados.</p>
         </div>
             <div className="second-column">
+                
                 <h2 className="title  title-second">Entrar com sua conta</h2>
+                <TabGroup>
+                    <Tab onClick={() => setIsInternal(false)}> Cliente/Admin </Tab>
+                    <Tab onClick={() => setIsInternal(true)}> Interno </Tab>
+                </TabGroup>
 
-                <form className="form-login" onSubmit={handleSubmit}>
 
-                    <div className="form-group">
+                <form className="form-login" onSubmit={(e) => !isInternal ? handleSubmit(e) : handleSubmitInternal(e)}>
+                    {!isInternal ? (
+                        <>
+                        <div className="form-group">
                         <label htmlFor="cnpj">CNPJ:</label>
                         <MaskedInput className="input-form"  onSend={handleChangeCNPJ} placeholder="" required />
                     </div>
@@ -144,7 +197,21 @@ export function LoginUserForm() {
                         <label htmlFor="senha">Senha:</label>
                         <input type='password' className='input-form' onChange={handleChangePassword} defaultValue={values.password} required />
                     </div>
+                    </>
+                    ) : (
+                        <>
+                            <div className="form-group">
+                            <label htmlFor="user">Login:</label>
+                            <input type='text' className='input-form' onChange={handleChangeInternalValues} name="USUARIO" required />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="senha">Senha:</label>
+                            <input type='password' className='input-form' onChange={handleChangeInternalValues} name="SENHA" required />
+                        </div>
+                        </>
 
+                    )}
+                    
                     
                     <ForgotPasswordSpan onClick={handleSetForgotPassword}>{isForgotPasswordVisible ? "Informe o CNPJ para enviarmos sua nova senha" : "Esqueci minha senha/Não recebi o email"}</ForgotPasswordSpan>
                     <ForgotPassword isVisible={isForgotPasswordVisible} />

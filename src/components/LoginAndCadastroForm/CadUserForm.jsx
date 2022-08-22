@@ -8,6 +8,8 @@ import MaskedInput from "../cnpjInput"
 import {MultipleSelect} from '../MultipleSelectComponent'
 import { BASE_URL } from '../../utils/requests'
 import Logo from '../../assets/logoBranca.png'
+import {TabGroup, Tab} from '../styledComponents/containers'
+
 
 //Definindo um valor inicial para o estado
 const initialState = () => {
@@ -20,6 +22,16 @@ const initialState = () => {
         STATUS: 0,
         ADMIN: 0,
         RAMODEATIVIDADE: "",
+    }
+}
+
+const initialInternalState = () => {
+    return {
+        USUARIO: "",
+        SENHA: "",
+        SETOR:"",
+        EMAIL:"",
+        NOME:"",
     }
 }
 
@@ -36,8 +48,12 @@ export function CadUserForm() {
         await axios.post(url, data)
             .then(res => {
                 console.log(res)
+                if(isInternal){
+                    navigate('/login')
+                } else {
+                    navigate('/solicitacao-enviada') //redireciona para a página solicitacao-enviada caso tudo funcione bem
 
-                navigate('/solicitacao-enviada') //redireciona para a página solicitacao-enviada caso tudo funcione bem
+                }
 
             })
             .catch(err => {
@@ -54,9 +70,12 @@ export function CadUserForm() {
     const [state, setState] = useState({
         isVerified: false
     })
+    const [isInternal, setIsInternal] = useState(false)
+     const [setores,setSetores] = useState([])
 
     //Estado dos valores do formulário
-    const [values, setValues] = useState(initialState)
+    const [values, setValues] = useState(initialState())
+    const [internalValues, setInternalValues] = useState(initialInternalState)
 
     const [ramos, setRamos] = useState([])
 
@@ -68,8 +87,17 @@ export function CadUserForm() {
             .catch(err => {
                 console.log(err)
             })
+
+        axios.get(BASE_URL + '/setores/')
+        .then(res => {
+            setSetores(res.data.data)
+        })
+        .catch(err =>{
+            console.log(err)
+        })
     }, [])
 
+    console.log(setores)
 
 
     //Funções para capturar os valores do formulário
@@ -77,10 +105,17 @@ export function CadUserForm() {
     const handleChangeValue = e => {
         const { name, value } = e.target;
 
-        setValues(prevState =>({
-        ...prevState,
-        [name]:value
-       }))
+        if(isInternal){
+            setInternalValues({
+                ...internalValues,
+                [name]:value
+            })
+        } else {
+            setValues(prevState =>({
+                ...prevState,
+                [name]:value
+               }))
+        }
     };
 
     const handleChangeCNPJ = (cnpj) => {
@@ -109,11 +144,18 @@ export function CadUserForm() {
     }
 
     //Função para envio dos dados do formualário
-    const handleSubmit = (event) => {
+    const handleSubmitClient = (event) => {
         event.preventDefault();
         values.IDCLOUD = Number(values.CNPJ.replace(/\D/g, '').substring(0, 6)) //Remove os caracteres não numéricos e pega os 6 primeiros caracteres
         values.RAMODEATIVIDADE = values.RAMODEATIVIDADE.toString()
-        postData('http://localhost:8000/clientes/', values) //Envia os dados para o banco de dados
+        postData(BASE_URL+'/clientes/', values) //Envia os dados para o banco de dados
+    }
+
+    const handleSubmitInternal = (event) => {
+        event.preventDefault()
+        console.log(internalValues)
+        postData(BASE_URL+'/internos/',internalValues)
+        
     }
 
     return (
@@ -132,37 +174,69 @@ export function CadUserForm() {
         </div><div className="second-column">
 
                 <h2 className="title title-second">Solicitar uma conta</h2>
-                <form className="form-login" onSubmit={handleSubmit}>
+                <TabGroup>
+                    <Tab onClick={() => setIsInternal(false)}> Cliente </Tab>
+                    <Tab onClick={() => setIsInternal(true)}> Interno </Tab>
+                </TabGroup>
+                <form className="form-login" onSubmit={(e) => !isInternal ? handleSubmitClient(e) : handleSubmitInternal(e)}>
 
-                    <div className="form-group" id="input-nome">
-                        <label htmlFor="nome">Nome:</label>
-                        <input type='text' name="NOME" className='input-form' onChange={handleChangeValue} required />
-                    </div>
-                    <div className="form-group" id="input-nome-empresa">
-                        <label htmlFor="nome-estabelecimento">Nome do estabelecimento:</label>
-                        <input type='text' name="NOMEESTABELECIMENTO" className='input-form' onChange={handleChangeValue} required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="cnpj">CNPJ:</label>
-                    </div>
+                    {!isInternal ? (
+                        <><div className="form-group" id="input-nome">
+                            <label htmlFor="nome">Nome:</label>
+                            <input type='text' name="NOME" className='form-control' onChange={handleChangeValue} required />
+                        </div><div className="form-group" id="input-nome-empresa">
+                                <label htmlFor="nome-estabelecimento">Nome do estabelecimento:</label>
+                                <input type='text' name="NOMEESTABELECIMENTO" className='form-control' onChange={handleChangeValue} required />
+                            </div><div className="form-group">
+                                <label htmlFor="cnpj">CNPJ:</label>
+                            </div><div className="form-group form-group-double">
+                                <MaskedInput className="form-control" onSend={handleChangeCNPJ} placeholder="" name="cnpj" required />
+                                <MultipleSelect data={ramos} on values={values} setValues={setValues} name="RAMODEATIVIDADE" nameSelect="Ramo do estabelecimento" />
 
-                    <div className="form-group form-group-double">
-                        <MaskedInput className="input-form" onSend={handleChangeCNPJ} placeholder="" name="cnpj" required />
-                        <MultipleSelect data={ramos} on values={values} setValues={setValues} name="RAMODEATIVIDADE" nameSelect="Ramo do estabelecimento"/>
+                            </div><div className="form-group-double">
+                                <label htmlFor="email">
+                                    Email:
+                                    <input type='email' name="EMAIL" className='form-control' id="input-email" onChange={handleChangeValue} required />
 
-                    </div>
-                    <div className="form-group-double">
-                        <label htmlFor="email">
-                            Email:
-                        <input type='email' name="EMAIL" className='input-form' id="input-email" onChange={handleChangeValue} required />
+                                </label>
+                                <label htmlFor="representante">
+                                    Representante:
+                                    <input type='text' className='form-control' name="REPRESENTANTE" id="input-representante" onChange={handleChangeValue} required />
 
-                        </label>
-                        <label htmlFor="representante">
-                            Representante:
-                        <input type='text' className='input-form' name="REPRESENTANTE" id="input-representante" onChange={handleChangeValue} required />
+                                </label>
+                            </div></>
+                    ) : (
+                            <><div className="form-group-double">
+                                <label htmlFor="nome">Nome:
+                                <input type='text' name="NOME" className='form-control' onChange={handleChangeValue} required />
+                                </label>
 
-                            </label>
-                    </div>
+                                <label htmlFor="usuario">Usuário:
+                                <input type='text' name="USUARIO" className='form-control' onChange={handleChangeValue} required />
+
+                                </label>
+
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="email">Email:</label>
+                                <input type='email' name="EMAIL" className='form-control' onChange={handleChangeValue} required />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="Setor">Setor:</label>
+                                <select name="SETOR" className='form-control' id="input-setor" onChange={handleChangeValue} required>
+                                    <option value="" defaultValue="Selecione uma opção"></option>
+                                    {setores ? setores.map(setor => {
+                                        return (
+                                            <option key={setor.ID} value={setor.ID}>{setor.NOME}</option>
+                                        )
+                                    }) : null}
+                                </select>
+                            </div>
+                            </>
+
+
+                    )}
 
 
                     <div className="captcha">
@@ -173,7 +247,7 @@ export function CadUserForm() {
                         />
                     </div>
 
-                    <button type='submit' className='btn-form btn-form-second' disabled={!state.isVerified}>Enviar</button>
+                    <button type='submit' className='btn-form btn-form-second' disabled={!state.isVerified }>Enviar</button>
 
                 </form>
 

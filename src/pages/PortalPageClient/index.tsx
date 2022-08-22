@@ -33,7 +33,7 @@ export function PortalPageClient() {
 	const cnpj = localStorage.getItem('cnpj');
 	
 
-	const idUser = Number(cookie.get('id'))
+	const idUser = Number(cookie.get('id') || 0);
 
 
 	useEffect(

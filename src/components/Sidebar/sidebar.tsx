@@ -56,7 +56,7 @@ export default function Sidebar(props: Props) {
 	useEffect(
 		//Pega os dados do menu lateral
 		() => {
-			if (!location.pathname.includes('admin')) {
+			if (location.pathname.includes('user')) {
 				//Se não for admin
 				axios
 					.get(`${BASE_URL}/menu/item/ramo/${dadosUser.RAMODEATIVIDADE}`) //Pega os dados do menu lateral
@@ -87,7 +87,7 @@ export default function Sidebar(props: Props) {
 					.catch((err) => {
 						console.log(err);
 					});
-			} else {
+			} else if(location.pathname.includes('admin')) {
 				//Se for admin
 				axios
 					.get(`${BASE_URL}/menu/item`) //Pega os dados do menu lateral
@@ -111,6 +111,39 @@ export default function Sidebar(props: Props) {
 									]);
 								}
 							});
+						} else {
+							console.log('Erro ao carregar menu');
+						}
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+			} else if(location.pathname.includes('interno')){
+				axios
+					.get(`${BASE_URL}/menu/item`) //Pega os dados do menu lateral
+					.then((res) => {
+						if (res.status === 200) {
+							res.data.data.forEach((element) => {
+								if(element.link.includes('interno') && element.admin === 0){
+									if (!dadosSidebar.find((item) => item.id === element.id)) {
+										//Se não existir no estado
+										setDadosSidebar([
+											...dadosSidebar, //Adiciona no estado
+											{
+												id: Number(element.id),
+												idPai: Number(element.idPai),
+												titulo: element.descricao,
+												link: element.link,
+												icon: element.iconNameFontAwesome,
+												cName: element.descricao + '-item',
+												admin: element.admin,
+												isActive: element.ativo
+											}
+										]);
+									}
+								}
+							});
+							
 						} else {
 							console.log('Erro ao carregar menu');
 						}
