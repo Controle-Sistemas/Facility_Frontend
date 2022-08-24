@@ -43,3 +43,16 @@ export function formatData(data: string) {
 	const dataFormatada = `${dataSplit[2]}/${dataSplit[1]}/${dataSplit[0]}`;
 	return dataFormatada;
 }
+
+export function formatTime(time: string){
+	const timeSplit = time.split(':')
+	for (let i = 0; i < timeSplit.length; i++) {
+		if(timeSplit[i].length <= 1){
+			timeSplit[i] = `0${timeSplit[i]}`
+		}
+	}
+		
+	
+	const horaFormatada = `${timeSplit[0]}:${timeSplit[1]}:${timeSplit[0]}`
+	return horaFormatada
+}

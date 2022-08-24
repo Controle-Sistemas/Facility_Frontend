@@ -103,6 +103,7 @@ export const DisabledInputContainer = styled.div`
 	display: flex;
 	align-items: flex-start;
 	justify-content: space-between;
+	gap:.5rem;
 	flex-direction: row;
 	@media (max-width: 1040px) {
 		width: 100%;

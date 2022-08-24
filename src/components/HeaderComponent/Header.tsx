@@ -13,11 +13,19 @@ import './header.css';
 export default function Header() {
 	const [ open, setOpen ] = useState(false); // estado para abrir e fechar a box do usuário
 	const [ user, setUser ] = useState<UserDataType>({}); // estado para armazenar o usuário logado
+	const [internalUser, setIntenalUser] = useState({
+		NOME:"",
+		USUARIO:"",
+		EMAIL:""
+	})
 	const cnpj = localStorage.getItem('cnpj'); // pega o cnpj do usuário logado
+	const idUser = cookie.get('id')
+	const isInternal = window.location.pathname.includes("interno")
+	console.log(isInternal)
 	
 
 	useEffect(() => {
-		if (cnpj) {
+		if (cnpj && !isInternal) {
 			axios
 				.get(BASE_URL + `/clientes/usuario/${cnpj}`)
 				.then((res) => {
@@ -30,8 +38,16 @@ export default function Header() {
 				.catch((err) => {
 					console.log(err);
 				});
-		} else {
-			console.log('Usuário não logado');
+		} else if(isInternal){
+			axios
+				.get(BASE_URL + `/internos/${idUser}`)
+				.then((res) => {
+						setIntenalUser(res.data.data[0]); // seta o 
+
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
 	}, [cnpj]);
 	const handleOpen = () => {
@@ -46,7 +62,7 @@ export default function Header() {
 	};
 
 	
-
+	console.log(internalUser)
 	const handleLogout = () => {
 		localStorage.removeItem('cnpj'); // remove o cnpj do usuário logado
 		localStorage.removeItem('token'); // remove o token do usuário logado
@@ -59,44 +75,66 @@ export default function Header() {
 			<div className="header-content">
 				<div className="header-content-left" />
 				<div className="header-content-left-icons">
-					<NotificationIcon />
-
+					{!isInternal && (
+						<NotificationIcon />
+					)}
 					<div className="header-content-user icon-header" onClick={handleOpen}>
 						<i className="fa-solid fa-circle-user" id="user-icon" />
 					</div>
 				</div>
 			</div>
 			<div className="header-content-info-user">
-				<div className="header-content-info-user-icon info-icon">
-					<i className="fa-solid fa-circle-user" id="user-icon" />
-					<p>{user.NOME}</p>
-				</div>
+				{isInternal ? (
+					<> 
+					<div className="header-content-info-user-icon info-icon">
+						<i className="fa-solid fa-circle-user" id="user-icon" />
+						<p>{internalUser.NOME}</p>
+					</div>
+					<span>
+						<p className="little-text">Email:</p>
+						<p>{internalUser.EMAIL}</p>
+					</span>
+					<span>
+						<p className="little-text">Usuário:</p>
+						<p>{internalUser.USUARIO}</p>
+					</span>
 
+				</>
+				) : (
+					<> 
+					<div className="header-content-info-user-icon info-icon">
+						<i className="fa-solid fa-circle-user" id="user-icon" />
+						<p>{user.NOME}</p>
+					</div>
+					<span>
+						<p className="little-text">Email:</p>
+						<p>{user.EMAIL}</p>
+					</span>
+					<span>
+						<p className="little-text">Usuário:</p>
+						<p>{cnpjMask(user.CNPJ)}</p>
+					</span>
+					
+				</>
+				)}
 				<span>
-					<p className="little-text">Email:</p>
-					<p>{user.EMAIL}</p>
-				</span>
-				<span>
-					<p className="little-text">CNPJ:</p>
-					<p>{cnpjMask(cnpj)}</p>
-				</span>
-				<span>
-					{window.location.pathname.includes('/admin') ? (
-						<Link to="/admin/change-password" className="change-password" onClick={handleOpen}>
-							<i className="fa-solid fa-key" />Alterar Senha
+						{window.location.pathname.includes('/admin') ? (
+							<Link to="/admin/change-password" className="change-password" onClick={handleOpen}>
+								<i className="fa-solid fa-key" />Alterar Senha
+							</Link>
+						) : (
+							<Link to="/user/change-password" className="change-password" onClick={handleOpen}>
+								<i className="fa-solid fa-key" />Alterar Senha
+							</Link>
+						)}
+					</span>
+					<span>
+						<Link to="/login" className="logout" onClick={handleLogout}>
+							<i className="fa-solid fa-right-from-bracket" />Sair
 						</Link>
-					) : (
-						<Link to="/user/change-password" className="change-password" onClick={handleOpen}>
-							<i className="fa-solid fa-key" />Alterar Senha
-						</Link>
-					)}
-				</span>
-				<span>
-					<Link to="/login" className="logout" onClick={handleLogout}>
-						<i className="fa-solid fa-right-from-bracket" />Sair
-					</Link>
-				</span>
+					</span>
 			</div>
+				
 		</div>
 	);
 }

@@ -1,0 +1,20 @@
+*{
+    margin:0;
+    padding:0;
+}
+
+.MuiTreeItem-label{
+    margin:0;
+
+}
+.css-1g86id8-MuiTreeItem-content{
+    padding:0 !important;
+}
+.MuiTreeItem-content{
+    padding:0;
+}
+.MuiTreeItem-iconContainer{
+    width:0 !important;
+    margin:0 !important;
+
+}

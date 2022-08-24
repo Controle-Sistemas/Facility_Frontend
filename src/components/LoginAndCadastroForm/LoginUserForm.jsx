@@ -213,8 +213,8 @@ export function LoginUserForm() {
                     )}
                     
                     
-                    <ForgotPasswordSpan onClick={handleSetForgotPassword}>{isForgotPasswordVisible ? "Informe o CNPJ para enviarmos sua nova senha" : "Esqueci minha senha/Não recebi o email"}</ForgotPasswordSpan>
-                    <ForgotPassword isVisible={isForgotPasswordVisible} />
+                    <ForgotPasswordSpan onClick={handleSetForgotPassword}>{isForgotPasswordVisible ? `Informe o ${isInternal ? "usuário" : "CNPJ"} para enviarmos sua nova senha`: "Esqueci minha senha/Não recebi o email"}</ForgotPasswordSpan>
+                    <ForgotPassword isVisible={isForgotPasswordVisible} isInternal={isInternal} />
                      {
                         !isForgotPasswordVisible &&
                         (

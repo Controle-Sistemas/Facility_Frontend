@@ -22,6 +22,7 @@ import {PaginaDocumento} from './pages/PaginaDocumento';
 import {NotFound} from './pages/ErrorPage/NotFound';
 import {PaginaTutorial} from './pages/TutoriaisUsuario/PaginaTutorial'
 import { PaginaChamados } from './pages/PaginaChamados';
+import { PaginaChamado } from './pages/PaginaChamado';
 
 function App() {
 	//Rotas do React
@@ -202,6 +203,15 @@ function App() {
 							</ProtectedRoute>
 						}
 					/>
+					<Route
+						path="/admin/chamado/:id"
+						element={
+							<ProtectedRoute>
+								<Header />
+								<PaginaChamado />
+							</ProtectedRoute>
+						}
+					/>
 
 
 					{/*Rotas de Internos*/}
@@ -212,6 +222,15 @@ function App() {
 							<ProtectedRoute>
 								<Header />
 								<PaginaChamados/>
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path="/interno/chamado/:id"
+						element={
+							<ProtectedRoute>
+								<Header />
+								<PaginaChamado />
 							</ProtectedRoute>
 						}
 					/>
