@@ -30,6 +30,7 @@ import FilterComponent from '../../components/filterComponent';
 export function PaginaChamados(props) {
 	const [ chamadosData, setChamadosData ] = useState([]);
     const [internalData, setInternalData] = useState([])
+    const [ocorrencias, setOcorrencias] = useState([])
 	const [ setores, setSetores ] = useState([]);
     const [isModalChamadoOpen, setIsModalChamadoOpen] = useState(false)
     const [isModalSetorOpen,setIsModalSetorOpen] = useState(false)
@@ -67,6 +68,7 @@ export function PaginaChamados(props) {
                     }
                 });
 
+
 			} else {
                 axios.get(BASE_URL + '/internos/' + idUser).then((res) => {
                     setInternalData(res.data.data);
@@ -77,6 +79,11 @@ export function PaginaChamados(props) {
 				});
                 
 			}
+
+            axios.get(BASE_URL + '/ocorrencias/').then(res => {
+                setOcorrencias(res.data.data)
+            })
+            
 		},
 		[idUser, isAdmin, setores]
 	);
@@ -91,13 +98,20 @@ export function PaginaChamados(props) {
                     timer:2000,
                     showConfirmButton:true
                 })
-                axios.get(BASE_URL + '/chamados/').then((res) => {
-                    if(res.status === 200){
-					    setChamadosData(res.data.data);
-                    } else {
-                        setChamadosData([])
-                    }
-				});
+                if(isAdmin){
+                    axios.get(BASE_URL + '/chamados/').then((res) => {
+                        if(res.status === 200){
+                            setChamadosData(res.data.data);
+                        } else {
+                            setChamadosData([])
+                        }
+                    });
+                } else {
+                    axios.get(BASE_URL + '/chamados/setor/' + setores).then((res) => {
+                        setChamadosData(res.data.data);
+                    });
+                }
+                
                 handleOpenModalChamado()
             }
         })
@@ -209,7 +223,7 @@ export function PaginaChamados(props) {
 						</ButtonRow>
 					</ButtonGroup>
 
-                <ChamadosComponent chamados={searchedData} isAdmin={isAdmin} filterBy={filterBy} order={order} orderBy={orderBy} />
+                <ChamadosComponent chamados={searchedData} isAdmin={isAdmin} filterBy={filterBy} order={order} orderBy={orderBy} ocorrencias={ocorrencias}/>
 
                 <ModalForm
                     isModalOpen={isModalChamadoOpen}

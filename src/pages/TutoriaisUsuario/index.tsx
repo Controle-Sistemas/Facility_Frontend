@@ -22,6 +22,8 @@ import { FormSortTutoriais } from '../../components/Modais/forms/FormSortTutoria
 import FilterComponent from '../../components/filterComponent';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { FormFilterTutoriais } from '../../components/Modais/forms/FormFilterTutoriais';
 
 export function TutorialPage() {

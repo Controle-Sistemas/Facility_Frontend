@@ -22,6 +22,8 @@ interface ChamadosProps {
     order: string;
 	orderBy: string;
 	filterBy: string;
+	ocorrencias: any[];
+
 }
 
 interface ChamadosData {
@@ -35,12 +37,17 @@ interface ChamadosData {
 	prioridade: string | number;
 	nomeStatus: string;
 	statusId:number;
+	clienteId:  number;
+	clienteName?: string;
+	ocorrencias?: any[];
+
 }
 
-export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy }: ChamadosProps) {
+export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocorrencias }: ChamadosProps) {
 	const [ internos, setInternos ] = useState([]);
 	const [ setores, setSetores ] = useState([]);
 	const [statusChamados, setStatusChamado] = useState([])
+	const [clientes, setClientes] = useState([])
 	const organizedData: ChamadosData[] = [];
 
 	useEffect(() => {
@@ -52,6 +59,9 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy }: C
 		});
 		axios.get(BASE_URL+'/status-chamado/').then(res => {
 			setStatusChamado(res.data.data)
+		})
+		axios.get(BASE_URL+'/clientes/admin').then(res => {
+			setClientes(res.data.data)
 		})
 	}, []);
 
@@ -113,12 +123,18 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy }: C
 					dataPrevisao: '',
 					prioridade: chamado.PRIORIDADE,
 					statusId: chamado.STATUS,
-					nomeStatus:""
+					nomeStatus:"",
+					clienteId:chamado.IDCLIENTE,
+					ocorrencias:[]
 				};
 				const [ data, hora ] = chamado.DATAINCLUSAO.split(' ');
 				aux.data = formatData(data);
 				aux.hora = formatTime(hora);
 				aux.dataPrevisao = formatData(chamado.PREVISAO);
+
+				if(aux.dataPrevisao < formatData(dataAtual)){
+					aux.statusId = 5
+				}
 
 				if (chamado.IDINTERNO === interno.ID) {
 					aux.postadoPor = interno.USUARIO;
@@ -147,8 +163,28 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy }: C
 			})
 		})
 	}
+
+	function setClienteName(data:ChamadosData[]){
+		clientes.forEach(cliente => {
+			data.forEach(item => {
+				if(item.clienteId === cliente.ID){
+					item.clienteName = cliente.NOME
+				} 
+			})
+		})
+	}
+
+	function setOcorrenciasChamados(data){
+		ocorrencias.forEach(ocorrencia => {
+			data.forEach(item => {
+				if(item.id === ocorrencia.IDCHAMADO){
+				}
+			})
+		})
+	}
 	organizeData()
 	setStatus(organizedData)
+	setClienteName(organizedData)
 
 	return (
 		<ChamadosContainer>
@@ -168,7 +204,7 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy }: C
 											{chamado.prioridade}
 										</span>
 									</PrioritySection>
-									<PrioritySection>
+									<PrioritySection status={chamado.statusId}>
 										<span>
 											<i className="fa-solid fa-circle-exclamation" />
 											{chamado.nomeStatus}
@@ -191,9 +227,12 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy }: C
 
 								<ChamadoHeader>
 									<div>
-										<span>{chamado.data}</span> -
-										<span>{chamado.dataPrevisao}</span>
+										<span>{chamado.data}</span> - <span>{chamado.dataPrevisao}</span>
+										
 									</div>
+									<ChamadoHeaderPart>
+										Cliente:<span>{chamado.clienteName}</span>
+									</ChamadoHeaderPart>
 									<ChamadoHeaderPart>
 										Chamado feito por:
 										<span>{chamado.postadoPor}</span>

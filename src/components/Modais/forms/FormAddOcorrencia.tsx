@@ -1,48 +1,73 @@
-import { ButtonGroup,FormContainer, InputContainer,InputGroupContainer, DisabledInputContainer } from "../../styledComponents/containers";
-import {PrimaryButton} from "../../styledComponents/buttons";
-import { useState } from "react";
+import { ButtonRow, FormContainer, InputContainer, DisabledInputContainer } from '../../styledComponents/containers';
+import { PrimaryButton } from '../../styledComponents/buttons';
+import { useState } from 'react';
+import { Editor } from '@tinymce/tinymce-react';
 
+export function FormAddOcorrencia({ onAdd, idInterno, chamado, setor, statusChamado }) {
+	const date = new Date();
+	const ano = date.getFullYear();
+	const mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+	const dia = date.getDate();
+	const hora = date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
 
+	const [ ocorrencia, setOcorrencia ] = useState({
+		IDCHAMADO: chamado.ID,
+		IDINTERNO: idInterno | 99,
+		SETOR: setor.ID,
+		ATIVO: true,
+		STATUS: statusChamado.ID,
+		DESCRICAO: '',
+		DATAINCLUSAO: `${ano}-${mes}-${dia} ${hora}`
+	});
 
+	function handleChangeValues(e) {
+		setOcorrencia({
+			...ocorrencia,
+			[e.target.name]: e.target.value
+		});
+	}
 
-export function FormAddOcorrencia({onAdd, idInterno, chamado, setor,statusChamado}){
-    const [ocorrencia,setOcorrencia] = useState({
-        IDCHAMADO: chamado.ID,
-        IDINTERNO: idInterno,
-        SETOR: setor.ID,
-        ATIVO: true,
-        STATUS:statusChamado.ID,
-        DESCRICAO: ""
-    })
+	function handleChangeText(content, editor) {
+		setOcorrencia({ ...ocorrencia, DESCRICAO: content });
+	}
 
-    function handleChangeValues(e){
-        setOcorrencia({
-            ...ocorrencia,
-            [e.target.name]:e.target.value
-        })
-    }
+	function handleSubmit(e) {
+		e.preventDefault();
 
-    return (
-        <FormContainer>
-            <DisabledInputContainer>
-					<InputContainer>
-						<label htmlFor="empresa">Usuário interno:</label>
-						<input className="form-control" placeholder={`${idInterno ? idInterno : 'Admin'}`} disabled />
-					</InputContainer>
-					<InputContainer>
-						<label htmlFor="idcloud">Chamado: </label>
-						<input className="form-control" placeholder={`${chamado.TITULO}`} disabled />
-					</InputContainer>
-                    <InputContainer>
-                        <label htmlFor="idcloud">Setor: </label>
-						<input className="form-control" placeholder={`${setor.NOME}`} disabled />
-                    </InputContainer>
-				</DisabledInputContainer>
-                <InputContainer>
-                        <label htmlFor="idcloud">Descrição: </label>
-						<textarea className="form-control" name="DESCRICAO" onChange={handleChangeValues} />
-                </InputContainer>
+		onAdd(ocorrencia);
+	}
 
-        </FormContainer>
-    )
+	return (
+		<FormContainer onSubmit={handleSubmit}>
+			<DisabledInputContainer>
+				<InputContainer>
+					<label htmlFor="empresa">Usuário interno:</label>
+					<input className="form-control" placeholder={`${idInterno ? idInterno : 'Admin'}`} disabled />
+				</InputContainer>
+				<InputContainer>
+					<label htmlFor="idcloud">Chamado: </label>
+					<input className="form-control" placeholder={`${chamado.TITULO}`} disabled />
+				</InputContainer>
+				<InputContainer>
+					<label htmlFor="idcloud">Setor: </label>
+					<input className="form-control" placeholder={`${setor.NOME}`} disabled />
+				</InputContainer>
+			</DisabledInputContainer>
+			<InputContainer>
+				<label htmlFor="idcloud">Descrição: </label>
+				<Editor
+					value={ocorrencia.DESCRICAO}
+					init={{
+						height: 150,
+						width: '100%',
+						menubar: false
+					}}
+					onEditorChange={handleChangeText}
+				/>
+			</InputContainer>
+			<ButtonRow>
+				<PrimaryButton type="submit">Adicionar ocorrencia</PrimaryButton>
+			</ButtonRow>
+		</FormContainer>
+	);
 }

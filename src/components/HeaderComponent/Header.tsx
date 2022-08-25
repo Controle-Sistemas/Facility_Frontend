@@ -21,7 +21,6 @@ export default function Header() {
 	const cnpj = localStorage.getItem('cnpj'); // pega o cnpj do usuário logado
 	const idUser = cookie.get('id')
 	const isInternal = window.location.pathname.includes("interno")
-	console.log(isInternal)
 	
 
 	useEffect(() => {
@@ -62,7 +61,6 @@ export default function Header() {
 	};
 
 	
-	console.log(internalUser)
 	const handleLogout = () => {
 		localStorage.removeItem('cnpj'); // remove o cnpj do usuário logado
 		localStorage.removeItem('token'); // remove o token do usuário logado

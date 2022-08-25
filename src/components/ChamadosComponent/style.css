@@ -18,3 +18,8 @@
     margin:0 !important;
 
 }
+
+.css-1g86id8-MuiTreeItem-content.Mui-selected.Mui-focused,
+.css-1g86id8-MuiTreeItem-content.Mui-selected{
+    background-color:transparent !important;
+}

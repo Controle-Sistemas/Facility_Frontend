@@ -299,9 +299,6 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
             <TreeViewComponent
                     defaultCollapseIcon={<ExpandMoreIcon />}
                     defaultExpandIcon={<ChevronRightIcon />}
-                    
-                    
-                    
                     >
 			{TreeViewData ? sortTutorials(filterTutorials(TreeViewData)).map((item) => {
                 

@@ -31,7 +31,7 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 	const [ setores, setSetores ] = useState([]);
 	const [ hasFile, setHasFile ] = useState(false);
 	const [ clientes, setClientes ] = useState([]);
-	const [ searchText, setSearchText ] = useState('');
+	
 	useEffect(() => {
 		axios.get(BASE_URL + '/status-chamado/').then((res) => {
 			setStatusChamado(res.data.data);
@@ -58,7 +58,6 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 
 	function handleSubmit(e) {
 		e.preventDefault();
-		console.log(chamadoData)
 		const date = new Date();
 		const ano = date.getFullYear();
 		const mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
@@ -86,7 +85,7 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 			}
 		}
 
-		// onAdd(data);
+		onAdd(data);
 	}
 
 
@@ -114,6 +113,7 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 							menubar: false
 						}}
 						onEditorChange={handleChangeText}
+						
 					/>
 				</InputContainer>
 				<InputContainer>
@@ -128,6 +128,7 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 							console.log(newInputValue)
 							setChamadoData({...chamadoData,CLIENTE:newInputValue});
 						}}
+						
 					/>
 				</InputContainer>
 
@@ -146,7 +147,7 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 						<option value="" defaultChecked>
 							Selecione um setor...
 						</option>
-						{setores ? (
+						{setores.length > 0 ? (
 							setores.map((setor) => (
 								<option key={setor.ID} value={setor.ID}>
 									{setor.NOME}

@@ -16,7 +16,8 @@ export const ChamadoList = styled.ul`
 	margin-bottom: .5rem;
 	width: 100%;
 	cursor: pointer;
-	box-shadow: 0 .1rem .2rem rgba(0, 0, 0, 0.1);
+	box-shadow: 0 .1rem .2rem rgba(0, 0, 0, 0.2);
+	border:1px solid #e3e3e3;
 	border-radius: .3rem;
 	background-color: ${(props) => (props.selected ? '#cdcdcd' : '#fefeee')};
 	transition: background-color .2s ease-in-out;
@@ -97,7 +98,7 @@ export const ChamadoHeader = styled.div`
 	justify-content: space-between;
 	width: 100%;
 	gap: 1rem;
-	color: #c0c0c0;
+	color: #939393;
 	font-size: .8rem;
 	font-family: 'Open Sans', sans-serif;
 `;
@@ -120,9 +121,9 @@ export const ChamadoHeaderPart = styled.div`
 `;
 export const PrioritySection = styled.div`
 	color: ${(props) =>
-		props.prioridade === 'Urgente' || props.prioridade === 'Alta'
+		props.prioridade === 'Urgente' || props.prioridade === 'Alta' || props.status === 1 || props.status === 5
 			? '#c82333'
-			: props.prioridade === `Média` ? '#f5a623' : '#00a84f'};
+			: props.prioridade === `Média` ||  props.status === 2 ? '#f5a623' : props.prioridade === 'Baixa' || props.status === 3 ? '#00a84f' : "#003775"};
 	& > span {
 		display: flex;
 		align-items:center;

@@ -13,22 +13,28 @@ import {
 	ChamadoFileContainer,
 	ChamadoTitle,
 	ChamadoPriority,
-    OcorrenciasContainer
+    OcorrenciasContainer,
+	OcorrenciaItem,
+	ChamadoHeader,
+	ChamadoStatus
 } from './styled';
 import { ButtonActionTable } from '../../components/styledComponents/buttons';
 import { ImagePostIt } from '../../components/PostItImageComponent';
 import { formatData, formatTime } from '../../utils/Masks';
 import ModalForm from '../../components/Modais/modalForm';
 import { FormAddOcorrencia } from '../../components/Modais/forms/FormAddOcorrencia';
+import { FormEditChamado } from '../../components/Modais/forms/FormEditChamado';
 import Sidebar from '../../components/Sidebar/sidebar';
 import Swal from 'sweetalert2';
 import TreeViewComponent from '@mui/lab/TreeView';
 import TreeItem from '@mui/lab/TreeItem';
 import cookie from 'js-cookie'
+import {ErrorPage} from '../ErrorPage/Error'
 
 export function PaginaChamado() {
 	const [ chamado, setChamado ] = useState<any>({});
 	const [interno, setInterno] = useState<any>({})
+	const [internos, setInternos] = useState<any>({})
 	const [ setor, setSetor ] = useState<any>({});
 	const [ statusChamado, setStatusChamado ] = useState<any>({});
     const [ocorrencias, setOcorrencias] = useState([])
@@ -36,6 +42,13 @@ export function PaginaChamado() {
 	const [ error, setError ] = useState(false);
 	const [ modalEditChamadoIsOpen, setModalEditChamadoIsOpen ] = useState(false);
 	const [ modalOcorrenciaIsOpen, setModalOcorrenciaIsOpen ] = useState(false);
+	const date = new Date();
+	const ano = date.getFullYear();
+	const mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+	const dia = date.getDate();
+	const hora =
+		date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
+
 
 	const navigate = useNavigate();
 
@@ -53,6 +66,7 @@ export function PaginaChamado() {
 					setChamado(res.data.data[0]);
 					const sectorId = res.data.data[0].SETOR
 					const status = res.data.data[0].STATUS
+					const internalId = res.data.data[0].IDINTERNO
 					
 							axios.get(BASE_URL + '/setores/' + sectorId).then((res) => {
 								setSetor(res.data.data[0]);
@@ -61,8 +75,20 @@ export function PaginaChamado() {
 								setStatusChamado(res.data.data[0]);
 							});
 							axios.get(`${BASE_URL}/ocorrencias/chamado/${idChamado}`).then((res) => {
-								setOcorrencias(res.data.data[0]);
+								setOcorrencias(res.data.data);
 							});
+							axios.get(BASE_URL + '/internos/').then((res) => {
+								setInternos(res.data.data);
+							});
+							if(internalId){
+								axios.get(BASE_URL+'/internos/'+internalId).then(res => {
+									console.log(res)
+									setInterno(res.data.data[0])
+								})
+							} else {
+								interno["USUARIO"] = 'Admin'
+							}
+							
 
 					
 							
@@ -74,11 +100,7 @@ export function PaginaChamado() {
 					setLoading(false);
 				});
 
-				if(idInterno){
-					axios.get(BASE_URL+'/internos/'+idInterno).then(res => {
-						setInterno(res.data.data)
-					})
-				}
+					
 
 			
 		},
@@ -109,6 +131,27 @@ export function PaginaChamado() {
 		});
 	}
 
+	function handleOpenModalDeleteOcorrencia(e,id) {
+		Swal.fire({
+			title: 'Você tem certeza?',
+			text: 'Você não poderá reverter isso!',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#003775',
+			cancelButtonColor: '#DC354f',
+			confirmButtonText: 'Sim, deletar!'
+		}).then((result) => {
+			if (result.value) {
+				axios.delete(`${BASE_URL}/ocorrencias/${id}`).then((res) => {
+					Swal.fire('Deletado!', 'A ocorrencia foi deletada.', 'success')
+					axios.get(`${BASE_URL}/ocorrencias/chamado/${idChamado}`).then((res) => {
+						setOcorrencias(res.data.data);
+					});
+				});
+			}
+		});
+	}
+
 	function handleOpenModalEditChamado() {
 		setModalEditChamadoIsOpen(!modalEditChamadoIsOpen);
 	}
@@ -117,12 +160,21 @@ export function PaginaChamado() {
         setModalOcorrenciaIsOpen(!modalOcorrenciaIsOpen)
     }
 
-	function onEdit(chamado) {
-		axios.patch(`${BASE_URL}/chamados/${idChamado}`, chamado).then((res) => {
-			axios.get(`${BASE_URL}/chamados/${idChamado}`).then((res) => {
+	function onEdit(newChamado) {
+		axios.patch(`${BASE_URL}/chamados/${idChamado}`, newChamado).then((res) => {
+
+			handleOpenModalOcorrencia()
+			axios.get(BASE_URL + '/setores/' + newChamado.SETOR).then((res) => {
+				setSetor(res.data.data[0]);
+			});
+			axios.get(BASE_URL + '/status-chamado/' + newChamado.STATUS).then((res) => {
+				setStatusChamado(res.data.data[0]);
+			});
+			axios.get(`${BASE_URL}/chamado/${idChamado}`).then((res) => {
 				Swal.fire('Atualizado!', 'O chamado foi atualizado.', 'success');
 				setChamado(res.data.data[0]);
 			});
+			handleOpenModalEditChamado()
 		});
 	}
 
@@ -130,9 +182,11 @@ export function PaginaChamado() {
         axios.post(`${BASE_URL}/ocorrencias/`,ocorrencia).then(res => {
             axios.get(`${BASE_URL}/ocorrencias/chamado/${idChamado}`).then((res) => {
 				Swal.fire('Adicionada!', 'Ocorrencia adicionada com sucesso.', 'success');
-				setOcorrencias(res.data.data[0]);
+				setOcorrencias(res.data.data);
 			});
-            handleOpenModalOcorrencia()
+			if(modalOcorrenciaIsOpen){
+				handleOpenModalOcorrencia()
+			}
         })
     }
 
@@ -144,12 +198,23 @@ export function PaginaChamado() {
 		horaFormatada = formatTime(hora);
 	}
 
+	function ordernarOcorrencias(data){
+		return data.sort((a, b) => {
+			//Ordena os documentos pelo campo orderBy
+			if (a['DATAINCLUSAO'] > b['DATAINCLUSAO']) {
+				return -1;
+			}
+			if (a['DATAINCLUSAO'] < b['DATAINCLUSAO']) {
+				return 1;
+			}
+			return 0;
+		});
+	}
+
 	if (loading) {
 		return <LoadingComponent />;
 	} else if (error) {
-		return <h1>Error oooooooooooooo</h1>;
-	} else if(interno.SETOR !== chamado.SETOR && !isAdmin){
-		navigate("/interno/chamados")
+		return <ErrorPage errorMessage='Não foi possivel carregar os chamados' dark/>
 	} else {
 		return (
 			<ContainerAdmin>
@@ -157,6 +222,11 @@ export function PaginaChamado() {
 					<Sidebar />
 				</SidebarContainer>
 				<ContainerAdminContas>
+					<ChamadoHeader>
+								<div>
+								Publicado por: <span>{interno.USUARIO}</span> dia <span>{dataFormatada}</span>  as <span>{horaFormatada}</span>
+								</div>
+					</ChamadoHeader>
 					<ChamadoContainer>
 						<ChamadoActions>
 							<ChamadoPriority prioridade={chamado.PRIORIDADE}>
@@ -176,34 +246,35 @@ export function PaginaChamado() {
 								<span>
 
 							{isAdmin && (
-									<><ButtonActionTable primary onClick={handleOpenModalEditChamado}>
-                                        <i className="fas fa-edit" />
-                                    </ButtonActionTable><ButtonActionTable danger onClick={handleOpenModalDeleteChamado}>
+									<><ButtonActionTable danger onClick={handleOpenModalDeleteChamado}>
                                             <i className="fas fa-trash" />
                                         </ButtonActionTable></>
 							)}
+							<ButtonActionTable primary onClick={handleOpenModalEditChamado}>
+                                        <i className="fas fa-edit" />
+                                    </ButtonActionTable>
                                 <ButtonActionTable primary onClick={handleOpenModalOcorrencia}>
                                         <i className="fas fa-plus" />
                                     </ButtonActionTable>
 								</span>
 
 						</ChamadoActions>
-						<ChamadoActions>
-							<span>
-								{dataFormatada} - {formatData(chamado.PREVISAO)}
-							</span>
-							<span>{horaFormatada}</span>
-						</ChamadoActions>
+						
 
 						<ChamadoTitle>
 							<h1>{chamado.TITULO}</h1>
 						</ChamadoTitle>
 						<ChamadoBody>
 							<ChamadoBodyRow>
-								<ChamadoBodyRowLabel>
-									<h4>Status</h4>
-									<p>{statusChamado.NOME}</p>
+							<ChamadoBodyRowLabel>
+
+								<ChamadoStatus>
+									<h4>Status: <span>{statusChamado.NOME}</span></h4>
+									<h4>Previsão: <span>{formatData(chamado.PREVISAO)}</span></h4>
+
+								</ChamadoStatus>
 								</ChamadoBodyRowLabel>
+
 								<ChamadoBodyRowLabel>
 									<h4>Setor</h4>
 									<p>{setor.NOME}</p>
@@ -219,19 +290,60 @@ export function PaginaChamado() {
 								</ChamadoBodyRow>
 							)}
 
-                            {chamado.FILE && (
+                            {/* {chamado.FILE && (
+							<ChamadoBodyRow>
+								<ChamadoFileContainer>
+								<h4>Arquivos</h4>
                                 <span>{chamado.FILE}</span>
-                            )}
+								</ChamadoFileContainer>
+							
+
+							</ChamadoBodyRow>
+
+								
+                            )} */}
+							<h4>Ocorrencias</h4>
                             <TreeViewComponent>
                             <OcorrenciasContainer>
-                                {ocorrencias.length > 0 ? ocorrencias.map(ocorrencia => (
-                                    <TreeItem nodeId={"sim"} label={"ocorrencia 1"}>
-                                    <TreeItem nodeId={"teste"} label={"teste 1 "}/>
-                                    
-                                </TreeItem>
+                                {ocorrencias.length > 0 ? ordernarOcorrencias(ocorrencias).map((ocorrencia,index) => (
+									<>
+                                    <TreeItem nodeId={index.toString()} label={
+										<ChamadoHeader>
+										{internos.map(interno => {
+											if(ocorrencia.IDINTERNO === interno.ID){
+												return (
+													<>
+														<div>#{index} -  <span> {interno.NOME} </span></div>
+														<div>
+														<span> {formatData(ocorrencia.DATAINCLUSAO.split(' ')[0])} </span> 
+														<span> {formatTime(ocorrencia.DATAINCLUSAO.split(' ')[1])} </span>
+														</div>
+														
+													</>
+													
+												)
+											}
+										})}
+
+										</ChamadoHeader>
+									}>
+										<OcorrenciaItem>
+											<div dangerouslySetInnerHTML={{ __html: ocorrencia.DESCRICAO }}></div>
+											{isAdmin && (
+												<ButtonActionTable danger onClick={(e) => handleOpenModalDeleteOcorrencia(e, ocorrencia.ID)}>
+													<i className="fas fa-trash" />
+												</ButtonActionTable>
+											)}
+										</OcorrenciaItem>
+									</TreeItem>
+									
+									</>
+
+
                                 )) : (
                                     <h4>Não há ocorrencias</h4>
                                 )}
+								
                                 
 
 
@@ -245,12 +357,20 @@ export function PaginaChamado() {
                 <ModalForm
                     isModalOpen={modalOcorrenciaIsOpen}
                     isModalClosed={handleOpenModalOcorrencia}
-                    title="Adicionar Chamado"
-                    height="85vh"
+                    title="Adicionar Ocorrencia"
+                    height="65vh"
                     width="50%"
                     >
                         <FormAddOcorrencia onAdd={onAddOcorrencia} idInterno={idInterno} chamado={chamado} setor={setor} statusChamado={statusChamado} />
                     </ModalForm>
+					<ModalForm
+					 isModalOpen={modalEditChamadoIsOpen}
+					 isModalClosed={handleOpenModalEditChamado}
+					 title="Editar Chamado"
+					 height="85vh"
+					 width="50%">
+						<FormEditChamado setor={setor} isAdmin={isAdmin} chamado={chamado} setChamado={setChamado} atualizar={onEdit}/>
+					</ModalForm>
 			</ContainerAdmin>
 		);
 	}

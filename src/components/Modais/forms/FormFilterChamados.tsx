@@ -1,4 +1,4 @@
-import { CheckboxGroup, CheckboxContainer, FormContainer } from '../../../components/styledComponents/containers';
+import { CheckboxGroup, InputContainer, FormContainer } from '../../../components/styledComponents/containers';
 import { PrimaryButton } from '../../../components/styledComponents/buttons';
 import { useState, useEffect } from 'react';
 import axios from 'axios'
@@ -10,7 +10,7 @@ export function FormFilterChamados({handleClose, filterBy, setFilterBy}) {
 	const [status, setStatus] = useState([])
 
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event) => {
         setAuxFilterBy(event.target.value);
     }
 
@@ -20,42 +20,27 @@ export function FormFilterChamados({handleClose, filterBy, setFilterBy}) {
 		handleClose();
 	}
     useEffect(() => {
-		const radios = document.getElementsByName('filterOption') as unknown as HTMLInputElement[]
-
-        for(let i = 0; i < radios.length; i++){
-            if(radios[i].value === auxFilterBy){
-                radios[i].defaultChecked = true;
-            }
-                
-        }
 
 		axios.get(BASE_URL+"/status-chamado").then(res => {
 			setStatus(res.data.data)
 		})
     }, [auxFilterBy])
 
-    
 
 
 	return (
 		<FormContainer>
-			<CheckboxContainer
+			<InputContainer
 				
 			>
 				<h4>Filtrar por:</h4>
-				<CheckboxGroup>
-					<input type="radio" name="filterOption" value="TODOS" className='form-check-input' onChange={handleChange} />
-					<label htmlFor="">Todos</label>
-				</CheckboxGroup>
+				<select className="form-control" name="PRIORIDADE" onChange={handleChange} required>
+					<option value="TODOS">Todos</option>
 				{status.map(item => (
-					<CheckboxGroup key={item.ID}>
-						<input type="radio" name="filterOption" value={item.ID} className='form-check-input' onChange={handleChange} />
-						<label htmlFor="">{item.NOME}</label>
-					</CheckboxGroup>
+					<option value={item.ID} selected={item.ID === Number(filterBy)}>{item.NOME}</option>
 				))}
-				
-				
-			</CheckboxContainer>
+				</select>
+			</InputContainer>
 			<PrimaryButton onClick={handleSubmit}>Filtrar</PrimaryButton>
 		</FormContainer>
 	);

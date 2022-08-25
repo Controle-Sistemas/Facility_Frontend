@@ -131,6 +131,7 @@ export function LoginUserForm() {
             if (res.status === 200) { 
                 cookie.set('id', res.data.id)
                 setToken(res.data.token) //Setando o token nos cookies
+                setAdmin(res.data.isAdmin)
                 navigate("/interno/chamados")
             }
             return { token:res.data.token} //Retornando o token
