@@ -19,7 +19,9 @@ import { FormAddSetor } from '../../components/Modais/forms/FormAddSetor';
 import { FormAddStatusChamado } from '../../components/Modais/forms/FormAddStatusChamado';
 import {ChamadosComponent} from '../../components/ChamadosComponent'
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import SortIcon from '@mui/icons-material/Sort';
+import SortDownIcon from '@mui/icons-material/ArrowDownward';
+import SortUpIcon from '@mui/icons-material/ArrowUpward';
+
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {FormSortChamados} from '../../components/Modais/forms/FormSortChamados'
 import { FormFilterChamados } from '../../components/Modais/forms/FormFilterChamados';
@@ -70,13 +72,18 @@ export function PaginaChamados(props) {
 
 
 			} else {
+                console.log(idUser)
                 axios.get(BASE_URL + '/internos/' + idUser).then((res) => {
                     setInternalData(res.data.data);
                     setSetores(res.data.data[0].SETOR)
-                });
+                }).catch(err => {
+                    console.log(err)
+                })
 				axios.get(BASE_URL + '/chamados/setor/' + setores).then((res) => {
 					setChamadosData(res.data.data);
-				});
+				}).catch(err => {
+                    console.log(err)
+                })
                 
 			}
 
@@ -218,7 +225,7 @@ export function PaginaChamados(props) {
 								<FormatListBulletedIcon />
 							</PrimaryButton>
 							<PrimaryButton onClick={handleRequestSort}>
-								<SortIcon />
+								{order === `desc` ? <SortDownIcon/> : <SortUpIcon/>}
 							</PrimaryButton>
 						</ButtonRow>
 					</ButtonGroup>

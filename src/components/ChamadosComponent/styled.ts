@@ -138,3 +138,24 @@ export const ChamadosActions = styled.span`
 	justify-content: end;
 	gap: 0.5rem;
 `;
+
+export const ChamadosLabel = styled.div`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	width:100%;
+`
+
+export const OcurrencySpan = styled.span`
+display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:  center;
+    border-radius: 50%;
+    height: 2rem;
+    width: 2rem;
+    font-size: 1rem;
+    background-color: #003775;
+    color: #fefef5;
+`

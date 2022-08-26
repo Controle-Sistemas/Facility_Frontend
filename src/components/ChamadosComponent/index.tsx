@@ -12,7 +12,9 @@ import {
 	ChamadoList,
 	ChamadoHeader,
 	ChamadoHeaderPart,
-	PrioritySection
+	PrioritySection,
+	OcurrencySpan,
+	ChamadosLabel
 } from './styled';
 import { formatData, formatTime } from '../../utils/Masks';
 import './style.css';
@@ -39,8 +41,8 @@ interface ChamadosData {
 	statusId:number;
 	clienteId:  number;
 	clienteName?: string;
-	ocorrencias?: any[];
-
+	arrayOcorrencias: any[];
+	ativo: boolean;
 }
 
 export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocorrencias }: ChamadosProps) {
@@ -125,7 +127,8 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 					statusId: chamado.STATUS,
 					nomeStatus:"",
 					clienteId:chamado.IDCLIENTE,
-					ocorrencias:[]
+					arrayOcorrencias:[],
+					ativo: chamado.ATIVO
 				};
 				const [ data, hora ] = chamado.DATAINCLUSAO.split(' ');
 				aux.data = formatData(data);
@@ -174,10 +177,11 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 		})
 	}
 
-	function setOcorrenciasChamados(data){
+	function setOcorrenciasChamados(data:ChamadosData[]){
 		ocorrencias.forEach(ocorrencia => {
 			data.forEach(item => {
 				if(item.id === ocorrencia.IDCHAMADO){
+					item.arrayOcorrencias.push(ocorrencia)
 				}
 			})
 		})
@@ -185,7 +189,7 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 	organizeData()
 	setStatus(organizedData)
 	setClienteName(organizedData)
-
+	setOcorrenciasChamados(organizedData)
 	return (
 		<ChamadosContainer>
 			<TreeViewComponent>
@@ -194,53 +198,69 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 						chamado.prioridade = chamado.prioridade === 1
 							? 'Baixa'
 							: chamado.prioridade === 2 ? 'Média' : chamado.prioridade === 3 ? 'Alta' : 'Urgente'
-						return (
-							<ChamadoList key={chamado.id}>
-								<ChamadoHeader>
 
-									<PrioritySection prioridade={chamado.prioridade}>
-										<span>
-											<i className="fa-solid fa-circle-exclamation" />
-											{chamado.prioridade}
-										</span>
-									</PrioritySection>
-									<PrioritySection status={chamado.statusId}>
-										<span>
-											<i className="fa-solid fa-circle-exclamation" />
-											{chamado.nomeStatus}
-										</span>
-									</PrioritySection>
-
-
-									
-
-								</ChamadoHeader>
-
-								<TreeItem nodeId={chamado.id.toString()} label={chamado.titulo} >
-                                    <Link to={`/${isAdmin ? "admin" : "interno"}/chamado/${chamado.id}`} style={{textDecoration:"none"}}>
-                                        <ChamadoDescription>
-                                            <div dangerouslySetInnerHTML={{__html:chamado.descricao}} />
-                                        </ChamadoDescription>
-                                    </Link>
-
-								</TreeItem>
-
-								<ChamadoHeader>
-									<div>
-										<span>{chamado.data}</span> - <span>{chamado.dataPrevisao}</span>
-										
-									</div>
-									<ChamadoHeaderPart>
-										Cliente:<span>{chamado.clienteName}</span>
-									</ChamadoHeaderPart>
-									<ChamadoHeaderPart>
-										Chamado feito por:
-										<span>{chamado.postadoPor}</span>
-										as {chamado.hora}
-									</ChamadoHeaderPart>
-								</ChamadoHeader>
-							</ChamadoList>
-						);
+							if(chamado.ativo || ((!chamado.ativo &&  filterBy === 'TODOS') || (!chamado.ativo && filterBy === "3"))){
+								return (
+									<ChamadoList key={chamado.id}>
+										<ChamadoHeader>
+		
+											<PrioritySection prioridade={chamado.prioridade}>
+												<span>
+													<i className="fa-solid fa-circle-exclamation" />
+													{chamado.prioridade}
+												</span>
+											</PrioritySection>
+											<PrioritySection status={chamado.statusId}>
+												<span>
+													<i className="fa-solid fa-circle-exclamation" />
+													{chamado.nomeStatus}
+												</span>
+											</PrioritySection>
+		
+		
+											
+		
+										</ChamadoHeader>
+		
+										<TreeItem nodeId={chamado.id.toString()} label={(
+											<ChamadosLabel>
+												<span>
+													{chamado.titulo}
+		
+												</span>
+												<OcurrencySpan>
+													{chamado.arrayOcorrencias.length}
+												</OcurrencySpan>
+		
+											</ChamadosLabel>
+										)
+										} >
+											<Link to={`/${isAdmin ? "admin" : "interno"}/chamado/${chamado.id}`} style={{textDecoration:"none"}}>
+												<ChamadoDescription>
+													<div dangerouslySetInnerHTML={{__html:chamado.descricao}} />
+												</ChamadoDescription>
+											</Link>
+		
+										</TreeItem>
+		
+										<ChamadoHeader>
+											<div>
+												<span>{chamado.data}</span> - <span>{chamado.dataPrevisao}</span>
+												
+											</div>
+											<ChamadoHeaderPart>
+												Cliente:<span>{chamado.clienteName}</span>
+											</ChamadoHeaderPart>
+											<ChamadoHeaderPart>
+												Chamado feito por:
+												<span>{chamado.postadoPor}</span>
+												as {chamado.hora}
+											</ChamadoHeaderPart>
+										</ChamadoHeader>
+									</ChamadoList>
+								);
+							}
+						
 					})
 				) : (
 					<h1>Não há chamados</h1>

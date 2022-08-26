@@ -23,6 +23,7 @@ import {NotFound} from './pages/ErrorPage/NotFound';
 import {PaginaTutorial} from './pages/TutoriaisUsuario/PaginaTutorial'
 import { PaginaChamados } from './pages/PaginaChamados';
 import { PaginaChamado } from './pages/PaginaChamado';
+import { PortalChamados } from './pages/PortalChamados';
 
 function App() {
 	//Rotas do React
@@ -209,6 +210,16 @@ function App() {
 							<ProtectedRoute>
 								<Header />
 								<PaginaChamado />
+							</ProtectedRoute>
+						}
+					/>
+
+<Route
+						path="/admin/portal-chamados"
+						element={
+							<ProtectedRoute>
+								<Header />
+								<PortalChamados />
 							</ProtectedRoute>
 						}
 					/>

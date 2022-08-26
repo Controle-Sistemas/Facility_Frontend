@@ -274,7 +274,6 @@ export const ChartContainer = styled.div`
 	flex-direction: column;
 	width: 100%;
 	height: 50%;
-	margin-top: .5rem;
 	padding: 0 .5rem;
 	@media (max-width: 1200px) {
 		height: 90%;

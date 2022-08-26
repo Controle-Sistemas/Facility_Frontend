@@ -34,6 +34,7 @@ interface ChartsProps {
 	aspect?: number;
 	color?: string;
 	title?: string;
+	dataKey ?: string;
 }
 
 //Graficos 
@@ -111,7 +112,7 @@ const renderActiveShape = (props: any) => {
 	  </g>
 	);
   };
-export function PieChartComponent({ data, color, title }: ChartsProps) {
+export function PieChartComponent({ data, color, title, dataKey }: ChartsProps) {
 	const [activeIndex, setActiveIndex] = useState(0);
   const onPieEnter = useCallback(
     (_, index) => {
@@ -126,7 +127,7 @@ export function PieChartComponent({ data, color, title }: ChartsProps) {
 			<ResponsiveContainer width="100%" height="100%">
 				<PieChart width={700} height={700}>
 					<Pie
-						dataKey="value"
+						dataKey={dataKey ? dataKey : "value"}
 						isAnimationActive={true}
 						data={data}
 						activeIndex={activeIndex}
@@ -144,7 +145,7 @@ export function PieChartComponent({ data, color, title }: ChartsProps) {
 }
 
 //Area
-export const AreaChartComponent = ({ aspect, data, color, title }: ChartsProps) => {
+export const AreaChartComponent = ({ aspect, data, color, title, dataKey }: ChartsProps) => {
 	return (
 		<ChartContainer>
 			<MainTitle>{title}</MainTitle>
@@ -157,7 +158,7 @@ export const AreaChartComponent = ({ aspect, data, color, title }: ChartsProps) 
 							<stop offset="95%" stopColor={color || '#8884d8'} stopOpacity={0} />
 						</linearGradient>
 					</defs>
-					<XAxis dataKey="label" stroke="gray" />
+					<XAxis dataKey={dataKey ? dataKey : "label"} stroke="gray" />
 					<YAxis />
 					<CartesianGrid strokeDasharray="3 3" className="chartGrid" />
 					<Tooltip />
@@ -176,14 +177,14 @@ export const AreaChartComponent = ({ aspect, data, color, title }: ChartsProps) 
 
 //Line
 
-export const LineChartComponent = ({ aspect, data, color, title }: ChartsProps) => {
+export const LineChartComponent = ({ aspect, data, color, title, dataKey }: ChartsProps) => {
 	return (
 		<ChartContainer>
 			<MainTitle>{title}</MainTitle>
 
 			<ResponsiveContainer width="100%" aspect={aspect}> 
 				<LineChart width={500} height={250} data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-					<XAxis dataKey="label" stroke="gray" />
+					<XAxis dataKey={dataKey ? dataKey : "label"} stroke="gray" />
 					<YAxis />
 					<CartesianGrid strokeDasharray="3 3" className="chartGrid" />
 					<Tooltip />
@@ -195,14 +196,14 @@ export const LineChartComponent = ({ aspect, data, color, title }: ChartsProps) 
 }
 
 //Bar
-export const BarChartComponent = ({ aspect, data, color, title }: ChartsProps) => {
+export const BarChartComponent = ({ aspect, data, color, title, dataKey}: ChartsProps) => {
 	return (
 		<ChartContainer>
 			<MainTitle>{title}</MainTitle>
 
 			<ResponsiveContainer width="100%" aspect={aspect}> 
 				<BarChart width={500} height={250} data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-					<XAxis dataKey="label" stroke="gray" />
+					<XAxis dataKey={dataKey ? dataKey : "label"} stroke="gray" />
 					<YAxis />
 					<CartesianGrid strokeDasharray="3 3" className="chartGrid" />
 					<Tooltip />
@@ -215,14 +216,14 @@ export const BarChartComponent = ({ aspect, data, color, title }: ChartsProps) =
 
 
 //Scatter
-export const ScatterChartComponent = ({ aspect, data, color, title }: ChartsProps) => {
+export const ScatterChartComponent = ({ aspect, data, color, title, dataKey }: ChartsProps) => {
 	return (
 		<ChartContainer>
 			<MainTitle>{title}</MainTitle>
 
 			<ResponsiveContainer width="100%" aspect={aspect}> 
 				<ScatterChart width={500} height={250} data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-					<XAxis dataKey="label" stroke="gray" />
+					<XAxis dataKey={dataKey ? dataKey : "label"} stroke="gray" />
 					<YAxis />
 					<CartesianGrid strokeDasharray="3 3" className="chartGrid" />
 					<Tooltip />
@@ -235,14 +236,14 @@ export const ScatterChartComponent = ({ aspect, data, color, title }: ChartsProp
 
 
 //Radial
-export const RadialChartComponent = ({ aspect, data, color, title }: ChartsProps) => {
+export const RadialChartComponent = ({ aspect, data, color, title,dataKey }: ChartsProps) => {
 	return (
 		<ChartContainer>
 			<MainTitle>{title}</MainTitle>
 
 			<ResponsiveContainer width="100%" aspect={aspect}> 
 				<RadialBarChart width={500} height={250} data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-					<RadialBar name="Valor" dataKey="value" stroke={color || '#8884d8'} fill={color || '#8884d8'} />
+					<RadialBar name="Valor" dataKey={dataKey ? dataKey : "value"} stroke={color || '#8884d8'} fill={color || '#8884d8'} />
 					<Tooltip />
 				</RadialBarChart>
 			</ResponsiveContainer>

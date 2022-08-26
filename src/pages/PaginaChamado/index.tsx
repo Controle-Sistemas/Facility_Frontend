@@ -49,12 +49,22 @@ export function PaginaChamado() {
 	const hora =
 		date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
 
+	const dataAtual = `${dia}/${mes}/${ano} ${formatTime(hora)}`
 
 	const navigate = useNavigate();
 
 	const idChamado = window.location.pathname.split('/')[window.location.pathname.split('/').length - 1];
 	const isAdmin = window.location.pathname.includes('admin') && localStorage.getItem("admin")
     const idInterno = isAdmin ? null : cookie.get("id")
+	const arquivos = chamado.FILE ? chamado.FILE.split(';') : [];
+	const arquivosFormatados = arquivos.map((arquivo) => {
+		return {
+			name: arquivo.split('-')[arquivo.split('-').length - 1],
+			url: arquivo
+		};
+	}).filter((arquivo) => {
+		return arquivo.name !== '';
+		})
 
 
 	useEffect(
@@ -266,13 +276,13 @@ export function PaginaChamado() {
 						</ChamadoTitle>
 						<ChamadoBody>
 							<ChamadoBodyRow>
-							<ChamadoBodyRowLabel>
+								<ChamadoBodyRowLabel>
 
-								<ChamadoStatus>
-									<h4>Status: <span>{statusChamado.NOME}</span></h4>
-									<h4>Previsão: <span>{formatData(chamado.PREVISAO)}</span></h4>
+									<ChamadoStatus>
+										<h4>Status: <span>{formatData(chamado.PREVISAO) < dataAtual.split(' ')[0] ? 'Atrasado' : statusChamado.NOME}</span></h4>
+										<h4>Previsão: <span>{formatData(chamado.PREVISAO)}</span></h4>
 
-								</ChamadoStatus>
+									</ChamadoStatus>
 								</ChamadoBodyRowLabel>
 
 								<ChamadoBodyRowLabel>
@@ -289,19 +299,25 @@ export function PaginaChamado() {
 									</ChamadoBodyRowLabel>
 								</ChamadoBodyRow>
 							)}
-
-                            {/* {chamado.FILE && (
-							<ChamadoBodyRow>
-								<ChamadoFileContainer>
-								<h4>Arquivos</h4>
-                                <span>{chamado.FILE}</span>
-								</ChamadoFileContainer>
-							
-
-							</ChamadoBodyRow>
-
-								
-                            )} */}
+							<div className="row">
+							{chamado.FILE ? 
+								( 
+									arquivosFormatados.map((file, index) =>
+									  (
+										<div className="col-lg-4 mb-2">
+											<ChamadoFileContainer key={index}>
+												<ImagePostIt type={0} />
+												<div className="text-container">
+													<span>{file.name}</span>
+													<i className="fa-solid fa-cloud-arrow-down" />
+												</div>
+											</ChamadoFileContainer>
+										</div>
+									)
+								)
+							): null}
+							</div>
+                           
 							<h4>Ocorrencias</h4>
                             <TreeViewComponent>
                             <OcorrenciasContainer>
