@@ -12,7 +12,7 @@ export function FormAddOcorrencia({ onAdd, idInterno, chamado, setor, statusCham
 
 	const [ ocorrencia, setOcorrencia ] = useState({
 		IDCHAMADO: chamado.ID,
-		IDINTERNO: idInterno | 99,
+		IDINTERNO: idInterno ? Number(idInterno) : 99,
 		SETOR: setor.ID,
 		ATIVO: true,
 		STATUS: statusChamado.ID,
@@ -20,20 +20,12 @@ export function FormAddOcorrencia({ onAdd, idInterno, chamado, setor, statusCham
 		DATAINCLUSAO: `${ano}-${mes}-${dia} ${hora}`
 	});
 
-	function handleChangeValues(e) {
-		setOcorrencia({
-			...ocorrencia,
-			[e.target.name]: e.target.value
-		});
-	}
-
 	function handleChangeText(content, editor) {
 		setOcorrencia({ ...ocorrencia, DESCRICAO: content });
 	}
 
 	function handleSubmit(e) {
 		e.preventDefault();
-
 		onAdd(ocorrencia);
 	}
 

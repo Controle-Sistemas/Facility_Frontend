@@ -175,8 +175,8 @@ export function CadUserForm() {
 
                 <h2 className="title title-second">Solicitar uma conta</h2>
                 <TabGroup>
-                    <Tab onClick={() => setIsInternal(false)}> Cliente </Tab>
-                    <Tab onClick={() => setIsInternal(true)}> Interno </Tab>
+                    <Tab onClick={() => setIsInternal(false)} isActive={!isInternal}> Cliente </Tab>
+                    <Tab onClick={() => setIsInternal(true)} isActive={isInternal}> Interno </Tab>
                 </TabGroup>
                 <form className="form-login" onSubmit={(e) => !isInternal ? handleSubmitClient(e) : handleSubmitInternal(e)}>
 

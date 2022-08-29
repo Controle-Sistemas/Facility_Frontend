@@ -2,8 +2,6 @@ import { ButtonGroup,FormContainer, InputContainer } from "../../styledComponent
 import {PrimaryButton} from "../../styledComponents/buttons";
 import { useState } from "react";
 
-
-
 export function FormAddCategoria({handleClose, addCategoria}){
     const [categoria, setCategoria] = useState({
         nome: '',

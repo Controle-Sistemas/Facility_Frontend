@@ -42,14 +42,6 @@ export function PaginaChamado() {
 	const [ error, setError ] = useState(false);
 	const [ modalEditChamadoIsOpen, setModalEditChamadoIsOpen ] = useState(false);
 	const [ modalOcorrenciaIsOpen, setModalOcorrenciaIsOpen ] = useState(false);
-	const date = new Date();
-	const ano = date.getFullYear();
-	const mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
-	const dia = date.getDate();
-	const hora =
-		date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
-
-	const dataAtual = `${dia}/${mes}/${ano} ${formatTime(hora)}`
 
 	const navigate = useNavigate();
 
@@ -279,7 +271,7 @@ export function PaginaChamado() {
 								<ChamadoBodyRowLabel>
 
 									<ChamadoStatus>
-										<h4>Status: <span>{formatData(chamado.PREVISAO) < dataAtual.split(' ')[0] ? 'Atrasado' : statusChamado.NOME}</span></h4>
+										<h4>Status: <span>{statusChamado.NOME}</span></h4>
 										<h4>Previsão: <span>{formatData(chamado.PREVISAO)}</span></h4>
 
 									</ChamadoStatus>

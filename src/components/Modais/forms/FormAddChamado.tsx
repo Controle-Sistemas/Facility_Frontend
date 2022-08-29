@@ -25,12 +25,14 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		PREVISAO: '',
 		STATUS: '1',
 		FILE: null,
-		DATAINCLUSAO: ''
+		DATAINCLUSAO: '',
+		INTERNORECEPTOR:""
 	});
 	const [ statusChamado, setStatusChamado ] = useState([]);
 	const [ setores, setSetores ] = useState([]);
 	const [ hasFile, setHasFile ] = useState(false);
 	const [ clientes, setClientes ] = useState([]);
+	const [internos, setInternos] = useState([])
 	
 	useEffect(() => {
 		axios.get(BASE_URL + '/status-chamado/').then((res) => {
@@ -42,6 +44,9 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 
 		axios.get(BASE_URL + '/clientes/admin').then((res) => {
 			setClientes(res.data.data);
+		});
+		axios.get(BASE_URL + '/internos/').then((res) => {
+			setInternos(res.data.data);
 		});
 	}, []);
 
@@ -75,6 +80,7 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		data.append('PREVISAO', chamadoData.PREVISAO);
 		data.append('STATUS', chamadoData.STATUS);
 		data.append('DATAINCLUSAO', chamadoData.DATAINCLUSAO);
+		data.append('INTERNORECEPTOR',chamadoData.INTERNORECEPTOR)
 		if (!isAdmin) {
 			data.append('IDINTERNO', chamadoData.IDINTERNO);
 		}
@@ -95,6 +101,18 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 			id: cliente.ID
 		};
 	});
+
+	const formatedInternal = internos.map(interno => {
+		if(interno.USUARIO.toLowerCase() !== 'admin'){
+			return {
+				label:interno.USUARIO,
+				id: interno.ID,
+				setor: interno.SETOR
+			}
+		}
+		
+	}).filter(interno => interno !== undefined)
+
 
 	return (
 		<FormRowContainer onSubmit={handleSubmit} encType="multipart/form-data">
@@ -155,6 +173,21 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 							))
 						) : null}
 					</select>
+				</InputContainer>
+				<InputContainer>
+					<Autocomplete
+						id="combo-box-demo"
+						options={formatedInternal.filter(interno => interno.setor === Number(chamadoData.SETOR))}
+						sx={{ width: '100%', marginTop: '1rem' }}
+						renderInput={(params) => <TextField {...params} label="Interno" />}
+						isOptionEqualToValue={(option, value) => option.id === value.id}
+						inputValue={chamadoData.INTERNORECEPTOR}
+						onInputChange={(event, newInputValue) => {
+							console.log(newInputValue)
+							setChamadoData({...chamadoData,INTERNORECEPTOR:newInputValue});
+						}}
+						
+					/>
 				</InputContainer>
 				<InputContainer>
 					<label htmlFor="STATUS">Status do chamado (O padrão é pendente)</label>

@@ -146,7 +146,9 @@ export const TabGroup = styled.div`
 `;
 
 export const Tab = styled.span`
-	background-color: #003775;
+	background-color: ${props => props.isActive ? 'transparent' : '#003775'};
+	color: ${props => props.isActive ? '#003775' : '#fff'};
+
 	border: 1px solid #003775;
 	border-radius: .3rem;
 	padding: .3rem 1rem;
@@ -157,6 +159,7 @@ export const Tab = styled.span`
 		border: 1px solid #003775;
 		color: #003775;
 	}
+
 `;
 
 export const DataGroup = styled.div`
@@ -273,7 +276,6 @@ export const ChartContainer = styled.div`
 	justify-content: center;
 	flex-direction: column;
 	width: 100%;
-	height: 50%;
 	padding: 0 .5rem;
 	@media (max-width: 1200px) {
 		height: 90%;

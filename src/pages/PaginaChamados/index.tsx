@@ -2,7 +2,6 @@ import {
 	ContainerAdmin,
 	ContainerAdminContas,
 	SidebarContainer,
-	FilterContainer,
 	ButtonGroup,
 	ButtonRow
 } from '../../components/styledComponents/containers';
@@ -15,7 +14,6 @@ import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import ModalForm from '../../components/Modais/modalForm';
 import { FormAddChamado } from '../../components/Modais/forms/FormAddChamado';
-import { FormAddSetor } from '../../components/Modais/forms/FormAddSetor';
 import { FormAddStatusChamado } from '../../components/Modais/forms/FormAddStatusChamado';
 import {ChamadosComponent} from '../../components/ChamadosComponent'
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
@@ -35,7 +33,6 @@ export function PaginaChamados(props) {
     const [ocorrencias, setOcorrencias] = useState([])
 	const [ setores, setSetores ] = useState([]);
     const [isModalChamadoOpen, setIsModalChamadoOpen] = useState(false)
-    const [isModalSetorOpen,setIsModalSetorOpen] = useState(false)
     const [isModalStatusOpen, setIsModalStatusOpen] = useState(false)
     const [ modalSortIsOpen, setModalSortIsOpen ] = useState(false);
 	const [ modalFilterIsOpen, setModalFilterIsOpen ] = useState(false);
@@ -72,18 +69,19 @@ export function PaginaChamados(props) {
 
 
 			} else {
-                console.log(idUser)
                 axios.get(BASE_URL + '/internos/' + idUser).then((res) => {
                     setInternalData(res.data.data);
                     setSetores(res.data.data[0].SETOR)
+                    const auxUsuario = res.data.data[0].USUARIO
+                    axios.get(BASE_URL + '/chamados/interno/usuario/' + auxUsuario).then((res) => {
+                        setChamadosData(res.data.data);
+                    }).catch(err => {
+                        console.log(err)
+                    })
                 }).catch(err => {
                     console.log(err)
                 })
-				axios.get(BASE_URL + '/chamados/setor/' + setores).then((res) => {
-					setChamadosData(res.data.data);
-				}).catch(err => {
-                    console.log(err)
-                })
+				
                 
 			}
 
@@ -124,26 +122,7 @@ export function PaginaChamados(props) {
         })
     }
 
-    // const onAddSetor = (data) => {
-    //     axios.post(BASE_URL+'/setores/', data).then(res => {
-    //         if(res.status === 200){
-    //             Swal.fire({
-    //                 title:"Chamado Adicionado com Sucesso!",
-    //                 icon:"success",
-    //                 timer:2000,
-    //                 showConfirmButton:true
-    //             })
-    //             axios.get(BASE_URL + '/chamados/').then((res) => {
-    //                 if(res.status === 200){
-	// 				    setSetores(res.data.data);
-    //                 } else {
-    //                     setSetores([])
-    //                 }
-	// 			});
-    //             handleOpenModalSetor()
-    //         }
-    //     })
-    // }
+   
 
     const onAddStatusChamado = (data) => {
         axios.post(BASE_URL+'/status-chamado/', data).then(res => {
@@ -163,9 +142,7 @@ export function PaginaChamados(props) {
     function handleOpenModalChamado(){
         setIsModalChamadoOpen(!isModalChamadoOpen)
     }
-    function handleOpenModalSetor(){
-        setIsModalSetorOpen(!isModalSetorOpen)
-    }
+    
     function handleOpenModalStatus(){
         setIsModalStatusOpen(!isModalStatusOpen)
     }
@@ -195,10 +172,6 @@ export function PaginaChamados(props) {
 								<i className="fa-solid fa-plus" />
 								Abrir Chamado
 							</PrimaryButton>
-							{/* <PrimaryButton onClick={handleOpenModalSetor}>
-								<i className="fa-solid fa-plus" />
-								Adicionar Setor
-							</PrimaryButton> */}
 					{isAdmin && (
 
 							<PrimaryButton onClick={handleOpenModalStatus}>
@@ -241,15 +214,7 @@ export function PaginaChamados(props) {
                     >
                         <FormAddChamado onAdd={onAddChamado} isAdmin={isAdmin} idUser={idUser}/>
                     </ModalForm>
-                {/* <ModalForm
-                    isModalOpen={isModalSetorOpen}
-                    isModalClosed={handleOpenModalSetor}
-                    title="Adicionar Setor"
-                    height="42vh"
-                    width="30%"
-                    >
-                        <FormAddSetor onAdd={onAddSetor}/>
-                    </ModalForm> */}
+                
                     <ModalForm
                     isModalOpen={isModalStatusOpen}
                     isModalClosed={handleOpenModalStatus}

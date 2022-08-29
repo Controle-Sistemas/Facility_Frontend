@@ -73,9 +73,7 @@ export default function Header() {
 			<div className="header-content">
 				<div className="header-content-left" />
 				<div className="header-content-left-icons">
-					{!isInternal && (
 						<NotificationIcon />
-					)}
 					<div className="header-content-user icon-header" onClick={handleOpen}>
 						<i className="fa-solid fa-circle-user" id="user-icon" />
 					</div>
@@ -120,11 +118,11 @@ export default function Header() {
 							<Link to="/admin/change-password" className="change-password" onClick={handleOpen}>
 								<i className="fa-solid fa-key" />Alterar Senha
 							</Link>
-						) : (
+						) : window.location.pathname.includes('/user') ? (
 							<Link to="/user/change-password" className="change-password" onClick={handleOpen}>
 								<i className="fa-solid fa-key" />Alterar Senha
 							</Link>
-						)}
+						) : null}
 					</span>
 					<span>
 						<Link to="/login" className="logout" onClick={handleLogout}>

@@ -4,18 +4,15 @@ import {
 	SidebarContainer,
 	ChartContainer
 } from '../../components/styledComponents/containers';
-import { MainTitle } from '../../components/styledComponents/Texts';
-import { MainContainer, ChartGridContainer, TopCardsContainer, Cards,OptionsContainer } from './styled';
+import { MainContainer, ChartGridContainer, TopCardsContainer, CardsGrid,OptionsContainer } from './styled';
 import Sidebar from '../../components/Sidebar/sidebar';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { BASE_URL } from '../../utils/requests';
 import {
 	AreaChartComponent,
-	PieChartComponent,
 	LineChartComponent,
 	BarChartComponent,
-	RadialChartComponent,
 	ScatterChartComponent
 } from '../PortalPageClient/Charts';
 import { CardChamados } from '../../components/CardChamados';
@@ -27,9 +24,8 @@ export function PortalChamados() {
 	const [ statusChamado, setStatusChamado ] = useState([]);
 	const [ setores, setSetores ] = useState([]);
 	const [ chartOption, setChartOption ] = useState('1');
-	const [ chartType, setChartType ] = useState(localStorage.getItem('chartType') || '1');
+	const [ chartType, setChartType ] = useState(localStorage.getItem('chartType') || '4');
 	const [ chartColor, setChartColor ] = useState(localStorage.getItem('chartColor') || '#003775');
-	const [ chartData, setChartData ] = useState([]);
 
 	useEffect(() => {
 		axios.get(`${BASE_URL}/chamados/`).then((res) => {
@@ -49,7 +45,6 @@ export function PortalChamados() {
 		});
 	}, []);
 
-	const fakeData = [];
 
 	function getChamadosPorCliente(chamados) {
 		const chamadosPorCliente = clientes.map((cliente) => {
@@ -94,6 +89,7 @@ export function PortalChamados() {
 
 	function getChamadosPorStatus(chamados) {
 		const chamadosPorStatus = statusChamado.map((status) => {
+			
 			return chamados.filter((chamado) => (status.ID !== 3 ? status.ID === chamado.STATUS : false));
 		});
 
@@ -129,24 +125,23 @@ export function PortalChamados() {
 			<ContainerAdminContas>
 				<MainContainer>
 					<TopCardsContainer>
-						<div className="row">
-							<div className="col-sm-6 col-md-4 col-lg-3 ">
-								<CardChamados title="Chamados por Cliente" data={chamadosPorCliente} />
-							</div>
-							<div className="col-sm-6 col-md-4 col-lg-3 ">
-								<CardChamados title="Chamados por Setor" data={chamadosPorSetor} />
-							</div>
-							<div className="col-sm-6 col-md-4 col-lg-3 ">
-								<CardChamados title="Chamados por Interno" data={chamadosPorInternos} />
-							</div>
-                            <div className="col-sm-6 col-md-4 col-lg-3 ">
+						<CardsGrid>
+							
+								<CardChamados title="Chamados por Cliente" data={chamadosPorCliente} totalChamados={chamados.length}/>
+							
+							
+								<CardChamados title="Chamados por Setor" data={chamadosPorSetor} totalChamados={chamados.length}/>
+							
+							
+								<CardChamados title="Chamados por Interno" data={chamadosPorInternos} totalChamados={chamados.length}/>
+								<CardChamados title="Chamados por STATUS" data={chamadosPorStatus} totalChamados={chamados.length}/>
 
-							<CardChamados title="Chamados por Status" data={chamadosPorStatus} />
-						</div>
-						</div>
+							
+                            
+						</CardsGrid>
 					</TopCardsContainer>
 
-					<ChartGridContainer heightAuto={chartType !== '3'}>
+					<ChartGridContainer>
 							<OptionsContainer>
                             <select
 									name=""
@@ -177,10 +172,8 @@ export function PortalChamados() {
 									<option value="">Selecione um tipo de gráfico</option>
 									<option value="1">Area</option>
 									<option value="2">Linha</option>
-									<option value="3">Pizza</option>
-									<option value="4">Barra</option>
-									<option value="5">Espalhamento</option>
-									<option value="6">Radial</option>
+									<option value="3">Barra</option>
+									<option value="4">Espalhamento</option>
 								</select>
 							
 							
@@ -219,15 +212,6 @@ export function PortalChamados() {
 									aspect={3 / 1}
 								/>
 							) : chartType === '3' ? (
-								<PieChartComponent
-									data={chartOption === '1' ? transformData(chamadosPorStatus) : chartOption === '2' ?  transformData(chamadosPorSetor):chartOption === '3' ? transformData(chamadosPorInternos) :  transformData(chamadosPorCliente)}
-									title={
-										'Chamados por ' +
-										(chartOption === '1' ? 'status' : chartOption === '2' ? 'setor' : chartOption === '3' ? 'interno' :  'cliente')
-									}
-									color={chartColor}
-								/>
-							) : chartType === '4' ? (
 								<BarChartComponent
 									data={chartOption === '1' ? transformData(chamadosPorStatus) : chartOption === '2' ?  transformData(chamadosPorSetor):chartOption === '3' ? transformData(chamadosPorInternos) :  transformData(chamadosPorCliente)}
 									title={
@@ -237,22 +221,12 @@ export function PortalChamados() {
 									color={chartColor}
 									aspect={3 / 1}
 								/>
-							) : chartType === '5' ? (
+							) : chartType === '4' ? (
 								<ScatterChartComponent
 									data={chartOption === '1' ? transformData(chamadosPorStatus) : chartOption === '2' ?  transformData(chamadosPorSetor):chartOption === '3' ? transformData(chamadosPorInternos) :  transformData(chamadosPorCliente)}
 									title={
 										'Chamados por ' +
 										(chartOption === '1' ? 'status' : chartOption === '2' ? 'setor' : chartOption === '3' ? 'interno' : 'cliente')
-									}
-									color={chartColor}
-									aspect={3 / 1}
-								/>
-							) : chartType === '6' ? (
-								<RadialChartComponent
-									data={chartOption === '1' ? transformData(chamadosPorStatus) : chartOption === '2' ?  transformData(chamadosPorSetor):chartOption === '3' ? transformData(chamadosPorInternos) :  transformData(chamadosPorCliente)}
-									title={
-										'Chamados por ' +
-										(chartOption === '1' ? 'status' : chartOption === '2' ? 'dia' :chartOption === '3' ? 'interno' :  'cliente')
 									}
 									color={chartColor}
 									aspect={3 / 1}

@@ -12,17 +12,33 @@ import { BASE_URL } from '../../../utils/requests';
 import axios from 'axios';
 import {Editor} from '@tinymce/tinymce-react';
 import { formatData } from '../../../utils/Masks';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor }) {
     const [setores, setSetores] = useState([])
     const [statusChamado, setStatusChamado] = useState([])
-    
+    const [internos, setInternos] = useState([])
+    const [clientes, setClientes] = useState([])
+	const date = new Date();
+	const ano = date.getFullYear();
+	const mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+	const dia = date.getDate();
+	const hora = date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
+	const dataAtualizacao = `${ano}-${mes}${dia} ${hora}`
+
     useEffect(() => {
         axios.get(`${BASE_URL}/setores/`).then(res => {
             setSetores(res.data.data)
         })
         axios.get(`${BASE_URL}/status-chamado/`).then(res => {
             setStatusChamado(res.data.data)
+        })
+		axios.get(`${BASE_URL}/internos/`).then(res => {
+            setInternos(res.data.data)
+        })
+		axios.get(`${BASE_URL}/clientes/admin`).then(res => {
+            setClientes(res.data.data)
         })
     },[])
 
@@ -43,21 +59,33 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		console.log(chamado);
 		for (let i in chamado) {
 			if (chamado[i] === '') {
 				delete chamado[i];
 			}
 		}
-		console.log(chamado);
-
+		chamado.ULTIMAATUALIZACAO = dataAtualizacao
 		atualizar(chamado);
 
 
 	};
 
+	const formatedClient = clientes.map(cliente => {
+		return {
+			label: cliente.NOME,
+			id: cliente.ID,
+		}
+	})
 
-
+	const formatedInternal = internos.map(interno => {
+		if(interno.USUARIO.toLowerCase() !== 'admin'){
+			return {
+				label:interno.USUARIO,
+				id: interno.ID,
+				setor: interno.SETOR
+			}
+		}
+	}).filter(interno => interno !== undefined)
 
 	return (
 		<FormRowContainer>
@@ -95,6 +123,23 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 								/>
 				</InputContainer>
 				<InputContainer>
+				<Autocomplete
+						id="combo-box-demo"
+						options={formatedClient}
+						sx={{ width: '100%', marginTop: '1rem' }}
+						renderInput={(params) => <TextField {...params} label="Nome" />}
+						isOptionEqualToValue={(option, value) => option.id === value.id}
+						inputValue={chamado.CLIENTE}
+						onInputChange={(event, newInputValue) => {
+							console.log(newInputValue)
+							setChamado({...chamado,CLIENTE:newInputValue});
+						}}
+                            disabled={Boolean(isAdmin) ? false : true}
+
+						
+					/>
+				</InputContainer>
+				<InputContainer>
 					<label htmlFor="nomeestabelecimento">Nivel de prioridade</label>
 					<select name="PRIORIDADE" className="form-control" id="" onChange={handleChangeValues}>
 						<option value="1">Baixa</option>
@@ -126,6 +171,21 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 							))
 						) : null}
 					</select>
+				</InputContainer>
+				<InputContainer>
+					<Autocomplete
+						id="combo-box-demo"
+						options={formatedInternal.filter(interno => interno.setor === Number(chamado.SETOR))}
+						sx={{ width: '100%', marginTop: '1rem' }}
+						renderInput={(params) => <TextField {...params} label="Interno" />}
+						isOptionEqualToValue={(option, value) => option.id === value.id}
+						inputValue={chamado.INTERNORECEPTOR}
+						onInputChange={(event, newInputValue) => {
+							console.log(newInputValue)
+							setChamado({...chamado,INTERNORECEPTOR:newInputValue});
+						}}
+						
+					/>
 				</InputContainer>
                 <InputContainer>
                 <label htmlFor="SETOR">Status</label>

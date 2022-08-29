@@ -182,8 +182,8 @@ export function LoginUserForm() {
                 
                 <h2 className="title  title-second">Entrar com sua conta</h2>
                 <TabGroup>
-                    <Tab onClick={() => setIsInternal(false)}> Cliente/Admin </Tab>
-                    <Tab onClick={() => setIsInternal(true)}> Interno </Tab>
+                    <Tab onClick={() => setIsInternal(false)} isActive={!isInternal}> Cliente/Admin </Tab>
+                    <Tab onClick={() => setIsInternal(true)} isActive={isInternal}> Interno </Tab>
                 </TabGroup>
 
 

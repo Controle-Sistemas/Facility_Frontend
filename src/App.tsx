@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 
-import {TutorialPage} from './pages/TutoriaisUsuario';
+import { TutorialPage } from './pages/TutoriaisUsuario';
 import Header from './components/HeaderComponent/Header';
 import PainelAdmin from './pages/admin/painelAdmin';
 import ContasAdmin from './pages/admin/Accounts/AccountsAdmin';
@@ -13,17 +13,18 @@ import ProtectedRoute from './components/Routes/Private/Private';
 import { PageFormUser } from './pages/user/formUser';
 import PaginaSolicitacaoEnviada from './pages/user/solicitacaoEnviadaPage';
 import ChangePasswordPage from './pages/ChangePassword/ChangePasswordPage';
-import {MainPage} from './pages/user/paginaPrincipal';
+import { MainPage } from './pages/user/paginaPrincipal';
 import { LicencesAdmin } from './components/LicencesAdmin';
-import {PortalPageClient} from './pages/PortalPageClient';
-import {RelatoriosVendasPage} from './pages/user/Relatorios/vendas';
-import {CentralDocumentosPageAdmin} from './pages/CentralDocumentos/index';
-import {PaginaDocumento} from './pages/PaginaDocumento';
-import {NotFound} from './pages/ErrorPage/NotFound';
-import {PaginaTutorial} from './pages/TutoriaisUsuario/PaginaTutorial'
+import { PortalPageClient } from './pages/PortalPageClient';
+import { RelatoriosVendasPage } from './pages/user/Relatorios/vendas';
+import { CentralDocumentosPageAdmin } from './pages/CentralDocumentos/index';
+import { PaginaDocumento } from './pages/PaginaDocumento';
+import { NotFound } from './pages/ErrorPage/NotFound';
+import { PaginaTutorial } from './pages/TutoriaisUsuario/PaginaTutorial';
 import { PaginaChamados } from './pages/PaginaChamados';
 import { PaginaChamado } from './pages/PaginaChamado';
 import { PortalChamados } from './pages/PortalChamados';
+import { PaginaSetores } from './pages/PaginaSetores';
 
 function App() {
 	//Rotas do React
@@ -32,7 +33,7 @@ function App() {
 		<BrowserRouter>
 			<StoreProvider>
 				<Routes>
-					<Route path="/" element={<MainPage/>} />
+					<Route path="/" element={<MainPage />} />
 					<Route path="/solicitacao-enviada" element={<PaginaSolicitacaoEnviada />} />
 					<Route path="/cadastro" element={<PageFormUser />} />
 					<Route path="/login" element={<PageFormUser />} />
@@ -80,7 +81,6 @@ function App() {
 							<ProtectedRoute>
 								<Header />
 								<CentralDocumentosPageAdmin />
-
 							</ProtectedRoute>
 						}
 					/>
@@ -92,7 +92,7 @@ function App() {
 								<PaginaDocumento />
 							</ProtectedRoute>
 						}
-						/>
+					/>
 					<Route
 						path="/user/tutoriais/:id"
 						element={
@@ -102,7 +102,6 @@ function App() {
 							</ProtectedRoute>
 						}
 					/>
-
 
 					{/* Rotas Admin */}
 
@@ -154,7 +153,7 @@ function App() {
 							</ProtectedRoute>
 						}
 					/>
-					
+
 					<Route
 						path="/admin/documentos/:id"
 						element={
@@ -163,8 +162,7 @@ function App() {
 								<PaginaDocumento />
 							</ProtectedRoute>
 						}
-						/>
-					
+					/>
 
 					<Route
 						path="/admin/change-password"
@@ -200,7 +198,7 @@ function App() {
 						element={
 							<ProtectedRoute>
 								<Header />
-								<PaginaChamados/>
+								<PaginaChamados />
 							</ProtectedRoute>
 						}
 					/>
@@ -214,7 +212,7 @@ function App() {
 						}
 					/>
 
-<Route
+					<Route
 						path="/admin/portal-chamados"
 						element={
 							<ProtectedRoute>
@@ -224,6 +222,15 @@ function App() {
 						}
 					/>
 
+					<Route
+						path="/admin/setores"
+						element={
+							<ProtectedRoute>
+								<Header />
+								<PaginaSetores />
+							</ProtectedRoute>
+						}
+					/>
 
 					{/*Rotas de Internos*/}
 
@@ -232,7 +239,7 @@ function App() {
 						element={
 							<ProtectedRoute>
 								<Header />
-								<PaginaChamados/>
+								<PaginaChamados />
 							</ProtectedRoute>
 						}
 					/>
@@ -246,13 +253,7 @@ function App() {
 						}
 					/>
 
-					<Route
-						path="*"
-						element={<NotFound />}
-					/>
-					
-
-					
+					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</StoreProvider>
 

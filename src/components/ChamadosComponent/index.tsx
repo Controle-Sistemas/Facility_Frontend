@@ -122,7 +122,7 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 					postadoPor: '',
 					titulo: chamado.TITULO,
 					descricao: chamado.DESCRICAO,
-					dataPrevisao: '',
+					dataPrevisao: formatData(chamado.PREVISAO),
 					prioridade: chamado.PRIORIDADE,
 					statusId: chamado.STATUS,
 					nomeStatus:"",
@@ -133,11 +133,6 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 				const [ data, hora ] = chamado.DATAINCLUSAO.split(' ');
 				aux.data = formatData(data);
 				aux.hora = formatTime(hora);
-				aux.dataPrevisao = formatData(chamado.PREVISAO);
-
-				if(aux.dataPrevisao < formatData(dataAtual)){
-					aux.statusId = 5
-				}
 
 				if (chamado.IDINTERNO === interno.ID) {
 					aux.postadoPor = interno.USUARIO;
