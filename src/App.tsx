@@ -24,7 +24,7 @@ import { PaginaTutorial } from './pages/TutoriaisUsuario/PaginaTutorial';
 import { PaginaChamados } from './pages/PaginaChamados';
 import { PaginaChamado } from './pages/PaginaChamado';
 import { PortalChamados } from './pages/PortalChamados';
-import { PaginaSetores } from './pages/PaginaSetores';
+import { PaginaSetores } from './pages/PaginaInternos';
 
 function App() {
 	//Rotas do React

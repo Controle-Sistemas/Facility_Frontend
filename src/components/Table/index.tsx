@@ -190,16 +190,30 @@ export default function DefaultTable({
 															</ButtonActionTable>
 														</TableCellActions>
 													);
+												
+												case 4:
+														return (
+															<TableCellActions key={index}>
+																<ButtonActionTable
+																	primary
+																	onClick={handleOpenModalEdit.bind(this, item.ID)}
+																>
+																	<i className="fa-solid fa-edit" />
+																	Editar Interno
+																</ButtonActionTable>
+																
+															</TableCellActions>
+														);
 
 												default:
 													return (
 														<TableCellActions key={index}>
-															<ButtonActionTable primary onClick={handleOpenModalEdit}>
+															<ButtonActionTable primary onClick={handleOpenModalEdit.bind(this, item.ID)}>
 																<i className="fa-solid fa-edit" />
 															</ButtonActionTable>
 															<ButtonActionTable
 																primary
-																onClick={handleOpenModalAction}
+																onClick={handleOpenModalAction.bind(this, item.ID)}
 																danger
 															>
 																<i className="fa-solid fa-trash" />

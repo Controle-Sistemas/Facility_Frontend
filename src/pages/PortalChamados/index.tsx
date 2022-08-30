@@ -61,12 +61,12 @@ export function PortalChamados() {
 
 	function getChamadosPorSetor(chamados) {
 		const chamadosPorSetor = setores.map((setor) => {
-			return chamados.filter((chamado) => setor.ID === chamado.SETOR);
+			return chamados.filter((chamado) => setor.ID === chamado.SETOR && chamado.STATUS !== 3);
 		});
 
 		return chamadosPorSetor.map((item) => {
 			return item.map((chamado) => {
-				const aux = setores.filter((setor) => setor.ID === chamado.SETOR);
+				const aux = setores.filter((setor) => setor.ID === chamado.SETOR && chamado.STATUS !== 3);
 				return aux.pop();
 			});
 		});
@@ -74,13 +74,13 @@ export function PortalChamados() {
 
 	function getChamadosPorInterno(chamados) {
 		const chamadosPorInterno = internos.map((interno) => {
-			return chamados.filter((chamado) => interno.ID === (Number(chamado.IDINTERNO) ? chamado.IDINTERNO : 99));
+			return chamados.filter((chamado) => interno.USUARIO === chamado.INTERNORECEPTOR);
 		});
 
 		return chamadosPorInterno.map((item) => {
 			return item.map((chamado) => {
 				const aux = internos.filter(
-					(interno) => interno.ID === (Number(chamado.IDINTERNO) ? chamado.IDINTERNO : 99)
+					(interno) => interno.USUARIO === chamado.INTERNORECEPTOR
 				);
 				return aux.pop();
 			});

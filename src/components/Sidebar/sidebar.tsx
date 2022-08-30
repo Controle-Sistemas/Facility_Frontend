@@ -10,7 +10,7 @@ import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import Logo from '../../assets/logo.png'
+import Logo from '../../assets/logo.png';
 
 import './sidebar.css';
 import axios from 'axios';
@@ -37,20 +37,25 @@ export default function Sidebar(props: Props) {
 
 	const [ dadosSidebar, setDadosSidebar ] = useState<SidebarMenuType[]>([]); //Estado dos dados do menu lateral
 	const [ dadosUser, setDadosUser ] = useState<UserDataType>({}); //Estado dos dados do usuario
+	const isInternal = location.pathname.includes('interno');
+	const [ error, setError ] = useState(false);
 
 	useEffect(() => {
 		//Pega os dados do usuario
 		const cnpj = localStorage.getItem('cnpj'); //Pega o cnpj do localstorage
-		axios
-			.get(`${BASE_URL}/clientes/usuario/${cnpj}`)
-			.then((res) => {
-				res.data.data.forEach((element) => {
-					setDadosUser(element); //Pega os dados do usuario
+		if (!isInternal) {
+			axios
+				.get(`${BASE_URL}/clientes/usuario/${cnpj}`)
+				.then((res) => {
+					res.data.data.forEach((element) => {
+						setDadosUser(element); //Pega os dados do usuario
+					});
+				})
+				.catch((err) => {
+					setError(true);
+					console.log(err);
 				});
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+		}
 	}, []);
 
 	useEffect(
@@ -85,9 +90,11 @@ export default function Sidebar(props: Props) {
 						}
 					})
 					.catch((err) => {
+						setError(true);
+
 						console.log(err);
 					});
-			} else if(location.pathname.includes('admin')) {
+			} else if (location.pathname.includes('admin')) {
 				//Se for admin
 				axios
 					.get(`${BASE_URL}/menu/item`) //Pega os dados do menu lateral
@@ -116,15 +123,17 @@ export default function Sidebar(props: Props) {
 						}
 					})
 					.catch((err) => {
+						setError(true);
+
 						console.log(err);
 					});
-			} else if(location.pathname.includes('interno')){
+			} else if (location.pathname.includes('interno')) {
 				axios
 					.get(`${BASE_URL}/menu/item`) //Pega os dados do menu lateral
 					.then((res) => {
 						if (res.status === 200) {
 							res.data.data.forEach((element) => {
-								if(element.link.includes('interno') && element.admin === 0){
+								if (element.link.includes('interno') && element.admin === 0) {
 									if (!dadosSidebar.find((item) => item.id === element.id)) {
 										//Se não existir no estado
 										setDadosSidebar([
@@ -143,12 +152,13 @@ export default function Sidebar(props: Props) {
 									}
 								}
 							});
-							
 						} else {
 							console.log('Erro ao carregar menu');
 						}
 					})
 					.catch((err) => {
+						setError(true);
+
 						console.log(err);
 					});
 			}
@@ -273,10 +283,9 @@ export default function Sidebar(props: Props) {
 					boxShadow: 'none',
 					zIndex: { sm: -1, xs: 0 },
 					width: { sm: `calc(100% - ${drawerWidth}px)` }
-
 				}}
 			>
-				<Toolbar style={{minHeight:0}}>
+				<Toolbar style={{ minHeight: 0 }}>
 					<IconButton
 						aria-label="open drawer"
 						onClick={handleDrawerToggle}

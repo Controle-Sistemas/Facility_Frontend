@@ -57,6 +57,7 @@ export function NotificationIcon() {
 	useEffect(() => {
 		async function getInternal(){
 				await axios.get(BASE_URL+'/internos/'+idInterno).then(res => {
+					console.log(res.data.data[0])
 				   setInterno(res.data.data[0])
 			   })
 		}
@@ -70,7 +71,8 @@ export function NotificationIcon() {
 	setTimeout(() => { // seta o tempo para atualizar as notificações pendentes a cada 1 segundo
 
 		if(isInternal && interno){
-			axios
+			if(interno.USUARIO !== undefined){
+				axios
 			.get(BASE_URL + `/chamados/interno/usuario/${interno.USUARIO}`) // faz a requisição para buscar as notificações pendentes
 			.then((res) => {
 				setPendingChamados(res.data.data.filter((chamado: { VISTO: number; }) => chamado.VISTO === 0)); // seta os documentos pendentes
@@ -78,6 +80,8 @@ export function NotificationIcon() {
 			.catch((err) => {
 				console.log(err);
 			});
+			}
+			
 		} else {
 			axios
 			.get(BASE_URL + `/documentos/cnpj/${cnpj}`) // faz a requisição para buscar as notificações pendentes
@@ -91,6 +95,7 @@ export function NotificationIcon() {
 		}
 		
 	}, 1000);
+
 
     return (
         <NotificationIconContainer>

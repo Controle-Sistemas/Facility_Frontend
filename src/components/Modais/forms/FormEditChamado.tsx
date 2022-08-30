@@ -65,6 +65,7 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 			}
 		}
 		chamado.ULTIMAATUALIZACAO = dataAtualizacao
+		chamado.VISTO = 0
 		atualizar(chamado);
 
 

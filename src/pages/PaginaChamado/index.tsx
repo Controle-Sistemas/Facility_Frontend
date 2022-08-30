@@ -173,7 +173,7 @@ export function PaginaChamado() {
 			axios.get(BASE_URL + '/status-chamado/' + newChamado.STATUS).then((res) => {
 				setStatusChamado(res.data.data[0]);
 			});
-			axios.get(`${BASE_URL}/chamado/${idChamado}`).then((res) => {
+			axios.get(`${BASE_URL}/chamados/${idChamado}`).then((res) => {
 				Swal.fire('Atualizado!', 'O chamado foi atualizado.', 'success');
 				setChamado(res.data.data[0]);
 			});
@@ -217,7 +217,7 @@ export function PaginaChamado() {
 	if (loading) {
 		return <LoadingComponent />;
 	} else if (error) {
-		return <ErrorPage errorMessage='Não foi possivel carregar os chamados' dark/>
+		return <ErrorPage errorMessage='Não foi possivel carregar o chamados' dark/>
 	} else {
 		return (
 			<ContainerAdmin>

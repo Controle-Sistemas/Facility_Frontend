@@ -10,7 +10,7 @@ import { LoadingComponent } from '../Loading'
 import Swal from 'sweetalert2'
 import FilterComponent from '../filterComponent';
 import { PrimaryButton } from '../styledComponents/buttons'
-import { FilterContainer } from '../styledComponents/containers'
+import { FilterContainer,ButtonGroup } from '../styledComponents/containers'
 import {CepMask, cnpjMask} from '../../utils/Masks'
 import { FormMostrarColunas } from '../Modais/forms/FormMostrarColunas'
 import DefaultTable from '../Table'
@@ -231,11 +231,13 @@ export function LicencesAdminTable() {
 						<i className="fa-solid fa-filter"></i>
 					</button>
 				</FilterContainer>
-
-				<PrimaryButton onClick={handleOpenModalCadEmpresa}>
-					<i className="fa-solid fa-plus"></i>
-					Cadastrar Empresa
-				</PrimaryButton>
+				<ButtonGroup>
+					<PrimaryButton onClick={handleOpenModalCadEmpresa}>
+						<i className="fa-solid fa-plus"></i>
+						Cadastrar Empresa
+					</PrimaryButton>
+				</ButtonGroup>
+			
 
 				
 
