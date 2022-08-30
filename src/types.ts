@@ -78,3 +78,55 @@ export interface Empresas {
 	ValorImplantacao?: string;
 	ValorMensalidade?: string;
 }
+
+export interface SetoresType{
+    ID: number;
+    NOME: string;
+    DESCRICAO?: string;
+}
+
+export interface ChamadosType{
+    ID: number;
+    IDINTERNO: number | null;
+    IDCLIENTE: number;
+    SETOR: number | string;
+    TITULO: string;
+    DESCRICAO: string;
+    STATUS: number | string;
+    DATAINCLUSAO: string;
+    PREVISAO: string;
+    PRIORIDADE: number | string;
+    ULTIMAATUALIZACAO?: string | null;
+    ATIVO: number | boolean;
+    FILE?: string | null;
+    INTERNORECEPTOR: string;
+    VISTO: boolean | number;
+}
+
+
+export interface StatusChamadosType{
+    ID: number;
+    NOME: string;
+    DESCRICAO?: string;
+}
+
+export interface InternosType{
+    ID: number;
+    NOME: string;
+    USUARIO: string;
+    EMAIL: string;
+    SETOR: number|string;
+    ATIVO: number | boolean;
+}
+
+export interface OcorrenciasType{
+    ID: number;
+    IDCHAMADO: number;
+    IDINTERNO: number;
+    SETOR: string | number;
+    DESCRICAO: string;
+    DATAINCLUSAO: string;
+    ATIVO: number | boolean;
+    STATUS: string | number;
+}
+

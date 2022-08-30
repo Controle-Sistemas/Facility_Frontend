@@ -6,7 +6,7 @@ const Input = styled.input.attrs(props => ({ //Estilização do input
   size: props.small ? 5 : undefined
 }))`
   height: 2rem;
-  width: 30%;
+  width: 80%;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   border-top-right-radius: 0;
@@ -14,6 +14,9 @@ const Input = styled.input.attrs(props => ({ //Estilização do input
   border: 1px solid #e5e5e5;
   padding: 0 32px 0 16px;
   margin: 0;
+  @media (max-width:700px){
+    width:90%;
+  }
 `;
 
 const ClearButton = styled.button` 
@@ -36,6 +39,9 @@ const ClearButton = styled.button`
   &:hover {
     background-color: #FFF;
     color: #003775;
+  }
+  @media (max-width:400px){
+
   }
 
 `;

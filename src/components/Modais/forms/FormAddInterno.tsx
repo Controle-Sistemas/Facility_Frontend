@@ -64,7 +64,7 @@ export function FormAddInterno({ onAdd }) {
 				</select>
 			</InputContainer>
 			<ButtonGroup justifyContent="center">
-				<PrimaryButton>Salvar Categoria</PrimaryButton>
+				<PrimaryButton>Adicionar Interno</PrimaryButton>
 			</ButtonGroup>
 		</FormContainer>
 	);

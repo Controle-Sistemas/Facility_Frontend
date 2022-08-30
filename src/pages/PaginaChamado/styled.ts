@@ -18,7 +18,7 @@ export const ChamadoHeader = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap:.3rem;
+	gap: .3rem;
 	padding: .5rem;
 	border: 1px solid #e9e9e9;
 	border-radius: .5rem;
@@ -30,8 +30,6 @@ export const ChamadoHeader = styled.div`
 		color: #003775;
 		margin: 0 .3rem;
 	}
-
-
 `;
 
 export const ChamadoTitle = styled.div`
@@ -86,6 +84,11 @@ export const ChamadoBodyRow = styled.div`
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
+	@media (max-width: 700px) {
+		flex-direction: column;
+		align-items: start;
+		justify-content: flex-start;
+	}
 `;
 
 export const ChamadoBodyRowLabel = styled.div`
@@ -96,8 +99,18 @@ export const ChamadoBodyRowLabel = styled.div`
 	width: 30%;
 	height: 100%;
 	font-size: 1rem;
+	@media (max-width: 700px) {
+		width: 100%;
+	}
 `;
 
+export const ChamadoBodyDescription = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	justify-content: flex-start;
+	width: 100%;
+`;
 export const ChamadoFileContainer = styled.div`
 	display: flex;
 	flex-direction: row;
@@ -176,7 +189,7 @@ export const OcorrenciasContainer = styled.ul`
 	box-shadow: 0 .1rem .2rem rgba(0, 0, 0, 0.2);
 	border-radius: .3rem;
 	background-color: ${(props) => (props.selected ? '#cdcdcd' : '#efefff')};
-	
+
 	font-family: 'Open Sans', sans-serif;
 
 	& > li {
@@ -185,16 +198,12 @@ export const OcorrenciasContainer = styled.ul`
 		color: #000;
 		padding: 0;
 		margin: .5rem 0;
-	
+
 		& > div > div {
 			font-size: 1rem;
 			font-weight: bold !important;
-
 		}
 	}
-
-
-
 `;
 
 export const OcorrenciaItem = styled.span`
@@ -202,6 +211,4 @@ export const OcorrenciaItem = styled.span`
 	flex-direction: row;
 	align-items: start;
 	justify-content: space-between;
-	
-
 `;

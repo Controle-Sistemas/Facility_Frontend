@@ -7,7 +7,6 @@ import { FormEditEmpresa } from '../Modais/forms/FormEditEmpresa';
 import { FormTerminal } from '../Modais/forms/FormEditTerminal'
 import { FormCadEmpresa } from '../Modais/forms/FormCadEmpresa';
 import { LoadingComponent } from '../Loading'
-import Paper from '@mui/material/Paper';
 import Swal from 'sweetalert2'
 import FilterComponent from '../filterComponent';
 import { PrimaryButton } from '../styledComponents/buttons'
@@ -213,7 +212,7 @@ export function LicencesAdminTable() {
 		})
 
 		return (
-			<Paper sx={{ width: '100%', overflow: 'hidden' }}>
+			<>
 				<FilterContainer>
 					<FilterComponent
 						onFilter={(e) => setFilterText(e.target.value)}
@@ -237,6 +236,8 @@ export function LicencesAdminTable() {
 					<i className="fa-solid fa-plus"></i>
 					Cadastrar Empresa
 				</PrimaryButton>
+
+				
 
 				<DefaultTable
 					idTable={idTable}
@@ -285,7 +286,7 @@ export function LicencesAdminTable() {
 				>
 					<FormCadEmpresa isModalClosed={handleOpenModalCadEmpresa} />
 				</ModalForm>
-			</Paper>
+			</>
 		);
 	}
 }

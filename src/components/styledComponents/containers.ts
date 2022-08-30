@@ -76,6 +76,16 @@ export const ButtonGroup = styled.div`
 	flex-direction: row;
 	width: 100%;
 	gap: .5rem;
+
+	@media (max-width:400px){
+		flex-direction: column;
+		width:100%;
+		gap:.1rem;
+
+		& > button{
+			width:100%;
+		}
+	}
 `;
 
 export const ButtonFormGroup = styled.div`
@@ -331,4 +341,14 @@ export const ButtonRow = styled.div`
 	justify-content: center;
 	flex-direction: row;
 	gap: .5rem;
+
+	@media (max-width:400px){
+		flex-direction: column;
+		width:100%;
+		gap:.1rem;
+
+		& > button{
+			width:100%;
+		}
+	}
 `

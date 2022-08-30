@@ -2,7 +2,7 @@
 import { Popper } from '@mui/material';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatData } from '../../utils/Masks'; 
 import { BASE_URL } from '../../utils/requests';
@@ -21,24 +21,17 @@ export function NotificationIcon() {
 	const cnpj = localStorage.getItem('cnpj'); // pega o cnpj do usuário logado
 	const idInterno = cookie.get('id')
 
-	useEffect(() => {
-		if(isInternal){
-			axios.get(BASE_URL+'/internos/'+idInterno).then(res => {
-				setInterno(res.data.data[0])
-			})
-		}
-		
-	},[])
+	
 
 
-    function handleOpenNotification(event) { // abre e fecha a box de notificações
+    function handleOpenNotification(event: { currentTarget: SetStateAction<HTMLElement>; }) { // abre e fecha a box de notificações
 		setAnchorEl(anchorEl ? null : event.currentTarget);
 	}
  
 	const isNotificationOpen = Boolean(anchorEl); 
     
 
-	function handleChangeVisto(id){ // marca como visto a notificação 
+	function handleChangeVisto(id: string){ // marca como visto a notificação 
 		if(isInternal){
 			const aux = pendingChamados.filter(chamado => chamado.ID === id) 
 			axios.patch(BASE_URL + `/chamados/${id}`,{ // faz o patch para marcar como visto a notificação
@@ -60,12 +53,27 @@ export function NotificationIcon() {
 		}
 		
 	}
-    setTimeout(() => { // seta o tempo para atualizar as notificações pendentes a cada 1 segundo
+
+	useEffect(() => {
+		async function getInternal(){
+				await axios.get(BASE_URL+'/internos/'+idInterno).then(res => {
+				   setInterno(res.data.data[0])
+			   })
+		}
+		if(isInternal){
+			getInternal()
+		}
+		
+		
+	},[ idInterno, isInternal])
+    
+	setTimeout(() => { // seta o tempo para atualizar as notificações pendentes a cada 1 segundo
+
 		if(isInternal && interno){
 			axios
 			.get(BASE_URL + `/chamados/interno/usuario/${interno.USUARIO}`) // faz a requisição para buscar as notificações pendentes
 			.then((res) => {
-				setPendingChamados(res.data.data.filter((chamado) => chamado.VISTO === 0)); // seta os documentos pendentes
+				setPendingChamados(res.data.data.filter((chamado: { VISTO: number; }) => chamado.VISTO === 0)); // seta os documentos pendentes
 			})
 			.catch((err) => {
 				console.log(err);
@@ -75,7 +83,7 @@ export function NotificationIcon() {
 			.get(BASE_URL + `/documentos/cnpj/${cnpj}`) // faz a requisição para buscar as notificações pendentes
 			.then((res) => {
 
-				setPendingDocuments(res.data.data.filter((document) => document.STATUS === 0)); // seta os documentos pendentes
+				setPendingDocuments(res.data.data.filter((document: { STATUS: number; }) => document.STATUS === 0)); // seta os documentos pendentes
 			})
 			.catch((err) => {
 				console.log(err);
@@ -83,7 +91,6 @@ export function NotificationIcon() {
 		}
 		
 	}, 1000);
-
 
     return (
         <NotificationIconContainer>
@@ -144,7 +151,7 @@ export function NotificationIcon() {
 						<BellIcon
 							onClick={handleOpenNotification}
 							hasNotification={(pendingDocuments.length > 0 || pendingChamados.length > 0) ? true : false}
-							notificationNumber={pendingDocuments ? pendingDocuments.length : pendingChamados ? pendingChamados.length : 0}
+							notificationNumber={pendingDocuments.length > 0 ? pendingDocuments.length : pendingChamados.length > 0 ? pendingChamados.length : 0}
 						>
 							<i className="fa-solid fa-bell" id="bell-icon" />
 						</BellIcon>

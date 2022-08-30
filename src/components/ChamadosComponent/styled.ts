@@ -20,7 +20,6 @@ export const ChamadoList = styled.ul`
 	border:1px solid #e3e3e3;
 	border-radius: .3rem;
 	background-color: ${(props) => (props.selected ? '#cdcdcd' : '#fefeee')};
-	transition: background-color .2s ease-in-out;
 	&:hover {
 		background-color: #fff3f3;
 	}
@@ -101,7 +100,26 @@ export const ChamadoHeader = styled.div`
 	color: #939393;
 	font-size: .8rem;
 	font-family: 'Open Sans', sans-serif;
+
 `;
+
+export const ChamadoFooter = styled.div`
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: space-between;
+width: 100%;
+gap: 1rem;
+color: #939393;
+font-size: .8rem;
+font-family: 'Open Sans', sans-serif;
+
+@media (max-width:650px){
+	flex-direction:column;
+	align-items: start;
+
+}
+`
 
 export const ChamadoHeaderPart = styled.div`
 	display: flex;

@@ -25,7 +25,7 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 	const mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
 	const dia = date.getDate();
 	const hora = date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
-	const dataAtualizacao = `${ano}-${mes}${dia} ${hora}`
+	const dataAtualizacao = `${ano}-${mes}-${dia} ${hora}`
 
     useEffect(() => {
         axios.get(`${BASE_URL}/setores/`).then(res => {

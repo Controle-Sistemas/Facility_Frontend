@@ -17,16 +17,20 @@ import { PrimaryButton } from '../../components/styledComponents/buttons';
 import { FilterContainer } from '../../components/styledComponents/containers';
 import { FormAddSetor } from '../../components/Modais/forms/FormAddSetor';
 import { FormAddInterno } from '../../components/Modais/forms/FormAddInterno';
-
+import { FormEditInterno } from '../../components/Modais/forms/FormEditInterno';
+import { SetoresType,InternosType } from '../../types';
 import ModalForm from '../../components/Modais/modalForm';
 
 export function PaginaSetores() {
-	const [ setores, setSetores ] = useState([]);
-	const [ internos, setInternos ] = useState([]);
+	const [ setores, setSetores ] = useState<SetoresType[]>([]);
+	const [ internos, setInternos ] = useState<InternosType[]>([]);
 	const [ filterText, setFilterText ] = useState('');
 	const [ resetPaginationToggle, setResetPaginationToggle ] = useState(false);
 	const [ isModalSetorOpen, setIsModalSetorOpen ] = useState(false);
 	const [ isModalInternoOpen, setIsModalInternoOpen ] = useState(false);
+	const [isModalEditInternosOpen, setIsModalEditInternosOpen] = useState(false)
+	const [isModalDeleteInternosOpen, setIsModalDeleteInternosOpen] = useState(false)
+	const [idInterno, setIdInterno] = useState(null)
 
 	const idTable = 4;
 
@@ -45,9 +49,11 @@ export function PaginaSetores() {
 		{ fieldName: 'NOME', fieldCaption: 'Nome do interno', id: 'interno', visible: 1 },
 		{ fieldName: 'USUARIO', fieldCaption: 'Usuário', id: 'usuario', visible: 1 },
 		{ fieldName: 'EMAIL', fieldCaption: 'Email', id: 'email', visible: 1 },
+		{ fieldName: 'AÇÕES', fieldCaption: 'Ações', id: 'AÇÕES', visible: 1 },
+
 	];
 
-	const onAddSetor = (data) => {
+	const onAddSetor = (data:SetoresType) => {
 		axios.post(BASE_URL + '/setores/', data).then((res) => {
 			if (res.status === 200) {
 				Swal.fire({
@@ -67,7 +73,7 @@ export function PaginaSetores() {
 			}
 		});
 	};
-    const onAddInterno = (data) => {
+    const onAddInterno = (data: InternosType) => {
 		axios.post(BASE_URL + '/internos/', data).then((res) => {
 			if (res.status === 200) {
 				Swal.fire({
@@ -95,8 +101,17 @@ export function PaginaSetores() {
 		setIsModalInternoOpen(!isModalInternoOpen);
 	}
 
+	function handleOpenModalEditInterno(id: number) {
+		setIsModalEditInternosOpen(!isModalEditInternosOpen);
+		console.log(id)
+		setIdInterno(id)
+	}
+	function handleOpenModalDeleteInterno() {
+		setIsModalDeleteInternosOpen(!isModalDeleteInternosOpen);
+	}
 
-    let filteredItems = internos.filter((item) => { //filtra os dados
+
+    let filteredItems = internos.filter((item:InternosType) => { //filtra os dados
         return JSON.stringify(item).toLowerCase().includes(filterText.toLowerCase()); //se o texto for igual ao filtro retorna os dados
     });
     const extension = [] 
@@ -112,6 +127,15 @@ export function PaginaSetores() {
 
         return row //retorna os dados
     })
+
+	rows.forEach((row:any) => {
+		row.SETOR = setores.map((setor:SetoresType) => {
+			if(setor.ID === row.SETOR){
+				return setor.NOME
+			}
+		}).filter(setor => setor !== undefined)
+	})
+
 	return (
 		<ContainerAdmin>
 			<SidebarContainer>
@@ -139,7 +163,7 @@ export function PaginaSetores() {
 					</ButtonRow>
 				</ButtonGroup>
 
-				<DefaultTable idTable={idTable} rows={rows} columns={[]} defaultColumns={defaultColumns} />
+				<DefaultTable idTable={idTable} rows={rows} columns={[]} defaultColumns={defaultColumns}  handleOpenModalEdit={handleOpenModalEditInterno} handleOpenModalAction={handleOpenModalDeleteInterno}/>
 			</ContainerAdminContas>
             <ModalForm
                     isModalOpen={isModalSetorOpen}
@@ -158,6 +182,15 @@ export function PaginaSetores() {
                     width="30%"
                     >
                         <FormAddInterno onAdd={onAddInterno}/>
+                </ModalForm>
+				<ModalForm
+                    isModalOpen={isModalEditInternosOpen}
+                    isModalClosed={handleOpenModalEditInterno}
+                    title="Editar Interno"
+                    height="65vh"
+                    width="30%"
+                    >
+                        <FormEditInterno onAdd={() => {}} idInterno={idInterno}/>
                 </ModalForm>
 		</ContainerAdmin>
 	);

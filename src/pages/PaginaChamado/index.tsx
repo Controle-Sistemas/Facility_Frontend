@@ -16,7 +16,8 @@ import {
     OcorrenciasContainer,
 	OcorrenciaItem,
 	ChamadoHeader,
-	ChamadoStatus
+	ChamadoStatus,
+	ChamadoBodyDescription
 } from './styled';
 import { ButtonActionTable } from '../../components/styledComponents/buttons';
 import { ImagePostIt } from '../../components/PostItImageComponent';
@@ -284,12 +285,10 @@ export function PaginaChamado() {
 							</ChamadoBodyRow>
 
 							{chamado.DESCRICAO && (
-								<ChamadoBodyRow>
-									<ChamadoBodyRowLabel>
+								<ChamadoBodyDescription>
 										<h4>Descrição do chamado</h4>
 										<div dangerouslySetInnerHTML={{ __html: chamado.DESCRICAO }} />
-									</ChamadoBodyRowLabel>
-								</ChamadoBodyRow>
+								</ChamadoBodyDescription>
 							)}
 							<div className="row">
 							{chamado.FILE ? 
@@ -361,6 +360,13 @@ export function PaginaChamado() {
 
 						</ChamadoBody>
 					</ChamadoContainer>
+					{chamado.ULTIMAATUALIZACAO !== "" && chamado.ULTIMAATUALIZACAO ? (
+						<ChamadoHeader>
+							<div>
+								Ultima atualização: <span>{formatData(chamado.ULTIMAATUALIZACAO.split(' ')[0])}</span>  as <span>{formatTime(chamado.ULTIMAATUALIZACAO.split(' ')[1])}</span>
+							</div>
+						</ChamadoHeader>
+					): null}
 				</ContainerAdminContas>
                 <ModalForm
                     isModalOpen={modalOcorrenciaIsOpen}

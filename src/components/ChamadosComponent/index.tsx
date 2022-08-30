@@ -14,7 +14,8 @@ import {
 	ChamadoHeaderPart,
 	PrioritySection,
 	OcurrencySpan,
-	ChamadosLabel
+	ChamadosLabel,
+	ChamadoFooter
 } from './styled';
 import { formatData, formatTime } from '../../utils/Masks';
 import './style.css';
@@ -66,6 +67,14 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 			setClientes(res.data.data)
 		})
 	}, []);
+
+	function handleChangeVistoChamado(id){
+		const aux = chamados.filter(chamado => chamado.ID === id) 
+		axios.patch(BASE_URL + `/chamados/${id}`,{ // faz o patch para marcar como visto a notificação
+			VISTO: !aux[0].VISTO ? 1 : 1,
+		})
+
+	}
 
     const sortChamados = (chamados: any) => {
 		//Função para ordenar os documentos
@@ -229,7 +238,7 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 		
 											</ChamadosLabel>
 										)
-										} >
+										} onClick={(e) => handleChangeVistoChamado(chamado.id)} >
 											<Link to={`/${isAdmin ? "admin" : "interno"}/chamado/${chamado.id}`} style={{textDecoration:"none"}}>
 												<ChamadoDescription>
 													<div dangerouslySetInnerHTML={{__html:chamado.descricao}} />
@@ -238,7 +247,7 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 		
 										</TreeItem>
 		
-										<ChamadoHeader>
+										<ChamadoFooter>
 											<div>
 												<span>{chamado.data}</span> - <span>{chamado.dataPrevisao}</span>
 												
@@ -251,7 +260,7 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 												<span>{chamado.postadoPor}</span>
 												as {chamado.hora}
 											</ChamadoHeaderPart>
-										</ChamadoHeader>
+										</ChamadoFooter>
 									</ChamadoList>
 								);
 							}
