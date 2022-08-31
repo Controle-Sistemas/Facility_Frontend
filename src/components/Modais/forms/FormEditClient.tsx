@@ -29,14 +29,12 @@ export function FormEditClient(props) {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		console.log(values);
 		values.RAMODEATIVIDADE = values.RAMODEATIVIDADE.toString();
 		for (let i in values) {
 			if (values[i] === '') {
 				delete values[i];
 			}
 		}
-		console.log(values);
 		props.atualizar(values);
 		setTimeout(() => {
 			props.isModalClosed(true);
@@ -45,12 +43,9 @@ export function FormEditClient(props) {
 
 	useEffect(() => {
 		axios.get(`${BASE_URL}/ramos`).then((response) => {
-			console.log(response.data);
 			setRamos(response.data);
 		})
-		console.log(props.clientId);
 		axios.get(`${BASE_URL}/clientes/${props.clientId}`).then((response) => {
-			console.log(response.data);
 
 			setValues(response.data.data[0]);
 			setIdcloud(response.data.data[0].IDCLOUD);

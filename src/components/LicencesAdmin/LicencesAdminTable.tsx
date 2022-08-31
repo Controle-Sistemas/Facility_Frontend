@@ -47,7 +47,6 @@ export function LicencesAdminTable() {
 
 	useEffect(() => {
 		axios.get(`${BASE_URL}/tabelas/${idUser}/${idTable}`).then((response) => { //pega as colunas do usuario
-			console.log(response.data)
 			response.data.data.forEach((element) => {
 				if (element.visible === 1) { //se a coluna estiver visivel
 					if (columns.find(col => col.id === element.id)) { //se a coluna ja existir
@@ -64,7 +63,6 @@ export function LicencesAdminTable() {
 	}, [columns, idUser]);
 
 	const editColumns = (data) =>{ //edita as colunas do usuario
-		console.log(data)
 		axios.patch(`${BASE_URL}/tabelas/${idUser}`, data).then((response:any) => {	//edita as colunas do usuario
 			Swal.fire({
 				title: 'Sucesso',
@@ -116,7 +114,6 @@ export function LicencesAdminTable() {
 			});
 	}, []);
 
-	console.log(licences)
 
 	//Abrir/fechar Modais
 	function handleOpenModal(idCloud: number) {

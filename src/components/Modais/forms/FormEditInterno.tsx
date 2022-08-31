@@ -31,7 +31,6 @@ export function FormEditInterno({ onEdit, idInterno }) {
 		});
 	}, []);
 
-	console.log(interno);
 
 	function handleChange(e) {
 		setInterno({ ...interno, [e.target.name]: e.target.value });

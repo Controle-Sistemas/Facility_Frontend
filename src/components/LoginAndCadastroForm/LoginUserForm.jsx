@@ -127,7 +127,6 @@ export function LoginUserForm() {
     async function loginInterno(USUARIO, SENHA){
         axios.post(BASE_URL+'/internos/login', {USUARIO,SENHA})
         .then(res => {
-            console.log(res)
             if (res.status === 200) { 
                 cookie.set('id', res.data.id)
                 setToken(res.data.token) //Setando o token nos cookies

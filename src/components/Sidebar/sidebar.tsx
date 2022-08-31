@@ -212,7 +212,11 @@ export default function Sidebar(props: Props) {
 
 	const handleRedirectConfig = () => {
 		//Função para redirecionar para a página de configurações
-		navigate('/user/configuracoes');
+		if (location.pathname.includes('/admin')) {
+			navigate('/admin/configuracoes');
+		} else {
+			navigate('/user/configuracoes');
+		}
 	};
 
 	//Função para abrir e fechar o menu lateral

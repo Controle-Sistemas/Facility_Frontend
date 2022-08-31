@@ -51,7 +51,6 @@ export function FormAddCard({handleClose,onAdd}) {
                 break;
 
         }      
-        console.log(values)  
         onAdd(values)
         
     }

@@ -17,7 +17,6 @@ export interface Tree {
 	iconNameFontAwesome: string;
 	items: Tree[] | void;
 }
-console.log(BASE_URL);
 function AddMenuItem(props) {
 	const [ modalFormIsOpen, setFormIsOpen ] = useState(false); //Estado da modal
 	const [ apiItemData, setApiItemData ] = useState<any>([]); //Estado dos dados da api

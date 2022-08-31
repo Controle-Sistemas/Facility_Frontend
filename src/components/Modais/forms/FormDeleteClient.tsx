@@ -5,7 +5,6 @@ export function FormDeleteClient(props){
   
   function handleDeleteClient(event) {
     event.preventDefault()
-    console.log(props.clienteId)
     
     props.deleteFunction(props.clientId)
       

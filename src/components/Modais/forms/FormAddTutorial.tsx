@@ -14,17 +14,14 @@ export function FormAddTutorial({ handleClose, addTutorial, categorias }) {
 		TEXTO: null,
 		LINK: ''
 	});
-	console.log(categorias);
 
 	function handleChange(e) {
 		const { name, value } = e.target;
 		setTutorial({ ...tutorial, [name]: value });
-		console.log(tutorial);
 	}
 
     function handleChangeText(content,editor){
         setTutorial({...tutorial, TEXTO: content})
-        console.log(tutorial)
     }
 
 	function handleSubmit(e) {
@@ -45,7 +42,6 @@ export function FormAddTutorial({ handleClose, addTutorial, categorias }) {
         }
 		addTutorial(data);
 	}
-	console.log(categorias);
 
 	return (
 		<FormContainer onSubmit={handleSubmit} encType="multipart/form-data">

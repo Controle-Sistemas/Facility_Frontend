@@ -17,7 +17,6 @@ export function FormEditEmpresa({ idCloud,isModalClosed }) {
             await axios
 			.get(`${BASE_URL}/empresas/${idCloud}`)
 			.then((response) => {
-                console.log(response)
 				setDadosEmpresa(response.data.data[0]);
                 setLoading(false)
 			})
@@ -32,7 +31,6 @@ export function FormEditEmpresa({ idCloud,isModalClosed }) {
 
     function handleChangePage(page:string) {
         setPage(page)
-        console.log(page)
     }
 
     const handleChangeEnterprise = e => {
@@ -45,7 +43,6 @@ export function FormEditEmpresa({ idCloud,isModalClosed }) {
 
     function handleSubmit(event){
         event.preventDefault()
-        console.log(JSON.stringify(dadosEmpresa))
             if (dadosEmpresa.Status !== 0) {
                 dadosEmpresa.Novo='N';
             } 
@@ -63,7 +60,6 @@ export function FormEditEmpresa({ idCloud,isModalClosed }) {
             })
     }
 
-	console.log(dadosEmpresa);
 
     if(loading){
         return (<LoadingComponent/>)

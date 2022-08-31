@@ -25,10 +25,12 @@ import { PaginaChamados } from './pages/PaginaChamados';
 import { PaginaChamado } from './pages/PaginaChamado';
 import { PortalChamados } from './pages/PortalChamados';
 import { PaginaSetores } from './pages/PaginaInternos';
+import { ConfigPage } from './pages/ConfigPage';
 
 function App() {
 	//Rotas do React
 	//As privadas impedem o acesso caso não esteja logado
+	localStorage.getItem('Tema') === undefined && localStorage.setItem('Tema','light')
 	return (
 		<BrowserRouter>
 			<StoreProvider>
@@ -81,6 +83,15 @@ function App() {
 							<ProtectedRoute>
 								<Header />
 								<CentralDocumentosPageAdmin />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path="/user/configuracoes"
+						element={
+							<ProtectedRoute>
+								<Header />
+								<ConfigPage />
 							</ProtectedRoute>
 						}
 					/>
@@ -228,6 +239,15 @@ function App() {
 							<ProtectedRoute>
 								<Header />
 								<PaginaSetores />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path="/admin/configuracoes"
+						element={
+							<ProtectedRoute>
+								<Header />
+								<ConfigPage />
 							</ProtectedRoute>
 						}
 					/>

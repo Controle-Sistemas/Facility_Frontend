@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+const tema = localStorage.getItem('Tema') 
 export const CardContainer = styled.div`
 	display: flex;
 	align-items: center;
@@ -9,15 +9,17 @@ export const CardContainer = styled.div`
 	height: 100%;
 	margin: .2rem;
 	padding: .3rem;
-	background-color: #fff;
+	background-color: ${tema === 'light' ? '#fff' : '#2C333f'};
+
 	border-radius: .3rem;
 	box-shadow: 0 0 .5rem rgba(0, 0, 0, 0.2);
 	border: 1px solid #eee;
-	color: #003775;
+	color: ${tema === 'light' ? '#003775' : '#E7F6F2'};
+	
 	transition: .5s all ease-in-out;
 	&:hover {
-		color: #003775;
-		transform: scale(1.02);
+		
+		transform: scale(1.01);
 	}
 
 	& > div > div {
@@ -31,11 +33,10 @@ export const CardContainer = styled.div`
 
 export const CardTitle = styled.h4`
 	font-family: 'Open Sans', sans-serif;
-	background: rgba(255, 250, 255, 0.2);
+	background-color: ${tema === 'light' ? 'rgba(255, 250, 255, 0.2)' : 'rgba(44, 51, 63,0.5)'};
+
 	box-shadow: 0 0 .5rem rgba(0, 0, 0, 0.1);
-	backdrop-filter: blur(5px);
-	-webkit-backdrop-filter: blur(5px);
-	border-bottom: 1px solid #efefef;
+	border-bottom: 1px solid ${tema === 'light' ? '#efefef' : '#2F433f'};
 	width: 100%;
 	font-weight: bold;
 	font-size: 1.2rem;
@@ -49,7 +50,7 @@ export const CardStatistic = styled.span`
 	color: ${(props) =>
 		props.status === 'PENDENTE' || props.status === 'ATRASADO'
 			? '#c82333'
-			: props.status === `ANDAMENTO` ? '#f5a623' : '#003775'};
+			: props.status === `ANDAMENTO` ? '#f5a623' : tema === 'light' ? '#003775' : '#E7F6F2'};
 	font-size: 1.2rem;
 	font-weight: 400;
 	width: 40%;

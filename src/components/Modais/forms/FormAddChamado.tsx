@@ -26,11 +26,14 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		STATUS: '1',
 		FILE: null,
 		DATAINCLUSAO: '',
-		INTERNORECEPTOR:""
+		INTERNORECEPTOR:"",
+		DATARECORRENCIA: ''
+
 	});
 	const [ statusChamado, setStatusChamado ] = useState([]);
 	const [ setores, setSetores ] = useState([]);
 	const [ hasFile, setHasFile ] = useState(false);
+	const [isRecurrent, setIsRecurrent] = useState(false)
 	const [ clientes, setClientes ] = useState([]);
 	const [internos, setInternos] = useState([])
 	
@@ -81,6 +84,9 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		data.append('STATUS', chamadoData.STATUS);
 		data.append('DATAINCLUSAO', chamadoData.DATAINCLUSAO);
 		data.append('INTERNORECEPTOR',chamadoData.INTERNORECEPTOR)
+		data.append('RECORRENTE',isRecurrent.toString())
+		data.append('DATARECORRENCIA',chamadoData.DATARECORRENCIA)
+
 		if (!isAdmin) {
 			data.append('IDINTERNO', chamadoData.IDINTERNO);
 		}
@@ -143,7 +149,6 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 						isOptionEqualToValue={(option, value) => option.id === value.id}
 						inputValue={chamadoData.CLIENTE}
 						onInputChange={(event, newInputValue) => {
-							console.log(newInputValue)
 							setChamadoData({...chamadoData,CLIENTE:newInputValue});
 						}}
 						
@@ -183,7 +188,6 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 						isOptionEqualToValue={(option, value) => option.id === value.id}
 						inputValue={chamadoData.INTERNORECEPTOR}
 						onInputChange={(event, newInputValue) => {
-							console.log(newInputValue)
 							setChamadoData({...chamadoData,INTERNORECEPTOR:newInputValue});
 						}}
 						
@@ -217,10 +221,20 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 						/>
 					</InputContainer>
 				)}
+
+				{isRecurrent && (
+					<InputContainer>
+						<label>Data recorrencia:</label>
+						<input type="date" className="form-control" name="DATARECORRENCIA" onChange={handleChange} required />
+					</InputContainer>
+				)}
+
 				<InputContainer>
 					<CheckboxGroup>
 						<input type="checkbox" onChange={() => setHasFile(!hasFile)} />
 						<label>Inserir Arquivos</label>
+						<input type="checkbox" onChange={() => setIsRecurrent(!isRecurrent)} />
+						<label>Recorrente</label>
 					</CheckboxGroup>
 				</InputContainer>
 				<ButtonFormGroup>

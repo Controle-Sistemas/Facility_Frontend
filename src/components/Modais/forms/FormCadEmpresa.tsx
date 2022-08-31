@@ -25,7 +25,6 @@ export function FormCadEmpresa({ isModalClosed }) {
 		if (name === 'CEP') {
 			setDadosEmpresa({ ...dadosEmpresa, [name]: CepMask(value) });
 		} else if (name === 'FoneCobranca') {
-			console.log(telefoneMask(value));
 			setDadosEmpresa({ ...dadosEmpresa, [name]: telefoneMask(value) });
 		} else {
 			setDadosEmpresa({ ...dadosEmpresa, [name]: value });

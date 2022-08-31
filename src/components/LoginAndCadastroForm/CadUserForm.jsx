@@ -44,10 +44,8 @@ export function CadUserForm() {
 
     //Enviando os dados para o banco de dados 
     async function postData(url = '', data = {}) {
-        console.log(data)
         await axios.post(url, data)
             .then(res => {
-                console.log(res)
                 if(isInternal){
                     navigate('/login')
                 } else {
@@ -96,9 +94,6 @@ export function CadUserForm() {
             console.log(err)
         })
     }, [])
-
-    console.log(setores)
-
 
     //Funções para capturar os valores do formulário
 
@@ -153,7 +148,6 @@ export function CadUserForm() {
 
     const handleSubmitInternal = (event) => {
         event.preventDefault()
-        console.log(internalValues)
         postData(BASE_URL+'/internos/',internalValues)
         
     }

@@ -32,13 +32,11 @@ export function FormEditDocument({ id, atualizar, handleClose }) {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		console.log(document);
 		for (let i in document) {
 			if (document[i] === '') {
 				delete document[i];
 			}
 		}
-		console.log(document);
 		atualizar(document);
 		setTimeout(() => {
 			handleClose();
@@ -48,7 +46,6 @@ export function FormEditDocument({ id, atualizar, handleClose }) {
 	useEffect(
 		() => {
 			axios.get(`${BASE_URL}/documentos/${id}`).then((response) => {
-				console.log(response.data.data[0]);
 				setDocument(response.data.data[0]);
 			});
 		},

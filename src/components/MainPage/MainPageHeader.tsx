@@ -17,7 +17,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 export function MainPageHeader(Props) {
 	const isMobile = window.innerWidth < 768;
 	const [ isMenuOpen, setIsMenuOpen ] = useState(false);
-	console.log(isMobile);
 	return (
 		<HeaderContainer>
 			<HeaderContactsContainer>

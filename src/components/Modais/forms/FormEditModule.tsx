@@ -13,16 +13,12 @@ async function patchStatusApi(id: string, ativo: Boolean) {
 		.patch(`http://localhost:8000/menu/item/${id}`, {
 			ativo
 		})
-		.then((res) => {
-			console.log(res);
-		})
 		.catch((err) => {
 			Swal.fire({
 				title: 'Erro',
 				text: err.response.data,
 				icon: 'error'
 			});
-			console.log(err.response.data);
 		});
 }
 
@@ -31,9 +27,6 @@ async function patchAdminApi(id: string, admin: Boolean) {
 	await axios
 		.patch(`http://localhost:8000/menu/item/${id}`, {
 			admin
-		})
-		.then((res) => {
-			console.log(res);
 		})
 		.catch((err) => {
 			Swal.fire({
@@ -79,7 +72,6 @@ export function FormEditModule(props) {
 					}
 				})
 				.then((res) => {
-					console.log(res);
 					let item = res.data.data;
 
 					setItem({

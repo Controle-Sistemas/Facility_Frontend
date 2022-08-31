@@ -1,5 +1,6 @@
 import styled, { keyframes } from 'styled-components';
-
+const tema = localStorage.getItem('Tema')
+console.log(tema)
 export const ContainerAdmin = styled.div`
 	display: flex;
 	flex-direction: row;
@@ -7,6 +8,7 @@ export const ContainerAdmin = styled.div`
 	width: 100%;
 	height: 100%;
 	padding: 0 1rem;
+	background-color: ${tema === 'light' ? '#fefefe' : '#2C3333'}
 
 	@media (max-width: 600px) {
 		flex-direction: column;
@@ -22,6 +24,8 @@ export const ContainerAdminContas = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
+	background-color: ${tema === 'light' ? '#fefefe' : '#2C3333'}
+
 
 	@media (max-width: 960px) {
 		width: 75%;
@@ -96,7 +100,8 @@ export const ButtonFormGroup = styled.div`
 	margin-top: 1rem;
 	position: absolute;
 	bottom: 0;
-	background-color: #fff;
+	background-color: ${tema === 'light' ? '#fff' : '#2C3333'}
+
 
 	@media (max-width: 768px) {
 		display: flex;
@@ -303,7 +308,8 @@ export const CardContainer = styled.div`
 	max-height: 15rem;
 	margin: .5rem;
 	padding: .5rem;
-	background-color: #fff;
+	background-color: ${tema === 'light' ? '#fff' : '#2C3333'}
+
 	border-radius: .3rem;
 	box-shadow: 0 0 .5rem ${(props) => props.isChecked ? 'rgba(175,0,0,0.2)' : 'rgba(0,0,0,0.2)'};
 	border: 1px solid ${(props) => props.isChecked ? '#ff6961' : '#eee'};

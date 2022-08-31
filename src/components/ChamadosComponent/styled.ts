@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+const tema = localStorage.getItem('Tema')
 export const ChamadosContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -19,7 +19,8 @@ export const ChamadoList = styled.ul`
 	box-shadow: 0 .1rem .2rem rgba(0, 0, 0, 0.2);
 	border:1px solid #e3e3e3;
 	border-radius: .3rem;
-	background-color: ${(props) => (props.selected ? '#cdcdcd' : '#fefeee')};
+	background-color: ${tema === 'light' ? '#fff' : '#2C333f'};
+
 	&:hover {
 		background-color: #fff3f3;
 	}
@@ -28,7 +29,8 @@ export const ChamadoList = styled.ul`
 	& > li {
 		width: 100%;
 		height: 100%;
-		color: #000;
+		color: ${tema === 'light' ? '#000' : '#E7F6F2'};
+
 		padding: 0;
 
 		&:hover {
@@ -78,7 +80,8 @@ export const ChamadoDescription = styled.li`
 	margin: 0;
 	border-radius: .3rem;
 	font-size: 1.2rem;
-	color: #000;
+	color: ${tema === 'light' ? '#003775' : '#E7F6F2'};
+
 
 	& > li > .css-1g86id8-MuiTreeItem-content.Mui-selected.Mui-focused,
 	.css-1g86id8-MuiTreeItem-content.Mui-selected {
@@ -97,7 +100,8 @@ export const ChamadoHeader = styled.div`
 	justify-content: space-between;
 	width: 100%;
 	gap: 1rem;
-	color: #939393;
+	color: ${tema === 'light' ? '#939393' : '#efefef'};
+
 	font-size: .8rem;
 	font-family: 'Open Sans', sans-serif;
 
@@ -110,7 +114,8 @@ align-items: center;
 justify-content: space-between;
 width: 100%;
 gap: 1rem;
-color: #939393;
+color: ${tema === 'light' ? '#939393' : '#efefef'};
+
 font-size: .8rem;
 font-family: 'Open Sans', sans-serif;
 
@@ -126,13 +131,15 @@ export const ChamadoHeaderPart = styled.div`
 	flex-direction: row;
 	align-items: center;
 	justify-content: flex-start;
-	color: #050505;
+	color: ${tema === 'light' ? '#050505' : '#cdcdcd'};
+
 	gap: .3rem;
 	font-size: .8rem;
 	font-family: 'Open Sans', sans-serif;
 
 	& > span {
-		color: #003775;
+		color: ${tema === 'light' ? '#003775' : '#E7F6F2'};
+
 		font-weight: bold;
 		display: flex;
 	}

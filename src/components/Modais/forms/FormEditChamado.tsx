@@ -6,41 +6,43 @@ import {
 	InputContainer,
 	DisabledInputContainer,
 	ButtonFormGroup,
-	FormRowContainer
+	FormRowContainer,
+	CheckboxGroup
 } from '../../styledComponents/containers';
 import { BASE_URL } from '../../../utils/requests';
 import axios from 'axios';
-import {Editor} from '@tinymce/tinymce-react';
+import { Editor } from '@tinymce/tinymce-react';
 import { formatData } from '../../../utils/Masks';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
 export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor }) {
-    const [setores, setSetores] = useState([])
-    const [statusChamado, setStatusChamado] = useState([])
-    const [internos, setInternos] = useState([])
-    const [clientes, setClientes] = useState([])
+	const [ setores, setSetores ] = useState([]);
+	const [ statusChamado, setStatusChamado ] = useState([]);
+	const [ internos, setInternos ] = useState([]);
+	const [ clientes, setClientes ] = useState([]);
+
 	const date = new Date();
 	const ano = date.getFullYear();
 	const mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
 	const dia = date.getDate();
 	const hora = date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
-	const dataAtualizacao = `${ano}-${mes}-${dia} ${hora}`
+	const dataAtualizacao = `${ano}-${mes}-${dia} ${hora}`;
 
-    useEffect(() => {
-        axios.get(`${BASE_URL}/setores/`).then(res => {
-            setSetores(res.data.data)
-        })
-        axios.get(`${BASE_URL}/status-chamado/`).then(res => {
-            setStatusChamado(res.data.data)
-        })
-		axios.get(`${BASE_URL}/internos/`).then(res => {
-            setInternos(res.data.data)
-        })
-		axios.get(`${BASE_URL}/clientes/admin`).then(res => {
-            setClientes(res.data.data)
-        })
-    },[])
+	useEffect(() => {
+		axios.get(`${BASE_URL}/setores/`).then((res) => {
+			setSetores(res.data.data);
+		});
+		axios.get(`${BASE_URL}/status-chamado/`).then((res) => {
+			setStatusChamado(res.data.data);
+		});
+		axios.get(`${BASE_URL}/internos/`).then((res) => {
+			setInternos(res.data.data);
+		});
+		axios.get(`${BASE_URL}/clientes/admin`).then((res) => {
+			setClientes(res.data.data);
+		});
+	}, []);
 
 	function handleChangeValues(event) {
 		const { name, value } = event.target;
@@ -51,11 +53,11 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 	}
 
 	const handleChangeText = (content, editor) => {
-		setChamado({	
+		setChamado({
 			...chamado,
 			DESCRICAO: content
 		});
-	}
+	};
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
@@ -64,29 +66,29 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 				delete chamado[i];
 			}
 		}
-		chamado.ULTIMAATUALIZACAO = dataAtualizacao
-		chamado.VISTO = 0
+		chamado.ULTIMAATUALIZACAO = dataAtualizacao;
+		chamado.VISTO = 0;
 		atualizar(chamado);
-
-
 	};
 
-	const formatedClient = clientes.map(cliente => {
+	const formatedClient = clientes.map((cliente) => {
 		return {
 			label: cliente.NOME,
-			id: cliente.ID,
-		}
-	})
+			id: cliente.ID
+		};
+	});
 
-	const formatedInternal = internos.map(interno => {
-		if(interno.USUARIO.toLowerCase() !== 'admin'){
-			return {
-				label:interno.USUARIO,
-				id: interno.ID,
-				setor: interno.SETOR
+	const formatedInternal = internos
+		.map((interno) => {
+			if (interno.USUARIO.toLowerCase() !== 'admin') {
+				return {
+					label: interno.USUARIO,
+					id: interno.ID,
+					setor: interno.SETOR
+				};
 			}
-		}
-	}).filter(interno => interno !== undefined)
+		})
+		.filter((interno) => interno !== undefined);
 
 	return (
 		<FormRowContainer>
@@ -98,33 +100,47 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 					</InputContainer>
 					<InputContainer>
 						<label htmlFor="idcloud">Data Cadastro </label>
-						<input className="form-control" placeholder={`${formatData(chamado.DATAINCLUSAO.split(' ')[0])}`} disabled />
+						<input
+							className="form-control"
+							placeholder={`${formatData(chamado.DATAINCLUSAO.split(' ')[0])}`}
+							disabled
+						/>
 					</InputContainer>
-                    <InputContainer>
+					<InputContainer>
 						<label htmlFor="empresa">Chamado por:</label>
-						<input className="form-control" placeholder={`${chamado.IDINTERNO === null ? 'Admin' : chamado.IDINTERNO}`} disabled />
+						<input
+							className="form-control"
+							placeholder={`${chamado.IDINTERNO === null ? 'Admin' : chamado.IDINTERNO}`}
+							disabled
+						/>
 					</InputContainer>
 				</DisabledInputContainer>
 
 				<InputContainer>
 					<label htmlFor="nome-responsavel  ">Titulo do chamado</label>
-					<input className="form-control" name="TITULO" value={chamado.TITULO} onChange={handleChangeValues} disabled={Boolean(isAdmin) ? false : true}/>
-				</InputContainer>
-					<InputContainer>
-					<label>Descrição</label>
-						<Editor
-							value={chamado.DESCRICAO}
-							init={{
-								height: 150,
-								width: '100%',
-								menubar: false,
-							}}
-							onEditorChange={handleChangeText}
-                            disabled={Boolean(isAdmin) ? false : true}
-								/>
+					<input
+						className="form-control"
+						name="TITULO"
+						value={chamado.TITULO}
+						onChange={handleChangeValues}
+						disabled={Boolean(isAdmin) ? false : true}
+					/>
 				</InputContainer>
 				<InputContainer>
-				<Autocomplete
+					<label>Descrição</label>
+					<Editor
+						value={chamado.DESCRICAO}
+						init={{
+							height: 150,
+							width: '100%',
+							menubar: false
+						}}
+						onEditorChange={handleChangeText}
+						disabled={Boolean(isAdmin) ? false : true}
+					/>
+				</InputContainer>
+				<InputContainer>
+					<Autocomplete
 						id="combo-box-demo"
 						options={formatedClient}
 						sx={{ width: '100%', marginTop: '1rem' }}
@@ -132,12 +148,9 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 						isOptionEqualToValue={(option, value) => option.id === value.id}
 						inputValue={chamado.CLIENTE}
 						onInputChange={(event, newInputValue) => {
-							console.log(newInputValue)
-							setChamado({...chamado,CLIENTE:newInputValue});
+							setChamado({ ...chamado, CLIENTE: newInputValue });
 						}}
-                            disabled={Boolean(isAdmin) ? false : true}
-
-						
+						disabled={Boolean(isAdmin) ? false : true}
 					/>
 				</InputContainer>
 				<InputContainer>
@@ -157,13 +170,11 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 						name="PREVISAO"
 						onChange={handleChangeValues}
 						value={chamado.PREVISAO}
-						
 					/>
 				</InputContainer>
 				<InputContainer>
-                <label htmlFor="SETOR">Setor</label>
+					<label htmlFor="SETOR">Setor</label>
 					<select className="form-control" name="SETOR" onChange={handleChangeValues} required>
-						
 						{setores ? (
 							setores.map((sector) => (
 								<option key={sector.ID} value={sector.ID} selected={setor.ID === sector.ID}>
@@ -176,20 +187,18 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 				<InputContainer>
 					<Autocomplete
 						id="combo-box-demo"
-						options={formatedInternal.filter(interno => interno.setor === Number(chamado.SETOR))}
+						options={formatedInternal.filter((interno) => interno.setor === Number(chamado.SETOR))}
 						sx={{ width: '100%', marginTop: '1rem' }}
 						renderInput={(params) => <TextField {...params} label="Interno" />}
 						isOptionEqualToValue={(option, value) => option.id === value.id}
 						inputValue={chamado.INTERNORECEPTOR}
 						onInputChange={(event, newInputValue) => {
-							console.log(newInputValue)
-							setChamado({...chamado,INTERNORECEPTOR:newInputValue});
+							setChamado({ ...chamado, INTERNORECEPTOR: newInputValue });
 						}}
-						
 					/>
 				</InputContainer>
-                <InputContainer>
-                <label htmlFor="SETOR">Status</label>
+				<InputContainer>
+					<label htmlFor="SETOR">Status</label>
 					<select className="form-control" name="STATUS" onChange={handleChangeValues} required>
 						{statusChamado ? (
 							statusChamado.map((status) => (
@@ -200,23 +209,50 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 						) : null}
 					</select>
 				</InputContainer>
+				{chamado.RECORRENTE === 1 && (
+					<InputContainer>
+						<label>Data recorrencia:</label>
+						<input
+							type="date"
+							className="form-control"
+							name="DATARECORRENCIA"
+							onChange={handleChangeValues}
+							required
+						/>
+					</InputContainer>
+				)}
 				<InputContainer>
-                <label>
-                    <input type="checkbox" name="ATIVO" id="" checked={chamado.ATIVO}
-                    onChange={(event) => {
-									event.target.checked
-										? setChamado({ ...chamado, ATIVO: 1 })
-										: setChamado({ ...chamado, ATIVO: 0 });
-								}}/>
-                    Chamado ativo
-                </label>
-                </InputContainer>
-			</DataGroup>
+					<CheckboxGroup>
+						<input
+							type="checkbox"
+							name="ATIVO"
+							id=""
+							checked={chamado.ATIVO}
+							onChange={(event) => {
+								event.target.checked
+									? setChamado({ ...chamado, ATIVO: 1 })
+									: setChamado({ ...chamado, ATIVO: 0 });
+							}}
+						/>
+						<label>Chamado ativo</label>
 
+						<input
+							type="checkbox"
+							checked={chamado.RECORRENTE}
+							onChange={(event) => {
+								event.target.checked
+									? setChamado({ ...chamado, RECORRENTE: 1 })
+									: setChamado({ ...chamado, RECORRENTE: 0 });
+							}}
+						/>
+						<label>Recorrente</label>
+					</CheckboxGroup>
+				</InputContainer>
+			</DataGroup>
 
 			<ButtonFormGroup>
 				<PrimaryButton onClick={handleSubmit}>Confirmar</PrimaryButton>
 			</ButtonFormGroup>
 		</FormRowContainer>
-    )
+	);
 }
