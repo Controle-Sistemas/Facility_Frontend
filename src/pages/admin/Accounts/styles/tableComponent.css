@@ -14,7 +14,7 @@
     margin: 0;
     display: flex;
     width: 100%;
-    background-color: #003775;
+    background-color: inherit ;
     align-items: center;
     justify-content: end;
     text-align: center;

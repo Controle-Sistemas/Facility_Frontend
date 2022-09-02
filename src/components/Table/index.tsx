@@ -6,10 +6,10 @@ import Paper from '@mui/material/Paper';
 import { ButtonActionTable } from '../styledComponents/buttons';
 import TablePagination from '@mui/material/TablePagination';
 import { TableContainer } from '@mui/material';
-
 import { TablePaginationActions } from '../Paginacao';
 import { TableHeaderCell, TableRow, TableCell, TableCellActions } from '../styledComponents/table';
 import { useState } from 'react';
+import { colorPallete,tema } from '../../coresStyled';
 
 interface Props {
 	//Interface dos props do componente
@@ -71,7 +71,7 @@ export default function DefaultTable({
 	};
 
 	return (
-		<Paper sx={{ width: '100%', overflow: 'hidden' }}>
+		<Paper sx={{ width: '100%', overflow: 'hidden', backgroundColor:tema === 'light' ? colorPallete.light.primaryColor: colorPallete.dark.buttonPrimaryBgColor}}>
 			<TableContainer component={Paper} className="table-containertable-container" id={idTable.toString()}>
 				<Table id={idTable.toString()} sx={{ minWidth: 700 }} aria-label="customized table">
 					<TableHead>
@@ -148,7 +148,7 @@ export default function DefaultTable({
 								<TableRow
 									key={index}
 									style={
-										item.NOVO === 'S' ? { backgroundColor: '#BDECB6' } : { backgroundColor: '#fff' }
+										item.NOVO === 'S' ? { backgroundColor: '#BDECB6' } :  { backgroundColor:tema === 'light' ? colorPallete.light.bgColor: colorPallete.dark.bgColor } 
 									}
 								>
 									{keys.map((key, index) => {

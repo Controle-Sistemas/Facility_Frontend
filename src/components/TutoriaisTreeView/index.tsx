@@ -10,8 +10,6 @@ import {FormEditCategory} from '../../components/Modais/forms/FormEditCategory';
 import {BASE_URL} from '../../utils/requests';
 import Swal from 'sweetalert2';
 import TreeViewComponent from '@mui/lab/TreeView';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
 
 
@@ -297,8 +295,7 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
             </ModalForm>
             
             <TreeViewComponent
-                    defaultCollapseIcon={<ExpandMoreIcon />}
-                    defaultExpandIcon={<ChevronRightIcon />}
+
                     >
 			{TreeViewData ? sortTutorials(filterTutorials(TreeViewData)).map((item) => {
                 

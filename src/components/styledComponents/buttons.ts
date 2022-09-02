@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-
+import { colorPallete,tema } from '../../coresStyled';
 const Button = styled.button`
 	margin: .4rem;
 	padding: .5rem 1rem;
@@ -29,31 +29,32 @@ const Button = styled.button`
 `;
 
 export const PrimaryButton = styled(Button)`
-    background-color: #003775;
-    color: #fff;
-    border: 1px solid #003775;
+    background-color: ${tema === 'light' ? colorPallete.light.buttonPrimaryBgColor : colorPallete.dark.buttonPrimaryBgColor};
+    color:  ${tema === 'light' ? colorPallete.light.buttonTextColor : colorPallete.dark.buttonTextPrimaryColor};
+    border: 1px solid  ${tema === 'light' ? colorPallete.light.buttonPrimaryBgColor : colorPallete.dark.buttonPrimaryBgColor};
 	box-shadow: 0 .1rem .1rem 1px rgba(14, 0, 77, 0.37);
 	width: ${props => (props.width ? props.width : 'auto')};
 
     &:hover {
-    border: 1px solid #003775;
+    	border: 1px solid  ${tema === 'light' ? colorPallete.light.buttonPrimaryBgColor : colorPallete.dark.buttonPrimaryBgColor};
         
-        background-color: #fff;
-        color: #003775;
+        background-color: transparent;
+		color:  ${tema === 'light' ? colorPallete.light.buttonTextHoverColorPrimary : colorPallete.dark.buttonTextHoverColorPrimary};
+
     }
 `;
 
 export const DangerButton = styled(Button)`
-    background-color: #c82333;
-    color: #fff;
+    background-color: ${tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.dangerColor};
+  	color:  ${tema === 'light' ? colorPallete.light.buttonTextColor : colorPallete.dark.buttonTextDangerColor};
     border: 1px solid #c82333;
 	box-shadow: 0 .1rem .1rem 1px rgba(83, 0, 0, 0.37);
 
     &:hover {
-    border: 1px solid #c82333;
+		border: 1px solid ${tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.dangerColor};
 
-        background-color: #fff;
-        color: #c82333;
+        background-color: transparent;
+        color: ${tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.buttonTextHoverColorDanger};
     }
 `;
 
@@ -94,22 +95,24 @@ export const ButtonActionTable = styled.button`
 	${(props) =>
 		props.primary &&
 		css`
-			border: 1px solid #003775;
-			background-color: #003775;
-			color: #fff;
+			border: 1px solid ${tema === 'light' ? colorPallete.light.buttonPrimaryBgColor : colorPallete.dark.buttonPrimaryBgColor};
+			background-color: ${tema === 'light' ? colorPallete.light.buttonPrimaryBgColor : colorPallete.dark.buttonPrimaryBgColor};
+			color: ${tema === 'light' ? colorPallete.light.buttonTextColor : colorPallete.dark.buttonTextPrimaryColor};
 			&:hover {
-				background-color: #fff;
-				color: #003775;
+				background-color: transparent;
+				color: ${tema === 'light' ? colorPallete.light.buttonTextHoverColorPrimary : colorPallete.dark.buttonTextHoverColorPrimary};
 			}
 		`} ${(props) =>
 			props.danger &&
 			css`
-				background-color: #c82333;
-				color: #fff;
-				border: 1px solid #c82333;
+				background-color: ${tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.dangerColor};
+				color:  ${tema === 'light' ? colorPallete.light.buttonTextColor : colorPallete.dark.buttonTextDangerColor};
+
+				border: 1px solid ${tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.dangerColor};
 				&:hover {
-					background-color: #fff;
-					color: #c82333;
+					background-color: transparent;
+					color:  ${tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.buttonTextHoverColorDanger};
+ 
 				}
 			`};
 `;

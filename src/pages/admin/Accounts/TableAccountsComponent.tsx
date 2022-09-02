@@ -1,8 +1,5 @@
 //Importações
 import { useEffect, useState } from 'react';
-
-import Paper from '@mui/material/Paper';
-
 import axios from 'axios';
 import ModalEdit from '../../../components/Modais/modalEdit';
 import { ModalConfirm } from '../../../components/Modais/modalConfirm';
@@ -401,7 +398,7 @@ export default function TableComponent(props) {
 	} else {
 
 	return (
-		<Paper sx={{ width: '100%', overflow: 'hidden' }}>
+		<>
 			<PrimaryButton onClick={handleOpenModalForm}>
 				<AddIcon /> Nova conta
 			</PrimaryButton>
@@ -459,7 +456,7 @@ export default function TableComponent(props) {
 				handleOpenModalAction={handleOpenModalExcluir}
 				handleOpenModalMore={handleOpenModalMore}
 			/>
-		</Paper>
+		</>
 	);
 	}
 }

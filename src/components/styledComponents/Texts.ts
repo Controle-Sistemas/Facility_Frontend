@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { colorPallete,tema } from '../../coresStyled';
 
 export const MainTitle = styled.h1`
     font-size: 2rem;
@@ -6,14 +7,14 @@ export const MainTitle = styled.h1`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #003775;
+    color: ${tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.primaryColor};
     text-shadow: 0 .1rem .2rem rgba(0, 0, 0, 0.4);
 `
 
 export const MainParagraph = styled.p`
     font-size: 1.2rem;
     text-align: center;
-    color: #003775;
+    color: ${tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.primaryColor};
     text-shadow: 0 .1rem .2rem rgba(0, 0, 0, 0.2);
 `
 
@@ -25,7 +26,7 @@ export const ForgotPasswordSpan = styled.span`
     cursor: pointer;
     transition: .5s all ease-in-out;
     &:hover {
-        color: #003775;
+        color: ${tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.primaryColor};
     }
 `
 

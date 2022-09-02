@@ -14,7 +14,15 @@
     background-color: #003775;    /* color of the scroll thumb */
 }
 
+
 *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     text-decoration: none;
-    background-color: transparent;
+  }
+  html, body {
+    margin: 0;
+    height: 100%;
 }
+

@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import {colorPallete,tema} from '../../coresStyled'
+
 
 export const ChamadoContainer = styled.div`
 	display: flex;
@@ -10,8 +12,9 @@ export const ChamadoContainer = styled.div`
 	padding: 1rem;
 	border-radius: .5rem;
 	margin: auto 0;
-	background: #fafafa;
-	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+	background: ${tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor};
+	border: 1px solid ${tema === 'light' ? colorPallete.all.borderDark :  colorPallete.all.borderLight};
+	box-shadow: 0 0.5rem 1rem ${tema === 'light' ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.2)'};
 `;
 
 export const ChamadoHeader = styled.div`
@@ -20,14 +23,16 @@ export const ChamadoHeader = styled.div`
 	justify-content: space-between;
 	gap: .3rem;
 	padding: .5rem;
-	border: 1px solid #e9e9e9;
+	border: 1px solid  ${tema === 'light' ? colorPallete.all.borderLight :  colorPallete.all.borderLight};
 	border-radius: .5rem;
-	background: #fafafa;
+	background: ${tema === 'light' ? '#fafafa' : colorPallete.dark.bgColor};
 	font-size: 1rem;
+	color: ${tema === 'light' ? '#000' :  colorPallete.dark.secondaryColor};
 	margin-bottom: .3rem;
 	& > div > span {
 		font-weight: bold;
-		color: #003775;
+		color: ${tema === 'light' ? colorPallete.light.primaryColor :  colorPallete.dark.primaryColor};
+
 		margin: 0 .3rem;
 	}
 `;
@@ -38,7 +43,7 @@ export const ChamadoTitle = styled.div`
 	justify-content: center;
 	height: 20%;
 	margin: 0 auto;
-	color: #003775;
+	color: ${tema === 'light' ? colorPallete.light.primaryColor :  colorPallete.dark.primaryColor};
 	font-size: 1.5rem;
 	font-weight: bold;
 	& > h1 {
@@ -52,9 +57,10 @@ export const ChamadoStatus = styled.div`
 	justify-content: flex-start;
 	flex-direction: column;
 	padding: .5rem;
-	border: 1px solid #e9e9e9;
+	border: 1px solid  ${tema === 'light' ? colorPallete.all.borderLight :  colorPallete.all.borderLight};
+
 	border-radius: .5rem;
-	background: #fafafa;
+	background: ${tema === 'light' ? '#fafafa' : colorPallete.dark.bgColor};
 	font-size: 1rem;
 	margin-bottom: .3rem;
 	& > h4 {
@@ -63,7 +69,8 @@ export const ChamadoStatus = styled.div`
 
 		& > span {
 			font-weight: bold;
-			color: #003775;
+			color: ${tema === 'light' ? colorPallete.light.primaryColor :  colorPallete.dark.primaryColor};
+
 			margin: 0 .3rem;
 		}
 	}
@@ -76,6 +83,8 @@ export const ChamadoBody = styled.div`
 	height: 80%;
 	padding: 1rem;
 	font-size: 1rem;
+	color: ${tema === 'light' ? '#000' :  '#fff'};
+
 `;
 
 export const ChamadoBodyRow = styled.div`
@@ -123,7 +132,8 @@ export const ChamadoFileContainer = styled.div`
 	box-shadow: 0 .2rem .3rem rgba(0, 0, 0, 0.4);
 	border-radius: .3rem;
 
-	background-color: #fff;
+	background: ${tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor};
+
 	& > div.text-container {
 		width: 70%;
 		height: 100%;
@@ -136,13 +146,14 @@ export const ChamadoFileContainer = styled.div`
 
 	& > div.text-container > span {
 		font-size: .8rem;
-		color: #3d3d3d;
+		color: ${tema === 'light' ?  '#3d3d3d' : '#fafafa'}
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
 
 	& > div.text-container > svg {
-		color: #003775;
+		color: ${tema === 'light' ? colorPallete.light.primaryColor :  colorPallete.dark.buttonPrimaryBgColor};
+
 		font-size: 1.5rem;
 		cursor: pointer;
 		transition: all .3s ease-in-out;
@@ -170,7 +181,7 @@ export const ChamadoActions = styled.div`
 
 export const ChamadoPriority = styled.span`
 	color: ${(props) =>
-		props.prioridade === 3 || props.prioridade === 4 ? '#c82333' : props.prioridade === 2 ? '#f5a623' : '#00a84f'};
+		props.prioridade === 3 || props.prioridade === 4 ? tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.dangerColor : props.prioridade === 2 ? '#f5a623' : '#00a84f'};
 	& > span {
 		display: flex;
 		align-items: center;
@@ -188,14 +199,15 @@ export const OcorrenciasContainer = styled.ul`
 	cursor: pointer;
 	box-shadow: 0 .1rem .2rem rgba(0, 0, 0, 0.2);
 	border-radius: .3rem;
-	background-color: ${(props) => (props.selected ? '#cdcdcd' : '#efefff')};
+	background-color: ${tema === 'light' ? '#efefff' : '#7A7A7A'};
 
 	font-family: 'Open Sans', sans-serif;
 
 	& > li {
 		width: 100%;
 		height: 100%;
-		color: #000;
+		color: ${tema === 'light' ? '#000' :  '#fff'};
+
 		padding: 0;
 		margin: .5rem 0;
 

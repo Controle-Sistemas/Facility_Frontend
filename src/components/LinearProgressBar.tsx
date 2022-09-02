@@ -3,6 +3,8 @@ import { styled } from '@mui/material/styles';
 import LinearProgress, { linearProgressClasses,LinearProgressProps } from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import {tema} from '../coresStyled'
+
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
@@ -12,7 +14,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
-    backgroundColor: theme.palette.mode === 'light' ? '#1a90ff' : '#308fe8',
+    backgroundColor: tema === 'light' ? '#1a90ff' : '#6F6BF2',
   },
 }));
 
@@ -23,7 +25,7 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
           <BorderLinearProgress variant="determinate" {...props} />
         </Box>
         <Box sx={{ minWidth: 35 }}>
-          <Typography variant="body2" color="text.secondary">{`${Math.round(
+          <Typography variant="body2" color={tema === 'light' ? "#000" : "#fff"}>{`${Math.round(
             props.value,
           )}%`}</Typography>
         </Box>

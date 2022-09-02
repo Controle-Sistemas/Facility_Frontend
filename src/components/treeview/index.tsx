@@ -1,5 +1,5 @@
 //Importações
-import { TreeItem } from '../treeItem';
+import { TreeItem } from './treeItem';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 import ModalEdit from '../Modais/modalEdit';
@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 import { BASE_URL } from '../../utils/requests';
 import { useLocation } from 'react-router';
 import { DangerButton, PrimaryButton } from '../styledComponents/buttons';
+import {TreeViewContainer} from './styled'
 
 function TreeView({ tree }) { //Componente para o treeview
 	const location = useLocation(); //Pega o locate do react-router
@@ -176,7 +177,7 @@ function TreeView({ tree }) { //Componente para o treeview
 
 	if (location.pathname.includes('/admin/menu')) { //Se o admin estiver na pagina de menu
 		return (
-			<div className="treeview">
+			<TreeViewContainer>
 				<ModalForm
 					isModalOpen={modalFormIsOpen}
 					isModalClosed={closeModalForm}
@@ -247,11 +248,11 @@ function TreeView({ tree }) { //Componente para o treeview
 						Editar Módulo
 					</PrimaryButton>
 				</div>
-			</div>
+			</TreeViewContainer>
 		);
 	} else { //Se o admin/usuario estiver em outra pagina
 		return (
-			<div className="treeview">
+			<TreeViewContainer>
 				{tree.map((item, i) => {
 					return (
 						<TreeItem
@@ -265,7 +266,7 @@ function TreeView({ tree }) { //Componente para o treeview
 						/>
 					);
 				})}
-			</div>
+			</TreeViewContainer>
 		);
 	}
 }

@@ -11,20 +11,45 @@ import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Logo from '../../assets/logo.png';
+import LogoBranca from '../../assets/logoBranca.png';
 
 import './sidebar.css';
 import axios from 'axios';
-
 import { BASE_URL } from '../../utils/requests';
 import { UserDataType, SidebarMenuType } from '../../types';
 import { useLocation } from 'react-router';
 import TreeView from '../treeview';
+import { colorPallete, tema, setTema } from '../../coresStyled';
+import { LogoImg, ItemList, Item, ItemText } from './styled';
+import DarkModeToggle from "react-dark-mode-toggle";
+
 //Dados para o menu lateral
 
 const drawerWidth = 200; //Largura do menu lateral
 
 interface Props {
 	window?: () => Window;
+}
+
+
+
+
+
+function SwitchDarkMode(){
+    const [isDarkMode, setIsDarkMode] = useState(tema === 'light' ? false : true);
+	localStorage.setItem('Tema',isDarkMode ? 'dark' : 'light')
+
+
+
+    return (
+
+				<DarkModeToggle
+				onChange={(e) => {setIsDarkMode(!isDarkMode);window.location.reload()}} 
+				checked={isDarkMode}
+				size={"5rem"}
+				/>
+    )
+
 }
 
 //Componente da barra de navegação
@@ -249,7 +274,7 @@ export default function Sidebar(props: Props) {
 		<div>
 			<Toolbar>
 				<Link to="/" className="logo">
-					<img src={Logo} alt="Logo" className="logo-img" />
+					<LogoImg src={tema === 'light' ? Logo : LogoBranca	} alt="Logo" className="logo-img" />
 				</Link>
 			</Toolbar>
 			<Divider />
@@ -257,20 +282,19 @@ export default function Sidebar(props: Props) {
 				<TreeView tree={tree} />
 			</List>
 			<Divider />
-			<div className="item-list">
-				<label className="item" onClick={handleRedirectConfig}>
-					<span className="item-text">
-						<i className="fa fa-solid fa-cog" />
-						Configuracoes
-					</span>
-				</label>
-				<label className="item" onClick={handleLogout}>
-					<span className="item-text">
+			<ItemList>
+				<Item className="item">
+					<ItemText className="item-text">
+						<SwitchDarkMode />
+					</ItemText>
+				</Item>
+				<Item className="item" onClick={handleLogout}>
+					<ItemText className="item-text">
 						<i className="fa-solid fa-right-from-bracket" />
 						Logout
-					</span>
-				</label>
-			</div>
+					</ItemText>
+				</Item>
+			</ItemList>
 		</div>
 	);
 
@@ -300,7 +324,16 @@ export default function Sidebar(props: Props) {
 				</Toolbar>
 			</AppBar>
 
-			<Box sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
+			<Box
+				sx={{
+					width: { sm: drawerWidth },
+					backgroundColor: {
+						sm: tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor,
+						xs: tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor
+					},
+					flexShrink: { sm: 0 }
+				}}
+			>
 				<Drawer
 					container={container}
 					variant="temporary"
@@ -310,7 +343,11 @@ export default function Sidebar(props: Props) {
 						keepMounted: true //Melhora a performance no mobile
 					}}
 					sx={{
-						display: { xs: 'block', sm: 'none' }
+						display: { xs: 'block', sm: 'none' },
+						backgroundColor: {
+							sm: tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor,
+							xs: tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor
+						}
 					}}
 				>
 					{drawer}
@@ -320,6 +357,10 @@ export default function Sidebar(props: Props) {
 					sx={{
 						display: { xs: 'none', sm: 'block' },
 						zIndex: { xs: -1, sm: 0 },
+						backgroundColor: {
+							sm: tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor,
+							xs: tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor
+						},
 						'& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth }
 					}}
 					open

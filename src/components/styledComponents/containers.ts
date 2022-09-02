@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
-const tema = localStorage.getItem('Tema')
-console.log(tema)
+import { colorPallete, tema } from '../../coresStyled';
+
 export const ContainerAdmin = styled.div`
 	display: flex;
 	flex-direction: row;
@@ -8,7 +8,7 @@ export const ContainerAdmin = styled.div`
 	width: 100%;
 	height: 100%;
 	padding: 0 1rem;
-	background-color: ${tema === 'light' ? '#fefefe' : '#2C3333'}
+	background: ${tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor};
 
 	@media (max-width: 600px) {
 		flex-direction: column;
@@ -24,7 +24,8 @@ export const ContainerAdminContas = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
-	background-color: ${tema === 'light' ? '#fefefe' : '#2C3333'}
+	background: ${tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor};
+
 
 
 	@media (max-width: 960px) {
@@ -41,6 +42,12 @@ export const ContainerAdminContas = styled.div`
 export const SidebarContainer = styled.div`
 	width: 20%;
 	height: 100%;
+
+
+	& > div > div > div > .css-12i7wg6-MuiPaper-root-MuiDrawer-paper{
+	background: ${tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor};
+
+	}
 `;
 
 export const InputGroupContainer = styled.div`
@@ -50,8 +57,31 @@ export const InputGroupContainer = styled.div`
 	flex-direction: row;
 	width: 90%;
 	gap: .5rem;
-	& > label > input:focus {
-		background-color: #ffffaf;
+	color: ${tema === 'light' ? '#000' : '#fff' };
+
+	& > label > input {
+		background-color: ${tema === 'light' ? '#fff' : colorPallete.dark.bgColor };
+		color: ${tema === 'light' ? '#000' : '#fff' };
+
+
+		&:focus{
+			background-color: ${tema === 'light' ? '#ffffaf' : colorPallete.dark.inputBgColor };
+			color: ${tema === 'light' ? '#000' : '#fff' };
+
+			
+		}
+	}
+
+	& > label > select {
+		background-color: ${tema === 'light' ? '#fff' : colorPallete.dark.bgColor };
+		color: ${tema === 'light' ? '#000' : '#fff' };
+		&:focus{
+			background-color: ${tema === 'light' ? '#fff' : colorPallete.dark.inputBgColor };
+			color: ${tema === 'light' ? '#000' : '#fff' };
+
+			
+		}
+
 	}
 
 	@media (max-width: 1040px) {
@@ -100,7 +130,8 @@ export const ButtonFormGroup = styled.div`
 	margin-top: 1rem;
 	position: absolute;
 	bottom: 0;
-	background-color: ${tema === 'light' ? '#fff' : '#2C3333'}
+	background: ${tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor};
+
 
 
 	@media (max-width: 768px) {
@@ -120,6 +151,19 @@ export const DisabledInputContainer = styled.div`
 	justify-content: space-between;
 	gap:.5rem;
 	flex-direction: row;
+	color: ${tema === 'light' ? '#000' : '#fff' };
+
+	& > label > input:disabled {
+		background-color: ${tema === 'light' ? '#fff' : colorPallete.dark.bgHoverColor };
+		&::placeholder{
+			color: ${tema === 'light' ?  colorPallete.light.primaryColor : colorPallete.dark.buttonPrimaryBgColor };
+
+		}
+	}
+
+	
+
+	
 	@media (max-width: 1040px) {
 		width: 100%;
 		gap: 0;
@@ -145,8 +189,30 @@ export const InputContainer = styled.div`
 	justify-content: ${(props) => props.justifyContent || 'space-between'};
 	flex-direction: column;
 	width: 90%;
-	& > input:focus {
-		background-color: #ffffaf;
+	color: ${tema === 'light' ? '#000' : '#fff' };
+	& > input {
+		background-color: ${tema === 'light' ? '#fff' : colorPallete.dark.bgColor };
+		color: ${tema === 'light' ? '#000' : '#fff' };
+
+
+		&:focus{
+			background-color: ${tema === 'light' ? '#ffffaf' : colorPallete.dark.inputBgColor };
+			color: ${tema === 'light' ? '#000' : '#fff' };
+
+			
+		}
+	}
+
+	& > select {
+		background-color: ${tema === 'light' ? '#fff' : colorPallete.dark.bgColor };
+		color: ${tema === 'light' ? '#000' : '#fff' };
+		&:focus{
+			background-color: ${tema === 'light' ? '#fff' : colorPallete.dark.inputBgColor };
+			color: ${tema === 'light' ? '#000' : '#fff' };
+
+			
+		}
+
 	}
 `;
 
@@ -161,7 +227,7 @@ export const TabGroup = styled.div`
 `;
 
 export const Tab = styled.span`
-	background-color: ${props => props.isActive ? 'transparent' : '#003775'};
+	background-color: ${props => props.isActive ? 'transparent' : tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.buttonPrimaryBgColor};
 	color: ${props => props.isActive ? '#003775' : '#fff'};
 
 	border: 1px solid #003775;
@@ -171,8 +237,8 @@ export const Tab = styled.span`
 	transition: .5s all ease-in-out;
 	&:hover {
 		background-color: transparent;
-		border: 1px solid #003775;
-		color: #003775;
+		border: 1px solid ${tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.buttonPrimaryBgColor};
+		color: ${tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.primaryColor}
 	}
 
 `;
@@ -251,6 +317,8 @@ export const CheckboxGroup = styled.div`
 	flex-direction: row;
 	width: 100%;
 	gap: .5rem;
+	color: ${tema === 'light' ? '#000' :  '#fff'};
+
 
 	& > span {
 		margin-bottom: .5rem;
@@ -308,15 +376,16 @@ export const CardContainer = styled.div`
 	max-height: 15rem;
 	margin: .5rem;
 	padding: .5rem;
-	background-color: ${tema === 'light' ? '#fff' : '#2C3333'}
+	background: ${tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor};
+
 
 	border-radius: .3rem;
 	box-shadow: 0 0 .5rem ${(props) => props.isChecked ? 'rgba(175,0,0,0.2)' : 'rgba(0,0,0,0.2)'};
-	border: 1px solid ${(props) => props.isChecked ? '#ff6961' : '#eee'};
-	color: ${(props) => (props.typeCard === 1 ? '#CE4343' : props.typeCard === 2 ? '#5cb85c' : '#003775')};
-	transition: .5s all ease-in-out;
+	border: 1px solid ${(props) => props.isChecked ? '#ff6961' : 	'#eee'};
+	color: ${(props) => (props.typeCard === 1 ? tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.dangerColor : props.typeCard === 2 ? '#5cb85c' : tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.primaryColor)};
+	transition: .3s all ease-in-out;
 	&:hover {
-		color: #003775;
+		color:  ${tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.buttonPrimaryBgColor};
 		transform: scale(1.05);
 	}
 `;
@@ -329,7 +398,7 @@ export const CardHeader = styled.div`
 	width: 100%;
 	font-size: 1.2rem;
 	font-family: 'Roboto', sans-serif;
-	color: #000;
+	color: ${tema === 'light' ? '#000' : colorPallete.dark.primaryColor};
 	font-weight: bold;
 `;
 export const CardBody = styled.div`

@@ -1,7 +1,5 @@
 import styled from 'styled-components';
-
-
-
+import { colorPallete,tema } from '../../coresStyled';
 
 export const TreeViewContainer = styled.div`
     display: flex;
@@ -30,16 +28,16 @@ export const TreeViewItemLabel = styled.div`
     box-shadow: 0 .1rem .3rem rgba(0,0,0,0.2);
     border-radius: .3rem;
     font-size: 2rem;
-    background-color: ${props => props.selected ? '#cdcdcd' : '#fff'};
-    transition: background-color .2s ease-in-out;
+    background-color: ${tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor};
+    transition: background-color .5s ease-in-out;
     &:hover {
-        background-color: #fff3f3;
+        background-color: ${tema === 'light' ? colorPallete.light.bgHoverColor : colorPallete.dark.bgHoverColor};
     }
 
     & > li {
         width: 100%;
         height: 100%;
-        color: #003775;
+        color: ${tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.primaryColor};
 
         &:hover {
             background-color: transparent;
@@ -74,8 +72,8 @@ export const TreeViewItemTutorialLength = styled.span`
     height: 2rem;
     width: 2rem;
     font-size: 1rem;
-    background-color: #003775;
-    color: #fefef5;
+    background-color:  ${tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.primaryColor};
+    color:  ${tema === 'light' ? colorPallete.light.buttonTextColor : colorPallete.dark.buttonTextPrimaryColor};
 `
 
 export const TreeViewItemChild = styled.li`
@@ -100,13 +98,12 @@ export const TreeViewItemChildLabel = styled.div`
     margin-bottom: 0.5rem;
     box-shadow: 0 .1rem .3rem rgba(0,0,0,0.2);
     border-radius: .3rem;
-    background-color: #fefef5;
+    background-color:  ${tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor};
     font-size: 1rem;
-    color: #003775;
+    color: ${tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.primaryColor};
     font-family: 'Poppins', sans-serif;
     transition: background-color .2s ease-in-out;
     &:hover {
-        background-color: #f0f0f0;
         box-shadow: 0 .1rem .3rem rgba(0, 55, 117,0.5);
     }
 `

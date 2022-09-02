@@ -246,6 +246,12 @@ export function PaginaChamado() {
 									)}
 								</span>
 							</ChamadoPriority>
+							{chamado.RECORRENTE ? (
+								<span style={{color:'#F23D7F'}}>
+								<i className="fa-solid fa-person-circle-exclamation"></i>
+							Recorrente
+								</span>
+		) : null}
 								<span>
 
 							{isAdmin && (
@@ -277,12 +283,19 @@ export function PaginaChamado() {
 
 									</ChamadoStatus>
 								</ChamadoBodyRowLabel>
-
+								{chamado.RECORRENTE ? (
+								<ChamadoBodyRowLabel>
+									
+										<h4>Dia da recorrencia</h4>
+									<p>{chamado.DATARECORRENCIA}</p>
+								</ChamadoBodyRowLabel>
+							) : null}
 								<ChamadoBodyRowLabel>
 									<h4>Setor</h4>
 									<p>{setor.NOME}</p>
 								</ChamadoBodyRowLabel>
 							</ChamadoBodyRow>
+							
 
 							{chamado.DESCRICAO && (
 								<ChamadoBodyDescription>

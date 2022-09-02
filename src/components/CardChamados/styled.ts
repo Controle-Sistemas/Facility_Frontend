@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-const tema = localStorage.getItem('Tema') 
+import { colorPallete,tema } from '../../coresStyled';
+
 export const CardContainer = styled.div`
 	display: flex;
 	align-items: center;
@@ -9,12 +10,13 @@ export const CardContainer = styled.div`
 	height: 100%;
 	margin: .2rem;
 	padding: .3rem;
-	background-color: ${tema === 'light' ? '#fff' : '#2C333f'};
+	background: ${tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor};
+
 
 	border-radius: .3rem;
 	box-shadow: 0 0 .5rem rgba(0, 0, 0, 0.2);
 	border: 1px solid #eee;
-	color: ${tema === 'light' ? '#003775' : '#E7F6F2'};
+	color: ${tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.primaryColor};
 	
 	transition: .5s all ease-in-out;
 	&:hover {
@@ -49,7 +51,7 @@ export const CardStatistic = styled.span`
 
 	color: ${(props) =>
 		props.status === 'PENDENTE' || props.status === 'ATRASADO'
-			? '#c82333'
+			? tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.dangerColor
 			: props.status === `ANDAMENTO` ? '#f5a623' : tema === 'light' ? '#003775' : '#E7F6F2'};
 	font-size: 1.2rem;
 	font-weight: 400;

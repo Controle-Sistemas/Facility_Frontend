@@ -73,6 +73,8 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		const hora =
 			date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
 		chamadoData.DATAINCLUSAO = `${ano}-${mes}-${dia} ${hora}`;
+		chamadoData.DATARECORRENCIA = chamadoData.DATARECORRENCIA.split('-')[2]
+		console.log(chamadoData.DATARECORRENCIA)
 
 		const data = new FormData();
 		data.append('SETOR', chamadoData.SETOR);

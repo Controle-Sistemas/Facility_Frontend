@@ -101,7 +101,7 @@ export function LoginUserForm() {
                     setAdmin(res.data.isAdmin)
                     cookie.set('id', res.data.id)
                     if(res.data.isAdmin){ //Se for admin, redireciona para a pagina de administração
-                        navigate('/admin') //Redirecionando para a página de administração
+                        navigate('/admin/portal-chamados') //Redirecionando para a página de administração
                     }else{ //Se não for admin, redireciona para a página de cliente
                         navigate('/user/portal') //Redirecionando para a página de cliente
                     }

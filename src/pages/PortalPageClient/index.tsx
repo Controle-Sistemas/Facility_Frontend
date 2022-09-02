@@ -7,7 +7,14 @@ import {
 	ButtonGroup
 } from '../../components/styledComponents/containers';
 import { CardPortal } from '../../components/Card';
-import { AreaChartComponent, PieChartComponent,LineChartComponent, BarChartComponent,RadialChartComponent,ScatterChartComponent } from './Charts';
+import {
+	AreaChartComponent,
+	PieChartComponent,
+	LineChartComponent,
+	BarChartComponent,
+	RadialChartComponent,
+	ScatterChartComponent
+} from './Charts';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ModalForm from '../../components/Modais/modalForm';
@@ -23,38 +30,42 @@ export function PortalPageClient() {
 	const [ checked, setChecked ] = useState(false);
 	const [ modal, setModal ] = useState(false);
 	const [ cards, setCards ] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-	const [errorMessage, setErrorMessage] = useState('');
+	const [ loading, setLoading ] = useState(true);
+	const [ error, setError ] = useState(false);
+	const [ errorMessage, setErrorMessage ] = useState('');
 	const [ chartOption, setChartOption ] = useState('1');
 	const [ chartType, setChartType ] = useState(localStorage.getItem('chartType') || '1');
-	const [chartColor, setChartColor] = useState( localStorage.getItem('chartColor') || '#003775');
-	const [clientData, setClientData] = useState({})
+	const [ chartColor, setChartColor ] = useState(localStorage.getItem('chartColor') || '#003775');
+	const [ clientData, setClientData ] = useState({});
 	const cnpj = localStorage.getItem('cnpj');
-	
 
-	const idUser = Number(cookie.get('id') || 0);
-
+	const idUser = cookie.get('id');
 
 	useEffect(
 		() => {
-			axios.get(`http://localhost:8000/card/user/${idUser}`).then((response) => {
-				setCards(response.data.data);
-				setLoading(false);
-				setError(false);
+			if (idUser) {
+				axios
+					.get(`${BASE_URL}/card/user/${idUser}`)
+					.then((response) => {
+						setCards(response.data.data);
+						setLoading(false);
+						setError(false);
+					})
+					.catch((error) => {
+						setLoading(false);
+						setError(true);
+						console.log(error);
+						setErrorMessage('Falha ao carregar os cards');
+					});
+			}
 
+			axios.get(`${BASE_URL}/produtos/produto/@Ctrl13/13`).then((res:any) => {
+				console.log(res)
 			})
-			.catch((error) => {
-				setLoading(false);
-				setError(true);
-				console.log(error)
-				setErrorMessage("Falha ao carregar os cards");
+			axios.get(`${BASE_URL}/produtos/lista-produtos/@Ctrl13/all`).then((res:any) => {
+				console.log(res) 
 			})
-			// axios.get(`http://192.95.42.179:9000/socket/produtos`,{
-			// 	headers: {
-			// 		"socket_client":'client'
-			// 	}
-			// })
+
 		},
 		[ idUser ]
 	);
@@ -68,16 +79,18 @@ export function PortalPageClient() {
 				confirmButtonText: 'Ok'
 			});
 			handleChangeModal(this);
-			axios.get(`http://localhost:8000/card/user/${idUser}`).then((response) => {
-				setCards(response.data.data);
-				setLoading(false);
-			})
-			.catch((error) => {
-				setLoading(false);
-				setError(true);
-				console.log(error)
-				setErrorMessage("Falha ao carregar os cards");
-			})
+			axios
+				.get(`http://localhost:8000/card/user/${idUser}`)
+				.then((response) => {
+					setCards(response.data.data);
+					setLoading(false);
+				})
+				.catch((error) => {
+					setLoading(false);
+					setError(true);
+					console.log(error);
+					setErrorMessage('Falha ao carregar os cards');
+				});
 		});
 	}
 
@@ -100,7 +113,6 @@ export function PortalPageClient() {
 					if (error.response.status === 404) {
 						setCards([]);
 						setLoading(false);
-
 					}
 				});
 		});
@@ -110,52 +122,36 @@ export function PortalPageClient() {
 		setModal(!modal);
 	}
 
-	if(loading){
-		return <LoadingComponent/>
-	} else if(error){
-		return <ErrorPage errorMessage={errorMessage}/>
+	if (loading) {
+		return <LoadingComponent />;
+	} else if (error) {
+		return <ErrorPage errorMessage={errorMessage} />;
 	} else {
-	
+		return (
+			<ContainerAdmin>
+				<SidebarContainer>
+					<Sidebar />
+				</SidebarContainer>
+				<ContainerAdminContas>
+					<ButtonGroup>
+						<button
+							className={'btn ' + (checked ? 'btn-danger' : 'btn-outline-danger')}
+							onClick={() => {
+								setChecked(!checked);
+							}}
+						>
+							{<i className="fa-solid fa-trash" />}
+						</button>
+						<button className={'btn btn-primary'} onClick={handleChangeModal}>
+							{<i className="fa-solid fa-plus" />}
+						</button>
+					</ButtonGroup>
 
-	return (
-		<ContainerAdmin>
-			<SidebarContainer>
-				<Sidebar />
-			</SidebarContainer>
-			<ContainerAdminContas>
-				<ButtonGroup>
-					<button
-						className={'btn ' + (checked ? 'btn-danger' : 'btn-outline-danger')}
-						onClick={() => {
-							setChecked(!checked);
-						}}
-					>
-						{<i className="fa-solid fa-trash" />}
-					</button>
-					<button className={'btn btn-primary'} onClick={handleChangeModal}>
-						{<i className="fa-solid fa-plus" />}
-					</button>
-				</ButtonGroup>
-
-				<div className="row">
-					{cards.map((card) => {
-						return (
-							<div className="col-sm-6 col-lg-4 col-xl-3 mb-4" key={card.ID} id={card.ID}>
-								{checked ? (
-									<CardPortal
-										id={card.ID}
-										title={card.TITLE}
-										typeCard={card.TIPOCARD}
-										typeValue={card.TIPOVALOR}
-										value={card.VALUE}
-										icon={<i className={card.ICON} />}
-										isChecked={checked}
-										removeCard={removeCard}
-									>
-										{card.SUBTEXTO}
-									</CardPortal>
-								) : (
-									<Link to={`${card.LINK}`} style={{ textDecoration: 'none' }}>
+					<div className="row">
+						{cards.map((card) => {
+							return (
+								<div className="col-sm-6 col-lg-4 col-xl-3 mb-4" key={card.ID} id={card.ID}>
+									{checked ? (
 										<CardPortal
 											id={card.ID}
 											title={card.TITLE}
@@ -168,13 +164,27 @@ export function PortalPageClient() {
 										>
 											{card.SUBTEXTO}
 										</CardPortal>
-									</Link>
-								)}
-							</div>
-						);
-					})}
-				</div>
-				<div className="row">
+									) : (
+										<Link to={`${card.LINK}`} style={{ textDecoration: 'none' }}>
+											<CardPortal
+												id={card.ID}
+												title={card.TITLE}
+												typeCard={card.TIPOCARD}
+												typeValue={card.TIPOVALOR}
+												value={card.VALUE}
+												icon={<i className={card.ICON} />}
+												isChecked={checked}
+												removeCard={removeCard}
+											>
+												{card.SUBTEXTO}
+											</CardPortal>
+										</Link>
+									)}
+								</div>
+							);
+						})}
+					</div>
+					<div className="row">
 						<div className="col-sm-6 col-lg-4 col-xl-3 mb-4">
 							<select
 								name=""
@@ -210,18 +220,19 @@ export function PortalPageClient() {
 							</select>
 						</div>
 						<div className="col-sm-6 col-lg-4 col-xl-3 mb-4">
-							
-							<input type="color" value={chartColor} onChange={(e) => {
-								setChartColor(e.target.value)
-								localStorage.setItem('chartColor', e.target.value)
-							}} style={{height:"80%"}} />
+							<input
+								type="color"
+								value={chartColor}
+								onChange={(e) => {
+									setChartColor(e.target.value);
+									localStorage.setItem('chartColor', e.target.value);
+								}}
+								style={{ height: '80%' }}
+							/>
 						</div>
 					</div>
-				<PortalChartsContainer heightAuto={chartType !== "3" ? true : false}>
-					
-					
-
-					{/* {chartType === '1' ? (
+					<PortalChartsContainer heightAuto={chartType !== '3' ? true : false}>
+						{/* {chartType === '1' ? (
 						<AreaChartComponent
 							data={chartOption === '1' ? dataMonth : chartOption === '2' ? dataDay : dataYear}
 							title={'Vendas por ' + (chartOption === '1' ? 'mês' : chartOption === '2' ? 'dia' : 'ano')}
@@ -265,19 +276,18 @@ export function PortalPageClient() {
 								aspect={3 / 1}
 							/>
 					) : null} */}
-
-				</PortalChartsContainer>
-			</ContainerAdminContas>
-			<ModalForm
-				isModalOpen={modal}
-				isModalClosed={handleChangeModal}
-				title="Adicionar Cartão"
-				width="55%"
-				height="80vh"
-			>
-				<FormAddCard handleClose={handleChangeModal} onAdd={AddCard} />
-			</ModalForm>
-		</ContainerAdmin>
-	);
-				}
+					</PortalChartsContainer>
+				</ContainerAdminContas>
+				<ModalForm
+					isModalOpen={modal}
+					isModalClosed={handleChangeModal}
+					title="Adicionar Cartão"
+					width="55%"
+					height="80vh"
+				>
+					<FormAddCard handleClose={handleChangeModal} onAdd={AddCard} />
+				</ModalForm>
+			</ContainerAdmin>
+		);
+	}
 }

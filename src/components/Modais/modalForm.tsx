@@ -1,4 +1,5 @@
 import Modal from 'react-modal';
+import {tema, colorPallete} from '../../coresStyled'
 import './styles/modais.css';
 
 function ModalForm(props) {
@@ -20,7 +21,7 @@ function ModalForm(props) {
 			height: actualHeight,
 			margin: props.margin || 'auto',
 			border: 'none',
-			background: '#fff',
+			background: tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor,
 			overflow: 'auto',
 			WebkitOverflowScrolling: 'touch',
 			borderRadius: '4px',

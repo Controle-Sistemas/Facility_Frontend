@@ -1,7 +1,9 @@
 //importações
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import {Item,TreeItemContainer,ItemText} from './styled'
 import './style.css';
+import { colorPallete,tema } from '../../../coresStyled';
 
 interface Props {
 	//Propriedades do componente
@@ -39,7 +41,7 @@ export function TreeItem({ descricao, iconNameFontAwesome, items, id, setIdModul
 					if (btnsItem.length > 0) {
 						btnsItem[1].style.display = 'none';
 					}
-					event.target.parentNode.style.color = '#6f6f7f';
+					event.target.parentNode.style.color = tema === 'light' ? colorPallete.light.secondaryColor : colorPallete.dark.primaryColor;
 					divTreeItem.classList.add('fadeOut');
 					divTreeItem.classList.remove('fadeIn');
 				} else {
@@ -47,7 +49,7 @@ export function TreeItem({ descricao, iconNameFontAwesome, items, id, setIdModul
 					if (btnsItem.length > 0) {
 						btnsItem[1].style.display = 'flex';
 					}
-					event.target.parentNode.style.color = '#003775';
+					event.target.parentNode.style.color = tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.buttonPrimaryBgColor;
 					divTreeItem.classList.remove('fadeOut');
 					divTreeItem.classList.add('fadeIn');
 				}
@@ -80,12 +82,11 @@ export function TreeItem({ descricao, iconNameFontAwesome, items, id, setIdModul
 
 	return (
 		<div>
-			<label
+			<Item
 				className="item"
 				id={id.toString()}
 				onClick={(event) => {
 					const menu = document.querySelector(`.menu-item`); //Pega todos o menu
-					console.log(menu)
 
 					const e = event.target as HTMLElement; //Pega o elemento clicado
 					if (location.pathname.includes('/admin')) {
@@ -109,12 +110,12 @@ export function TreeItem({ descricao, iconNameFontAwesome, items, id, setIdModul
 					}
 				}}
 			>
-				<span className="item-text" onClick={toggle}>
+				<ItemText className="item-text" onClick={toggle}>
 					<i className={'fa ' + icone} />
 
 					{descricao !== '' || descricao !== undefined ? descricao : 'Item sem descrição'}
-				</span>
-				<div className="tree-item">
+				</ItemText>
+				<TreeItemContainer className="tree-item">
 					{open &&
 						newItems.map((item, i) => {
 							//Se o item estiver aberto, cria os itens filhos
@@ -143,8 +144,8 @@ export function TreeItem({ descricao, iconNameFontAwesome, items, id, setIdModul
 								);
 							}
 						})}
-				</div>
-			</label>
+				</TreeItemContainer>
+			</Item>
 		</div>
 	);
 }

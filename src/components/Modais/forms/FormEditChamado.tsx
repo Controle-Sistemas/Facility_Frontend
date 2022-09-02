@@ -61,6 +61,8 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
+		chamado.DATARECORRENCIA = chamado.DATARECORRENCIA.includes('-') ? chamado.DATARECORRENCIA.split('-')[2] : chamado.DATARECORRENCIA
+		console.log(chamado.DATARECORRENCIA)
 		for (let i in chamado) {
 			if (chamado[i] === '') {
 				delete chamado[i];

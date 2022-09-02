@@ -28,6 +28,8 @@ import {
 
 } from 'recharts';
 import { useState,useCallback } from 'react';
+import {tema} from '../../coresStyled'
+
 
 interface ChartsProps { 
 	data: any[];
@@ -158,7 +160,7 @@ export const AreaChartComponent = ({ aspect, data, color, title, dataKey }: Char
 							<stop offset="95%" stopColor={color || '#8884d8'} stopOpacity={0} />
 						</linearGradient>
 					</defs>
-					<XAxis dataKey={dataKey ? dataKey : "label"} stroke="gray" />
+					<XAxis dataKey={dataKey ? dataKey : "label"} stroke={tema === 'light' ? "gray" : "#efefef"} />
 					<YAxis />
 					<CartesianGrid strokeDasharray="3 3" className="chartGrid" />
 					<Tooltip />
@@ -184,7 +186,7 @@ export const LineChartComponent = ({ aspect, data, color, title, dataKey }: Char
 
 			<ResponsiveContainer width="100%" aspect={aspect}> 
 				<LineChart width={500} height={250} data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-					<XAxis dataKey={dataKey ? dataKey : "label"} stroke="gray" />
+					<XAxis dataKey={dataKey ? dataKey : "label"} stroke={tema === 'light' ? "gray" : "#efefef"} />
 					<YAxis />
 					<CartesianGrid strokeDasharray="3 3" className="chartGrid" />
 					<Tooltip />
@@ -203,7 +205,7 @@ export const BarChartComponent = ({ aspect, data, color, title, dataKey}: Charts
 
 			<ResponsiveContainer width="100%" aspect={aspect}> 
 				<BarChart width={500} height={250} data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-					<XAxis dataKey={dataKey ? dataKey : "label"} stroke="gray" />
+					<XAxis dataKey={dataKey ? dataKey : "label"} stroke={tema === 'light' ? "gray" : "#efefef"} />
 					<YAxis />
 					<CartesianGrid strokeDasharray="3 3" className="chartGrid" />
 					<Tooltip />
@@ -223,7 +225,7 @@ export const ScatterChartComponent = ({ aspect, data, color, title, dataKey }: C
 
 			<ResponsiveContainer width="100%" aspect={aspect}> 
 				<ScatterChart width={500} height={250} data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-					<XAxis dataKey={dataKey ? dataKey : "label"} stroke="gray" />
+					<XAxis dataKey={dataKey ? dataKey : "label"} stroke={tema === 'light' ? "gray" : "#efefef"} />
 					<YAxis />
 					<CartesianGrid strokeDasharray="3 3" className="chartGrid" />
 					<Tooltip />

@@ -4,7 +4,6 @@ import './App.css';
 
 import { TutorialPage } from './pages/TutoriaisUsuario';
 import Header from './components/HeaderComponent/Header';
-import PainelAdmin from './pages/admin/painelAdmin';
 import ContasAdmin from './pages/admin/Accounts/AccountsAdmin';
 import AddMenuItem from './components/MenuItems/AddMenuItem';
 import CookieComponent from './components/CookiesBox/cookies';
@@ -25,12 +24,12 @@ import { PaginaChamados } from './pages/PaginaChamados';
 import { PaginaChamado } from './pages/PaginaChamado';
 import { PortalChamados } from './pages/PortalChamados';
 import { PaginaSetores } from './pages/PaginaInternos';
-import { ConfigPage } from './pages/ConfigPage';
-
 function App() {
 	//Rotas do React
 	//As privadas impedem o acesso caso não esteja logado
 	localStorage.getItem('Tema') === undefined && localStorage.setItem('Tema','light')
+
+
 	return (
 		<BrowserRouter>
 			<StoreProvider>
@@ -87,15 +86,6 @@ function App() {
 						}
 					/>
 					<Route
-						path="/user/configuracoes"
-						element={
-							<ProtectedRoute>
-								<Header />
-								<ConfigPage />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
 						path="/user/documentos/:id"
 						element={
 							<ProtectedRoute>
@@ -116,15 +106,6 @@ function App() {
 
 					{/* Rotas Admin */}
 
-					<Route
-						path="/admin"
-						element={
-							<ProtectedRoute>
-								<Header />
-								<PainelAdmin />
-							</ProtectedRoute>
-						}
-					/>
 					<Route
 						path="/admin/contas"
 						element={
@@ -239,15 +220,6 @@ function App() {
 							<ProtectedRoute>
 								<Header />
 								<PaginaSetores />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="/admin/configuracoes"
-						element={
-							<ProtectedRoute>
-								<Header />
-								<ConfigPage />
 							</ProtectedRoute>
 						}
 					/>
