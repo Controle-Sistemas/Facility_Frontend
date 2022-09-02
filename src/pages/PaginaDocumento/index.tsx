@@ -193,7 +193,7 @@ export function PaginaDocumento() {
                                         return  (
                                             <div className="col-lg-6 mb-2">
                                                 <BoletoFileContainer key={index}>
-                                                    <ImagePostIt image={documento.TIPO === 2 && file} type={documento.TIPO} />
+                                                    <ImagePostIt image={documento.TIPO === 2 && file} type={documento.TIPO} route="documentos" />
                                                     <div className="text-container">
                                                         <span>{file}</span>
                                                         <i className="fa-solid fa-cloud-arrow-down" />

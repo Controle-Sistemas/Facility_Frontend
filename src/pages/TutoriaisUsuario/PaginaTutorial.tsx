@@ -158,7 +158,7 @@ export function PaginaTutorial() {
 												return  (
 													<div className="col-lg-6 mb-2">
 														<TutorialFileContainer key={index}>
-															<ImagePostIt  type={0} />
+															<ImagePostIt  type={0} route="tutoriais"/>
 															<div className="text-container">
 																<span>{file.name}</span>
 																<i className="fa-solid fa-cloud-arrow-down" />

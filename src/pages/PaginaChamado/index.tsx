@@ -310,7 +310,7 @@ export function PaginaChamado() {
 									  (
 										<div className="col-lg-4 mb-2">
 											<ChamadoFileContainer key={index}>
-												<ImagePostIt type={0} />
+												<ImagePostIt type={0} route="chamados"/>
 												<div className="text-container">
 													<span>{file.name}</span>
 													<i className="fa-solid fa-cloud-arrow-down" />
