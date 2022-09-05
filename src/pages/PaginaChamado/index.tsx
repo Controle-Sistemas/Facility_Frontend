@@ -52,7 +52,7 @@ export function PaginaChamado() {
 	const arquivos = chamado.FILE ? chamado.FILE.split(';') : [];
 	const arquivosFormatados = arquivos.map((arquivo) => {
 		return {
-			name: arquivo.split('-')[arquivo.split('-').length - 1],
+			name: arquivo.split('-')[arquivo.split('-').length - 1].replace(/[+]/g,' '),
 			url: arquivo
 		};
 	}).filter((arquivo) => {
@@ -309,13 +309,16 @@ export function PaginaChamado() {
 									arquivosFormatados.map((file, index) =>
 									  (
 										<div className="col-lg-4 mb-2">
-											<ChamadoFileContainer key={index}>
-												<ImagePostIt type={0} route="chamados"/>
-												<div className="text-container">
-													<span>{file.name}</span>
-													<i className="fa-solid fa-cloud-arrow-down" />
-												</div>
-											</ChamadoFileContainer>
+							                <a href={`https://uploadcontrolesistemas.s3.sa-east-1.amazonaws.com/chamados/${file.url}`} target="_blank" download rel="noopener noreferrer">
+
+												<ChamadoFileContainer key={index}>
+													<ImagePostIt type={0} route="chamados"/>
+													<div className="text-container">
+														<span>{file.name}</span>
+														<i className="fa-solid fa-cloud-arrow-down" />
+													</div>
+												</ChamadoFileContainer>
+											</a>
 										</div>
 									)
 								)

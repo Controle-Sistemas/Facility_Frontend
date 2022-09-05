@@ -12,10 +12,11 @@ import axios from 'axios';
 import { BASE_URL } from '../../../utils/requests';
 import { Editor } from '@tinymce/tinymce-react';
 import TextField from '@mui/material/TextField';
+import {tema,colorPallete} from '../../../coresStyled'
 import Autocomplete from '@mui/material/Autocomplete';
 
 export function FormAddChamado({ onAdd, idUser, isAdmin }) {
-	const [ chamadoData, setChamadoData ] = useState({
+	const [chamadoData, setChamadoData] = useState({
 		IDINTERNO: isAdmin ? '' : idUser.toString(),
 		SETOR: '',
 		CLIENTE: '',
@@ -26,17 +27,18 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		STATUS: '1',
 		FILE: null,
 		DATAINCLUSAO: '',
-		INTERNORECEPTOR:"",
-		DATARECORRENCIA: ''
+		INTERNORECEPTOR: "",
+		DATARECORRENCIA: '',
+		TIPORECORRENCIA: '0'
 
 	});
-	const [ statusChamado, setStatusChamado ] = useState([]);
-	const [ setores, setSetores ] = useState([]);
-	const [ hasFile, setHasFile ] = useState(false);
-	const [isRecurrent, setIsRecurrent] = useState(false)
-	const [ clientes, setClientes ] = useState([]);
+	const [statusChamado, setStatusChamado] = useState([]);
+	const [setores, setSetores] = useState([]);
+	const [hasFile, setHasFile] = useState(false);
+	const [isRecurrent, setIsRecurrent] = useState(0)
+	const [clientes, setClientes] = useState([]);
 	const [internos, setInternos] = useState([])
-	
+
 	useEffect(() => {
 		axios.get(BASE_URL + '/status-chamado/').then((res) => {
 			setStatusChamado(res.data.data);
@@ -58,6 +60,7 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 			...chamadoData,
 			[e.target.name]: e.target.value
 		});
+		console.log(chamadoData)
 	}
 
 	function handleChangeText(content, editor) {
@@ -69,12 +72,14 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		const date = new Date();
 		const ano = date.getFullYear();
 		const mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
-		const dia = date.getDate();
+		const dia = date.getDate().toString().length === 1 ? `0${date.getDate().toString()}` : date.getDate().toString()
 		const hora =
 			date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
 		chamadoData.DATAINCLUSAO = `${ano}-${mes}-${dia} ${hora}`;
-		chamadoData.DATARECORRENCIA = chamadoData.DATARECORRENCIA.split('-')[2]
-		console.log(chamadoData.DATARECORRENCIA)
+		if (isRecurrent) {
+			chamadoData.DATARECORRENCIA = chamadoData.DATARECORRENCIA.length > 1 ? chamadoData.DATARECORRENCIA.split('-')[2] : chamadoData.DATARECORRENCIA
+		}
+
 
 		const data = new FormData();
 		data.append('SETOR', chamadoData.SETOR);
@@ -85,9 +90,10 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		data.append('PREVISAO', chamadoData.PREVISAO);
 		data.append('STATUS', chamadoData.STATUS);
 		data.append('DATAINCLUSAO', chamadoData.DATAINCLUSAO);
-		data.append('INTERNORECEPTOR',chamadoData.INTERNORECEPTOR)
-		data.append('RECORRENTE',isRecurrent.toString())
-		data.append('DATARECORRENCIA',chamadoData.DATARECORRENCIA)
+		data.append('INTERNORECEPTOR', chamadoData.INTERNORECEPTOR)
+		data.append('RECORRENTE', isRecurrent.toString())
+		data.append('DATARECORRENCIA', chamadoData.DATARECORRENCIA)
+		data.append('TIPORECORRENCIA',chamadoData.TIPORECORRENCIA)
 
 		if (!isAdmin) {
 			data.append('IDINTERNO', chamadoData.IDINTERNO);
@@ -111,14 +117,14 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 	});
 
 	const formatedInternal = internos.map(interno => {
-		if(interno.USUARIO.toLowerCase() !== 'admin'){
+		if (interno.USUARIO.toLowerCase() !== 'admin') {
 			return {
-				label:interno.USUARIO,
+				label: interno.USUARIO,
 				id: interno.ID,
 				setor: interno.SETOR
 			}
 		}
-		
+
 	}).filter(interno => interno !== undefined)
 
 
@@ -139,7 +145,7 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 							menubar: false
 						}}
 						onEditorChange={handleChangeText}
-						
+
 					/>
 				</InputContainer>
 				<InputContainer>
@@ -151,9 +157,9 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 						isOptionEqualToValue={(option, value) => option.id === value.id}
 						inputValue={chamadoData.CLIENTE}
 						onInputChange={(event, newInputValue) => {
-							setChamadoData({...chamadoData,CLIENTE:newInputValue});
+							setChamadoData({ ...chamadoData, CLIENTE: newInputValue });
 						}}
-						
+
 					/>
 				</InputContainer>
 
@@ -185,14 +191,14 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 					<Autocomplete
 						id="combo-box-demo"
 						options={formatedInternal.filter(interno => interno.setor === Number(chamadoData.SETOR))}
-						sx={{ width: '100%', marginTop: '1rem' }}
+						sx={{ width: '100%', marginTop: '1rem', color:tema === 'light' ? '#000' : '#fff' }}
 						renderInput={(params) => <TextField {...params} label="Interno" />}
 						isOptionEqualToValue={(option, value) => option.id === value.id}
 						inputValue={chamadoData.INTERNORECEPTOR}
 						onInputChange={(event, newInputValue) => {
-							setChamadoData({...chamadoData,INTERNORECEPTOR:newInputValue});
+							setChamadoData({ ...chamadoData, INTERNORECEPTOR: newInputValue });
 						}}
-						
+
 					/>
 				</InputContainer>
 				<InputContainer>
@@ -211,7 +217,7 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 					<label>Previsão</label>
 					<input type="date" className="form-control" name="PREVISAO" onChange={handleChange} required />
 				</InputContainer>
-				{hasFile && (
+				{hasFile ? (
 					<InputContainer>
 						<label htmlFor="FILE">Arquivos</label>
 						<input
@@ -222,20 +228,45 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 							maxLength={10}
 						/>
 					</InputContainer>
-				)}
+				) : null}
 
-				{isRecurrent && (
-					<InputContainer>
-						<label>Data recorrencia:</label>
-						<input type="date" className="form-control" name="DATARECORRENCIA" onChange={handleChange} required />
-					</InputContainer>
-				)}
+				{isRecurrent === 1 ? (
+					<InputGroupContainer>
+						<InputContainer>
+							<label>Tipo de recorrencia</label>
+
+							<select className="form-control" name="TIPORECORRENCIA" onChange={handleChange} required>
+								<option selected>Selecione uma opção</option>
+								<option value="0">Mensal</option>
+								<option value="1">Semanal</option>
+							</select>
+						</InputContainer>
+						<InputContainer>
+							<label>Dia recorrencia:</label>
+							{chamadoData.TIPORECORRENCIA === '0' ? (
+								<input type="date" className="form-control" name="DATARECORRENCIA" onChange={handleChange} required />
+							) : chamadoData.TIPORECORRENCIA === '1' ? (
+								<select className="form-control" name="DATARECORRENCIA" onChange={handleChange} required>
+									<option selected>Selecione uma opção</option>
+									<option value="0">Domingo</option>
+									<option value="1">Segunda</option>
+									<option value="2">Terça</option>
+									<option value="3">Quarta</option>
+									<option value="4">Quinta</option>
+									<option value="5">Sexta</option>
+									<option value="6">Sábado</option>
+								</select>
+							) : null}
+						</InputContainer>
+
+					</InputGroupContainer>
+				) : null}
 
 				<InputContainer>
 					<CheckboxGroup>
 						<input type="checkbox" onChange={() => setHasFile(!hasFile)} />
 						<label>Inserir Arquivos</label>
-						<input type="checkbox" onChange={() => setIsRecurrent(!isRecurrent)} />
+						<input type="checkbox" onChange={() => isRecurrent === 0 ? setIsRecurrent(1) : setIsRecurrent(0)} />
 						<label>Recorrente</label>
 					</CheckboxGroup>
 				</InputContainer>

@@ -189,19 +189,23 @@ export function PaginaDocumento() {
                                         
                                     </p>
                                 ) : documentFileList.map((file, index) =>{
+                                    console.log(file)
                                     if(file !== ""){
                                         return  (
                                             <div className="col-lg-6 mb-2">
-                                                <BoletoFileContainer key={index}>
-                                                    <ImagePostIt image={documento.TIPO === 2 && file} type={documento.TIPO} route="documentos" />
-                                                    <div className="text-container">
-                                                        <span>{file}</span>
-                                                        <i className="fa-solid fa-cloud-arrow-down" />
-                                                    </div>
-                                                </BoletoFileContainer>
+							                    <a href={`https://uploadcontrolesistemas.s3.sa-east-1.amazonaws.com/documentos/${file}`} target="_blank" download rel="noopener noreferrer">
+                                                    <BoletoFileContainer key={index}>
+                                                        <ImagePostIt image={documento.TIPO === 2 && file} type={documento.TIPO} route="documentos" />
+                                                        <div className="text-container">
+                                                            <span>{file}</span>
+                                                            <i className="fa-solid fa-cloud-arrow-down" />
+                                                        </div>
+                                                    </BoletoFileContainer>
+                                                </a>
                                             </div>
                                         )
-                                    }
+                                    } 
+                                    return null
                                 })
 
                             }

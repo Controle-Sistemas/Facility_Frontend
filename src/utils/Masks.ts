@@ -40,7 +40,7 @@ export const CepMask = (value) => {
 
 export function formatData(data: string) {
 	const dataSplit = data.split('-');
-	const dataFormatada = `${dataSplit[2]}/${dataSplit[1]}/${dataSplit[0]}`;
+	const dataFormatada = `${dataSplit[2].length === 1 ? `0${dataSplit[2]}` : dataSplit[2]}/${dataSplit[1]}/${dataSplit[0]}`;
 	return dataFormatada;
 }
 

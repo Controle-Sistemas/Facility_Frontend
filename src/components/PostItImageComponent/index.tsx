@@ -14,7 +14,7 @@ export function ImagePostIt({image, type, route}:Props) {
   const imageType = type === 1 ? PDF : type === 3 ? Docs : type === 5 ? Excel : type === 2 ? image : File //verifica o tipo de arquivo e retorna a imagem correta
   return (
     <Image>
-        {image ? <img src={`https://uploadcontrolesistemas.s3.sa-east-1.amazonaws.com/${route}/${image}`} alt="" style={{height:"100%",width:"100%"}}/> : <img src={imageType} alt="" style={{height:"90%",width:"90%"}}/>}
+        {image ? <img src={`https://uploadcontrolesistemas.s3.sa-east-1.amazonaws.com/${route}/${image.includes(';') ? image.replace(';','') : image}`} alt="" style={{height:"100%",width:"100%"}}/> : <img src={imageType} alt="" style={{height:"90%",width:"90%"}}/>}
     </Image>
   )
 }

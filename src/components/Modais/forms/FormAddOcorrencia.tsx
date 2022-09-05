@@ -7,7 +7,8 @@ export function FormAddOcorrencia({ onAdd, idInterno, chamado, setor, statusCham
 	const date = new Date();
 	const ano = date.getFullYear();
 	const mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
-	const dia = date.getDate();
+	const dia = date.getDate().toString().length === 1 ? `0${date.getDate().toString()}` : date.getDate().toString()
+
 	const hora = date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
 
 	const [ ocorrencia, setOcorrencia ] = useState({

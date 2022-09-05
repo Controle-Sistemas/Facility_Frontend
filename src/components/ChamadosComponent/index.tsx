@@ -81,13 +81,24 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 		if (order === 'asc') {
 			//verifica se o tipo de ordenação é ascendente ou descendente
 			return chamados.sort((a, b) => {
+				if(orderBy === 'data'){
+					if (a["data"].split(' ')[0] < b["data"].split(' ')[0] && ((a["data"].split(' ')[1] < b["data"].split(' ')[1]) || (a["data"].split(' ')[1] > b["data"].split(' ')[1]))) {
+						return -1;
+					}
+					if (a["data"].split(' ')[0] > b["data"].split(' ')[0] &&((a["data"].split(' ')[1] < b["data"].split(' ')[1]) || (a["data"].split(' ')[1] > b["data"].split(' ')[1]))) {
+						return 1;
+					}
+					return 0;
+				} else {
+					if (a[orderBy] < b[orderBy]) {
+						return -1;
+					}
+					if (a[orderBy] > b[orderBy]) {
+						return 1;
+					}
+				}
 				//Ordena os documentos pelo campo orderBy
-				if (a[orderBy] < b[orderBy]) {
-					return -1;
-				}
-				if (a[orderBy] > b[orderBy]) {
-					return 1;
-				}
+				
 				return 0;
 			});
 		} else {

@@ -152,7 +152,7 @@ export function PostItCard({
 					) : (
 						<>
 							<p className="description">{DESCRICAO}</p>
-							<a href={`https://uploadcontrolesistemas.s3.sa-east-1.amazonaws.com/documentos/${FILE}`} target="_blank" download rel="noopener noreferrer">
+
 								<FileContainer>
 									<ImagePostIt image={TIPO === 2 && FILE} type={TIPO} route="documentos" />
 									<div className="text-container">
@@ -160,7 +160,6 @@ export function PostItCard({
 										<i className="fa-solid fa-cloud-arrow-down" />
 									</div>
 								</FileContainer>
-							</a>
 						</>
 						
 					)}
@@ -263,7 +262,6 @@ export function PostItCard({
 					) : (
 						<>
 							<p className="description">{DESCRICAO}</p>
-							<a href={`https://uploadcontrolesistemas.s3.sa-east-1.amazonaws.com/documentos/${FILE}`} target="_blank" download rel="noopener noreferrer">
 								<FileContainer>
 									<ImagePostIt image={TIPO === 2 && FILE} type={TIPO} route="documentos" />
 									<div className="text-container">
@@ -271,7 +269,6 @@ export function PostItCard({
 										<i className="fa-solid fa-cloud-arrow-down" />
 									</div>
 								</FileContainer>
-							</a>
 						</>
 						
 					)}

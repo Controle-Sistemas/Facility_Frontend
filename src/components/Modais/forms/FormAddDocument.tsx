@@ -79,7 +79,8 @@ export function FormAddDocument({ handleClose, adicionar }) {
 		const date = new Date();
 		const ano = date.getFullYear();
 		const mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;	
-		const dia = date.getDate();
+		const dia = date.getDate().toString().length === 1 ? `0${date.getDate().toString()}` : date.getDate().toString()
+
 		documento.DATAINCLUSAO = `${ano}-${mes}-${dia}`;
 		const data = new FormData();
 		data.append('COMUNICADO', documento.COMUNICADO);

@@ -7,7 +7,8 @@ import {
 	DisabledInputContainer,
 	ButtonFormGroup,
 	FormRowContainer,
-	CheckboxGroup
+	CheckboxGroup,
+	InputGroupContainer
 } from '../../styledComponents/containers';
 import { BASE_URL } from '../../../utils/requests';
 import axios from 'axios';
@@ -17,15 +18,16 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
 export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor }) {
-	const [ setores, setSetores ] = useState([]);
-	const [ statusChamado, setStatusChamado ] = useState([]);
-	const [ internos, setInternos ] = useState([]);
-	const [ clientes, setClientes ] = useState([]);
+	const [setores, setSetores] = useState([]);
+	const [statusChamado, setStatusChamado] = useState([]);
+	const [internos, setInternos] = useState([]);
+	const [clientes, setClientes] = useState([]);
 
 	const date = new Date();
 	const ano = date.getFullYear();
 	const mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
-	const dia = date.getDate();
+	const dia = date.getDate().toString().length === 1 ? `0${date.getDate().toString()}` : date.getDate().toString()
+
 	const hora = date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
 	const dataAtualizacao = `${ano}-${mes}-${dia} ${hora}`;
 
@@ -211,18 +213,37 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 						) : null}
 					</select>
 				</InputContainer>
-				{chamado.RECORRENTE === 1 && (
-					<InputContainer>
-						<label>Data recorrencia:</label>
-						<input
-							type="date"
-							className="form-control"
-							name="DATARECORRENCIA"
-							onChange={handleChangeValues}
-							required
-						/>
-					</InputContainer>
-				)}
+				{chamado.RECORRENTE === 1 ? (
+					<InputGroupContainer>
+						<InputContainer>
+							<label>Tipo de recorrencia</label>
+
+							<select className="form-control" name="TIPORECORRENCIA" onChange={handleChangeValues} required>
+								<option selected>Selecione uma opção</option>
+								<option value="0">Mensal</option>
+								<option value="1">Semanal</option>
+							</select>
+						</InputContainer>
+						<InputContainer>
+							<label>Dia recorrencia:</label>
+							{chamado.TIPORECORRENCIA === '0' ? (
+								<input type="date" className="form-control" name="DATARECORRENCIA" onChange={handleChangeValues} required />
+							) : chamado.TIPORECORRENCIA === '1' ? (
+								<select className="form-control" name="DATARECORRENCIA" onChange={handleChangeValues} required>
+									<option selected>Selecione uma opção</option>
+									<option value="0">Domingo</option>
+									<option value="1">Segunda</option>
+									<option value="2">Terça</option>
+									<option value="3">Quarta</option>
+									<option value="4">Quinta</option>
+									<option value="5">Sexta</option>
+									<option value="6">Sábado</option>
+								</select>
+							) : null}
+						</InputContainer>
+
+					</InputGroupContainer>
+				) : null}
 				<InputContainer>
 					<CheckboxGroup>
 						<input

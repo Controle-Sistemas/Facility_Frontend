@@ -28,7 +28,6 @@ export function CardChamados({ title, data, totalChamados }: CardProps) {
 					sortData(data).map((item, index) => {
 						if (item.length > 0 && index < 5) {
 							const porcentagemBarra = (item.length * 100 / totalChamados).toFixed(1);
-
 							return (
 								<div>
 									<CardStatistic status={item[0].NOME.trim().toUpperCase()}>

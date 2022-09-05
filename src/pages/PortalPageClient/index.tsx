@@ -43,9 +43,10 @@ export function PortalPageClient() {
 
 	useEffect(
 		() => {
-			if (idUser) {
+			if (cookie.get('id')) {
+
 				axios
-					.get(`${BASE_URL}/card/user/${idUser}`)
+					.get(`${BASE_URL}/card/user/${cookie.get('id')}`)
 					.then((response) => {
 						setCards(response.data.data);
 						setLoading(false);
@@ -67,7 +68,7 @@ export function PortalPageClient() {
 			})
 
 		},
-		[ idUser ]
+		[]
 	);
 
 	function AddCard(data) {
