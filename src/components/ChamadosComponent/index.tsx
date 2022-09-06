@@ -82,11 +82,21 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 			//verifica se o tipo de ordenação é ascendente ou descendente
 			return chamados.sort((a, b) => {
 				if(orderBy === 'data'){
-					if (a["data"].split(' ')[0] < b["data"].split(' ')[0] && ((a["data"].split(' ')[1] < b["data"].split(' ')[1]) || (a["data"].split(' ')[1] > b["data"].split(' ')[1]))) {
+					if (a[orderBy] < b[orderBy]) {
 						return -1;
 					}
-					if (a["data"].split(' ')[0] > b["data"].split(' ')[0] &&((a["data"].split(' ')[1] < b["data"].split(' ')[1]) || (a["data"].split(' ')[1] > b["data"].split(' ')[1]))) {
+					if (a[orderBy] > b[orderBy]) {
 						return 1;
+					}
+					if(a[orderBy] === b[orderBy]){
+
+						if(a["hora"] > b["hora"]){
+							return -1
+						} 
+						if(a["hora"] < b["hora"]){
+							return 1
+						}
+						return 0
 					}
 					return 0;
 				} else {
