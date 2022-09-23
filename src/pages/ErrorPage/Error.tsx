@@ -15,7 +15,7 @@ export function ErrorPage({ errorMessage,dark }:Props) {
                         <i className="fas fa-exclamation-triangle"></i>
                         ERRO!
                     </ErrorTitle>
-                    <ErrorMessage dark={dark}>
+                    <ErrorMessage dark='true'>
                         {errorMessage}
                     </ErrorMessage>
             </ErrorPageContainer>

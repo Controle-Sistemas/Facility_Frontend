@@ -13,6 +13,8 @@ import cookie from 'js-cookie'
 import {ForgotPasswordSpan} from '../styledComponents/Texts'
 import {BASE_URL} from '../../utils/requests'
 import {TabGroup, Tab} from '../styledComponents/containers'
+import { number } from "prop-types";
+import { toUnitless } from "@mui/material/styles/cssUtils";
 //Definindo um valor inicial para o estado
 function initialState() {
     return {
@@ -94,12 +96,13 @@ export function LoginUserForm() {
                 'Allow-Control-Allow-Origin': '*'
             }
         }) //Fazendo a requisição
-            .then(res => {                
+            .then(res => {          
+                      
                 console.log(res)
                 if (res.status === 200) { 
                     setToken(res.data.token) //Setando o token nos cookies
                     setAdmin(res.data.isAdmin)
-                    cookie.set('id', res.data.id)
+                    cookie.set('id', parseInt(res.data.id))
                     if(res.data.isAdmin){ //Se for admin, redireciona para a pagina de administração
                         navigate('/admin/portal-chamados') //Redirecionando para a página de administração
                     }else{ //Se não for admin, redireciona para a página de cliente
@@ -128,7 +131,7 @@ export function LoginUserForm() {
         axios.post(BASE_URL+'/internos/login', {USUARIO,SENHA})
         .then(res => {
             if (res.status === 200) { 
-                cookie.set('id', res.data.id)
+                cookie.set('id', parseInt(res.data.id))
                 setToken(res.data.token) //Setando o token nos cookies
                 setAdmin(res.data.isAdmin)
                 navigate("/interno/chamados")

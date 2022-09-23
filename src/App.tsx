@@ -15,6 +15,7 @@ import ChangePasswordPage from './pages/ChangePassword/ChangePasswordPage';
 import { MainPage } from './pages/user/paginaPrincipal';
 import { LicencesAdmin } from './components/LicencesAdmin';
 import { PortalPageClient } from './pages/PortalPageClient';
+import { PortalPageClientDashboard } from './pages/PortalPageClientDashboard';
 import { RelatoriosVendasPage } from './pages/user/Relatorios/vendas';
 import { CentralDocumentosPageAdmin } from './pages/CentralDocumentos/index';
 import { PaginaDocumento } from './pages/PaginaDocumento';
@@ -67,6 +68,17 @@ function App() {
 							</ProtectedRoute>
 						}
 					/>
+
+					<Route
+						path="/user/dashboard"
+						element={
+							<ProtectedRoute>
+								<Header />
+								<PortalPageClientDashboard />
+							</ProtectedRoute>
+						}
+					/>
+
 					<Route
 						path="/user/relatorios/vendas"
 						element={

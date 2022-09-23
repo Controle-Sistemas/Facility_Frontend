@@ -34,7 +34,7 @@ export default function DefaultTable({
 	handleOpenModalMore
 }: Props) {
 	const [ order, setOrder ] = useState('asc'); //Estado para ordenação da tabela
-	const [ orderBy, setOrderBy ] = useState(localStorage.getItem('fieldSort').trim() || 'ID'); //Estado para ordenação da tabela
+	const [ orderBy, setOrderBy ] = useState(localStorage.getItem('fieldSort') ? localStorage.getItem('fieldSort').trim() : 'ID'); //Estado para ordenação da tabela
 	const [ page, setPage ] = useState(0); //Estado para paginação da tabela
 	const [ rowsPerPage, setRowsPerPage ] = useState(5); //Estado para paginação da tabela
 

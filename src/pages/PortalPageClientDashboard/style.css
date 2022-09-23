@@ -1,0 +1,21 @@
+.logo{
+    width: 8rem;
+}
+
+.title{
+    text-align: center;
+    font-size: xx-large;
+}
+
+.row{
+    
+}
+
+.full-width{
+    width: 100%;
+    height: fit-content;
+}
+
+.fit-content{    
+    width: auto;
+}
