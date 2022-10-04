@@ -130,3 +130,27 @@ export interface OcorrenciasType{
     STATUS: string | number;
 }
 
+export type DashboardDataType = {    
+    QtdeRegistros: number,
+    DataConsulta: string,
+    TotalVendasDia: number,
+    TicketMedio: number,
+    VendasFormaPagamento:[{Forma:string, Valor: number}],
+    TotalDiaCancelamentos: number,
+    TotalDiaDescontos: number,
+    TotalDiaTaxaServico: number,
+    TotalDiaCortesias: number,
+    RankingProdutos:[{Produto:string,Qtde: number, ValorTotal: number}],
+    VendasPorHora:[{Hora: string,Valor: number}],
+    VendasPorTipo:[{Tipo:string,Valor:number},],
+    ConsumosEmAbertoQtde: number,
+    ConsumosEmAbertoValor: number,            
+    EvolucaoVendasMes:[{Mes: string,Valor: number}]      
+}
+
+export type DashboardTotaisDataType = {    
+    TotalDiaCancelamentos: number,
+    TotalDiaDescontos: number,
+    TotalDiaTaxaServico: number,
+    TotalDiaCortesias: number, 
+}
