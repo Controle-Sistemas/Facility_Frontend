@@ -83,16 +83,23 @@ export function PortalPageClientDashboard() {
 
 	useEffect( // buscar  os dados quando carregar a tela // detar a data pra mes atual
 		() => {		
-			axios.get(url,{
-				headers:{
-					"socket_client":'@20033038'
-				},
-			}).then(response => {
-				console.log(response)
-			}).catch(error => console.log(error))
+			getData()
 		},
 		[]
 	);
+
+	async function getData() {
+		const response = await axios.get(`${BASE_URL}/dashboard`).then(response => {
+			console.log(response.data)
+			return response.data
+		})
+		.catch(error => {
+			console.log(error)
+		})
+		return response
+	
+		
+	  };
 
 	const handleChangeYear = (event: SelectChangeEvent) => {
 		setDataYear(event.target.value);
@@ -158,6 +165,7 @@ export function PortalPageClientDashboard() {
 	const vendasPorHora = _.groupBy(data.VendasPorHora, (value)=> value.Hora);
 
 	const vendasHoraResult = _.map(vendasPorHora,(value, key)=>{
+		console.log(value)
 		return [
 			key, _.sumBy(vendasPorHora[key], (v) => v.Valor)
 		]
@@ -320,7 +328,7 @@ export function PortalPageClientDashboard() {
 												width="100%"
 												height="400px"
 												data={getVendasHora()}
-												options={{title:"", chartArea:{width: "80%"}, areaOpacity: 1, colors: ['#003775']}}
+												options={{title:"", chartArea:{width: "80%"}, areaOpacity: .3, colors: ['#003775']}}
 											/>
 										</div>
 										<div  className='responsiveBox'>

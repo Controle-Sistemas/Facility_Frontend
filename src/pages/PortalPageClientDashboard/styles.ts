@@ -24,7 +24,6 @@ export const TableContainer = styled.div`
   max-height: 500px;
   align-items: center;
   width: 100%;
-  overflow-x: auto;
 
   table {
     width: 100%;
