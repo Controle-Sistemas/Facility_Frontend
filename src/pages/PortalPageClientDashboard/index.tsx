@@ -43,63 +43,139 @@ import { Chart } from 'react-google-charts';
 import {dataTable, dataCandle, dataBar, dataArea, dataBar2, dataLine, LineChartOptions, tableChartOptions, barChartOptions, candleChartOptions, areaChartOptions, dataArea2} from './Data'
 import './style.css'
 import { TableContainer, TableHeader } from "./styles";
-import { DashboardDataType } from '../../types';
-import DataTest from './DataTest';
+import DataTest from './DataTest'
 import { Legend } from 'recharts';
 const MONITORAMENTOTEMPOREAL = 'Monitoramento em Tempo Real';
 const DETALHAMENTODECUSTOS = 'Detalhamentos de Custos';
 const HISTORICORESULTADOS = 'Histórico Resultados';
-const MESES = [
-	{name: 'Janeiro', value: 'JANEIRO'},
-	{name: 'Fevereiro', value: 'FEVEREIRO'},
-	{name: 'Março', value: 'MARCO'},
-	{name: 'Abril', value: 'ABRIL'},
-	{name: 'Maio', value: 'MAIO'},
-	{name: 'Junho', value: 'JUNHO'},
-	{name: 'Julho', value: 'JULHO'},
-	{name: 'Agosto', value: 'AGOSTO'},
-	{name: 'Setembro', value: 'SETEMBRO'},
-	{name: 'Outubro', value: 'OUTUBRO'},
-	{name: 'Novembro', value: 'NOVEMBRO'},
-	{name: 'Dezembro', value: 'DEZEMBRO'}
-];
+
+
+interface DashboardDataType{    
+    QtdeRegistros?: number,
+    DataConsulta?: string,
+    TotalVendasDia?: number,
+    TicketMedio?: number,
+    VendasFormaPagamento?:Array<{Forma?:string, Valor?: number}>,
+    TotalDiaCancelamentos?: number,
+    TotalDiaDescontos?: number,
+    TotalDiaTaxaServico?: number,
+    TotalDiaCortesias?: number,
+    RankingProdutos?:Array<{Produto?:string,Qtde?: number, ValorTotal?: number}>,
+    VendasPorHora?:Array<{Hora?: string,Valor?: number}>,
+    VendasPorTipo?:Array<{Tipo?:string,Valor?:number}>,
+    ConsumosEmAbertoQtde?: number,
+    ConsumosEmAbertoValor?: number,            
+    EvolucaoVendasMes?:Array<{Mes?: string,Valor?: number}>      
+}
+
+interface DashboardTotaisDataType {    
+    TotalDiaCancelamentos?: number,
+    TicketMedio?: number,
+}
+
+interface DashboardCardDataType {    
+    totalVendasDia?: number,
+    TotalDiaDescontos?: number,
+    TotalDiaTaxaServico?: number,
+    TotalDiaCortesias?: number, 
+}
+
+const initialData = new DataTest().getCleanJSON() as DashboardDataType;
 
 export function PortalPageClientDashboard() {
 	const [ error, setError ] = useState(false);
 	const [ errorMessage, setErrorMessage ] = useState('');
-	const [ chartOption, setChartOption ] = useState('1');
-	const [ chartType, setChartType ] = useState(localStorage.getItem('chartType') || '1');
-	const [ chartColor, setChartColor ] = useState(localStorage.getItem('chartColor') || '#003775');
-	const [ clientData, setClientData ] = useState<DashboardDataType>();
+	const [ clientData, setClientData ] = useState<any>(initialData);
+	const [ totaisDia, setTotaisDia ] = useState([]);
+	const [ formatedData, setFormatedData ] = useState({});	
+	const [ cardData, setCardData ] = useState<DashboardDataType>();
 	const [ dataMonth, setDataMonth] = useState('');
 	const [ dataYear, setDataYear] = useState('');
-	const [ dashpage, setPage] = useState(MONITORAMENTOTEMPOREAL);
+	const [ dashpage, setPage] = useState(HISTORICORESULTADOS);
 	const [ dashpageIndex, setPageIndex] = useState(0);
 
 	const cnpj = localStorage.getItem('cnpj');
-
-	const data = new DataTest().getDataJSON();
-	const url = 'http://192.95.42.179:9000/socket/VWSALESPERMONTH';  
+	const dataUtil = new DataTest()
+	const data = ''
+	///clientData;//new DataTest().getDataJSON(); 
 
 	useEffect( // buscar  os dados quando carregar a tela // detar a data pra mes atual
-		() => {		
-			getData()
+		() => {	
+			axios.get(`${BASE_URL}/dashboard/real-time`).then((res) => {
+				setClientData(res.data.data)
+				console.log(clientData)
+			}).catch(err => {
+				setError(true)
+				console.log('erro')
+			})
 		},
 		[]
 	);
 
 	async function getData() {
-		const response = await axios.get(`${BASE_URL}/dashboard`).then(response => {
-			console.log(response.data)
-			return response.data
+		const response = await axios.get(`${BASE_URL}/dashboard/real-time`).then(response => {			
+			return response.data.data
+			console.log(clientData)
 		})
 		.catch(error => {
 			console.log(error)
 		})
 		return response
-	
 		
 	  };
+	  var somaProdutosDia = 0;
+	  const totalProdutosDia = _.map(clientData.RankingProdutos,(value, key)=>{
+		  somaProdutosDia += clientData.RankingProdutos[key].ValorTotal	
+	  })
+
+	  const somaToTaisDia = _.sum([clientData.TotalDiaCancelamentos + clientData.TotalDiaCortesias + clientData.TotalDiaDescontos + clientData.TotalDiaTaxaServico]).toFixed(2);
+	  
+	  const vendasPorHora = _.groupBy(clientData.VendasPorHora, (value)=> value.Hora);
+
+	  const dataVendasHoraResult = _.map(vendasPorHora,(value, key)=>{
+		  console.log(value)
+		  return [
+			  key, _.sumBy(vendasPorHora[key], (v) => v.Valor)
+		  ]
+	  })
+	  
+	  var totalPagamentos = 0;
+	  const totalPagamentosDia = _.map(clientData.VendasFormaPagamento,(value, key)=>{
+		  totalPagamentos += clientData.VendasFormaPagamento[key].Valor	
+	  })
+
+	  var totalVendasPorTipo = 0;
+	  const somaVendasPorTipo = _.map(clientData.VendasPorTipo,(value, key)=>{
+		  totalVendasPorTipo += clientData.VendasPorTipo[key].Valor	
+	  })
+	  
+	  const dataVendasPorTipo = _.groupBy(clientData.VendasPorTipo, (value)=> value.Tipo);
+	  const dataVendasPorTipoResult = _.map(dataVendasPorTipo,(value, key)=>{		
+		  return [
+			  key, _.sumBy(dataVendasPorTipo[key], (v) => v.Valor)
+		  ]
+	  })
+
+	  const dataEvolucaoVendasMes = _.groupBy(clientData.VendasPorTipo, (value)=> value.Mes);
+
+	  const dataEvolucaoVendasMesResult = _.map(dataEvolucaoVendasMes,(value, key)=>{		
+		  var aux  = [
+			  dataUtil.getMeses()[parseInt(key.substring(0,2)) - 1].name.substring(0,3),(_.sumBy(dataEvolucaoVendasMes[key], (v) => v.Valor))
+		  ]
+		  return aux;
+	  })
+
+	function getVendasPorTipo(){
+		return [["Tipo", "Valor"], ...dataVendasPorTipoResult];
+	}
+
+	function getVendasHora(){
+		return [["Hora", "Vendas"], ...dataVendasHoraResult];
+	}
+
+	function getEvolucaoVendasMes(){
+		return [["Mês", "Vendas"], ...dataEvolucaoVendasMesResult];
+	}
 
 	const handleChangeYear = (event: SelectChangeEvent) => {
 		setDataYear(event.target.value);
@@ -126,72 +202,6 @@ export function PortalPageClientDashboard() {
 		}
 		console.log('Página atual: ' + dashpage);	
 	}	
-	
-	const totaisDoDia = [
-		{"Operacao": "Cancelamentos", "Total": data.TotalDiaCancelamentos},
-		{"Operacao": "Cortesias concedidas", "Total": data.TotalDiaCortesias},
-		{"Operacao": "Taxa de serviço", "Total": data.TotalDiaTaxaServico},
-		{"Operacao": "Descontos", "Total": data.TotalDiaDescontos},];
-
-	var somaPagamentos = 0;
-	const totalPagamentos = _.map(data.VendasFormaPagamento,(value, key)=>{
-		somaPagamentos += parseFloat(''+ data.VendasFormaPagamento[key].Valor)
-	})
-
-	var somaVendasPorTipo = 0;
-	const vendasPorTipo = _.map(data.VendasPorTipo,(value, key)=>{
-		somaVendasPorTipo += data.VendasPorTipo[key].Valor	
-	})
-
-	const dataVendasPorTipo = _.groupBy(data.VendasPorTipo, (value)=> value.Tipo);
-
-	const dataVendasPorTipoResult = _.map(dataVendasPorTipo,(value, key)=>{
-		return [
-			key, _.sumBy(dataVendasPorTipo[key], (v) => v.Valor)
-		]
-	})
-
-	function getVendasPorTipo(){
-		return [["Tipo", "Valor"], ... dataVendasPorTipoResult];
-	}
-
-	var somaProdutosDia = 0;
-	const totalProdutosDia = _.map(data.RankingProdutos,(value, key)=>{
-		somaProdutosDia += data.RankingProdutos[key].ValorTotal	
-	})
-
-	const somaToTaisDia = _.sum([data.TotalDiaCancelamentos + data.TotalDiaCortesias + data.TotalDiaDescontos + data.TotalDiaTaxaServico]).toFixed(2);
-	
-	const vendasPorHora = _.groupBy(data.VendasPorHora, (value)=> value.Hora);
-
-	const vendasHoraResult = _.map(vendasPorHora,(value, key)=>{
-		console.log(value)
-		return [
-			key, _.sumBy(vendasPorHora[key], (v) => v.Valor)
-		]
-	})
-
-	function getVendasHora(){
-		return [["Hora", "Vendas"], ... vendasHoraResult];
-	}
-
-	const evolucaoVendasMes = 0;
-
-	const dataEvolucaoVendasMes = _.groupBy(data.EvolucaoVendasMes, (value)=> value.Mes);
-
-	const dataEvolucaoVendasMesResult = _.map(dataEvolucaoVendasMes,(value, key)=>{		
-		var aux  = [
-			MESES[parseInt(key.substring(0,2)) - 1].name.substring(0,3),(_.sumBy(dataEvolucaoVendasMes[key], (v) => v.Valor))
-		]
-
-		console.log(aux)
-		return aux;
-	})
-
-	function getEvolucaoVendasMes(){
-		return [["Mês", "Vendas"], ... dataEvolucaoVendasMesResult];
-	}
-
 
 	return (
 		<ContainerAdmin>
@@ -231,24 +241,24 @@ export function PortalPageClientDashboard() {
 							label="Mês"
 							>
 							<MenuItem value=""><em>Selecione um mês</em></MenuItem>
-							{MESES.map((mes, index)=>(
+							{new DataTest().getMeses().map((mes, index)=>(
 							<MenuItem value={mes.value}>{mes.name}</MenuItem>
 							))}							
 						</Select>
 					</FormControl>	
 					</div>					
 				</InputGroupContainer>
-					{dashpage === MONITORAMENTOTEMPOREAL ? 
+					{dashpage === MONITORAMENTOTEMPOREAL && clientData ? 
 						(
 							<Box >																	
 								<Box className='left'>
 									<Container>											
 										<p>Total de vendas do dia</p>
-										<h2>{data.TotalVendasDia.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</h2>									
+										<h2>{clientData.TotalVendasDia.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</h2>									
 									</Container>
 									<Container style={{}}>										
 										<p>Ticket médio</p>
-										<h2>{data.TicketMedio.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</h2>										
+										<h2>{clientData.TicketMedio.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</h2>										
 									</Container>
 								</Box>
 								<Box className='inverseInResponsive'>
@@ -265,11 +275,11 @@ export function PortalPageClientDashboard() {
 													</TableRow>
 													</TableHead>
 													<TableBody>
-													{data.VendasFormaPagamento.map((pagamento: any) => (
+													{clientData.VendasFormaPagamento.map((pagamento: any) => (
 														<TableRow key={pagamento.Forma}>
 														<TableCell align="left" style={{fontWeight: 'bold'}}>{pagamento.Forma}</TableCell>
 														<TableCell align="center">{pagamento.Valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
-														<TableCell align="center">{((pagamento.Valor / somaPagamentos) * 100).toFixed(1)} %</TableCell>														
+														<TableCell align="center">{((pagamento.Valor / formatedData[3]) * 100).toFixed(1)} %</TableCell>														
 														</TableRow>
 													))}
 													</TableBody>
@@ -285,11 +295,11 @@ export function PortalPageClientDashboard() {
 													</TableRow>
 													</TableHead>
 													<TableBody>
-													{totaisDoDia.map((total: any) => (
+													{totaisDia.map((total: any) => (
 														<TableRow key={total.Operacao}>
 														<TableCell align="left" style={{fontWeight: 'bold'}}>{total.Operacao}</TableCell>
 														<TableCell align="center">{total.Total.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
-														<TableCell align="center">{((total.Total / somaToTaisDia) * 100).toFixed(1)} %</TableCell>														
+														<TableCell align="center">{((total.Total / formatedData[4]) * 100).toFixed(1)} %</TableCell>														
 														</TableRow>
 													))}
 													</TableBody>
@@ -307,11 +317,11 @@ export function PortalPageClientDashboard() {
 														</TableRow>
 														</TableHead>
 														<TableBody>
-														{data.RankingProdutos.map((item: any) => (
+														{clientData.RankingProdutos.map((item: any) => (
 															<TableRow key={item.Produto}>
 															<TableCell align="left" style={{fontWeight: 'bold'}}>{item.Produto}</TableCell>
 															<TableCell align="center">{item.Qtde}</TableCell>
-															<TableCell align="center">{((item.ValorTotal / somaProdutosDia) * 100).toFixed(2)} %</TableCell>														
+															<TableCell align="center">{((item.ValorTotal / formatedData[5]) * 100).toFixed(2)} %</TableCell>														
 															</TableRow>
 														))}
 														</TableBody>
@@ -349,11 +359,11 @@ export function PortalPageClientDashboard() {
 													</TableRow>
 													</TableHead>
 													<TableBody>
-													{data.VendasPorTipo.map((item: any) => (
+													{clientData.VendasPorTipo.map((item: any) => (
 														<TableRow key={item.Tipo}>
 														<TableCell align="left" style={{fontWeight: 'bold'}}>{item.Tipo}</TableCell>
 														<TableCell align="center">{item.Valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
-														<TableCell align="center">{((item.Valor / somaVendasPorTipo) * 100).toFixed(2)} %</TableCell>														
+														<TableCell align="center">{((item.Valor / formatedData[6]) * 100).toFixed(2)} %</TableCell>														
 														</TableRow>
 													))}
 													</TableBody>
@@ -438,55 +448,7 @@ export function PortalPageClientDashboard() {
 								</div>
 							</Container>
 						) 
-					}
-				<PortalChartsContainer heightAuto={chartType !== '3' ? true : false}>
-					{
-						/* {chartType === '1' ? (
-						<AreaChartComponent
-							data={chartOption === '1' ? dataMonth : chartOption === '2' ? dataDay : dataYear}
-							title={'Vendas por ' + (chartOption === '1' ? 'mês' : chartOption === '2' ? 'dia' : 'ano')}
-							color={chartColor}
-
-							aspect={3 / 1}
-						/>
-						) : chartType === '2' ? (
-							<LineChartComponent
-								data={chartOption === '1' ? dataMonth : chartOption === '2' ? dataDay : dataYear}
-								title={'Vendas por ' + (chartOption === '1' ? 'mês' : chartOption === '2' ? 'dia' : 'ano')}
-								color={chartColor}
-								aspect={3 / 1}
-							/>
-						) : chartType === '3' ? (
-							<PieChartComponent
-								data={chartOption === '1' ? dataMonth : chartOption === '2' ? dataDay : dataYear}
-								title={'Vendas por ' + (chartOption === '1' ? 'mês' : chartOption === '2' ? 'dia' : 'ano')}
-								color={chartColor}
-
-							/>
-						) : chartType === '4' ? (
-								<BarChartComponent
-									data={chartOption === '1' ? dataMonth : chartOption === '2' ? dataDay : dataYear}
-									title={'Vendas por ' + (chartOption === '1' ? 'mês' : chartOption === '2' ? 'dia' : 'ano')}
-									color={chartColor}
-									aspect={3 / 1}
-								/>
-						) : chartType === '5' ? (
-								<ScatterChartComponent
-									data={chartOption === '1' ? dataMonth : chartOption === '2' ? dataDay : dataYear}
-									title={'Vendas por ' + (chartOption === '1' ? 'mês' : chartOption === '2' ? 'dia' : 'ano')}
-									color={chartColor}
-									aspect={3 / 1}
-								/>
-						) :  chartType === '6' ? (
-								<RadialChartComponent
-									data={chartOption === '1' ? dataMonth : chartOption === '2' ? dataDay : dataYear}
-									title={'Vendas por ' + (chartOption === '1' ? 'mês' : chartOption === '2' ? 'dia' : 'ano')}
-									color={chartColor}
-									aspect={3 / 1}
-								/>
-						) : null} */
-					}
-				</PortalChartsContainer>
+					}						
 			</ContainerAdminContas>				
 		</ContainerAdmin>
 	);
