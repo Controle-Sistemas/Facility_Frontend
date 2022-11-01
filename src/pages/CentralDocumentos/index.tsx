@@ -25,6 +25,7 @@ import SortIcon from '@mui/icons-material/Sort';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import Container from '@mui/material/Container';
 
 export function CentralDocumentosPageAdmin() {
 	const [ documents, setDocuments ] = useState([]);
@@ -122,7 +123,94 @@ export function CentralDocumentosPageAdmin() {
 	if (loading) {
 		return <LoadingComponent />;
 	} else if (error) {
-		return <div>Erro ao carregar os documentos</div>;
+		return	<ContainerAdmin>
+					<SidebarContainer>
+						<Sidebar />
+					</SidebarContainer>
+					<ContainerAdminContas>
+						<MainTitle>Central de Documentos</MainTitle>
+						<ButtonGroup>
+							{isAdmin ? (
+								<PrimaryButton onClick={handleOpenModal}>
+									<i className="fas fa-plus" />
+									Adicionar Documento
+								</PrimaryButton>
+							) : null}
+						</ButtonGroup>
+
+						<ButtonGroup>
+							<FilterComponent
+								filterText={searchText}
+								onClear={() => setSearchText('')}
+								onFilter={(e) => setSearchText(e.target.value)}
+							/>
+
+							<ButtonRow>
+								<PrimaryButton onClick={handleOpenModalFilter}>
+									<FilterAltIcon />
+								</PrimaryButton>
+								<PrimaryButton onClick={handleOpenModalSort}>
+									<FormatListBulletedIcon />
+								</PrimaryButton>
+								<PrimaryButton onClick={handleRequestSort}>
+									<SortIcon />
+								</PrimaryButton>
+								<PrimaryButton onClick={handleSetTypeOfView}>
+								{typeOfView === 'module' ? <ViewModuleIcon /> : <ViewListIcon />}
+								</PrimaryButton>
+							</ButtonRow>
+						</ButtonGroup>
+
+						<ModalForm
+							isModalOpen={modalIsOpen}
+							isModalClosed={handleOpenModal}
+							title="Adicionar Documento"
+							height="75vh"
+							width="50%"
+						>
+							<FormAddDocument handleClose={handleOpenModal} adicionar={onAdd} />
+						</ModalForm>
+						<ModalForm
+							isModalOpen={modalSortIsOpen}
+							isModalClosed={handleOpenModalSort}
+							title="Ordenar Documentos"
+							height="45vh"
+							width="20%"
+						>
+							<FormSortDocuments
+								handleClose={handleOpenModalSort}
+								orderBy={orderBy}
+								setOrderBy={setOrderBy}
+							/>
+						</ModalForm>
+						<ModalForm
+							isModalOpen={modalFilterIsOpen}
+							isModalClosed={handleOpenModalFilter}
+							title="Filtrar Documentos"
+							height="45vh"
+							width="20%"
+						>
+							<FormFilterDocument
+								handleClose={handleOpenModalFilter}
+								filterBy={filterBy}
+								setFilterBy={setFilterBy}
+							/>
+						</ModalForm>
+
+						<CentralDocuments
+							documents={[]}
+							setDocuments={setDocuments}
+							isAdmin={isAdmin}
+							filterBy={filterBy}
+							order={order}
+							orderBy={orderBy}
+							typeOfView={typeOfView}
+						/>
+						<Container>
+                        	<p style={{"textAlign": "center"}}> Não há documentos para exibição </p>
+                		</Container>  
+					</ContainerAdminContas>
+				</ContainerAdmin>
 	} else {
 		const searchedData = documents.filter((doc) => {
 			return JSON.stringify(doc).toLowerCase().includes(searchText.toLowerCase());

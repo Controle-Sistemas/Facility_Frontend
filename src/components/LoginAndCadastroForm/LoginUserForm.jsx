@@ -2,7 +2,7 @@
 //Importações
 import { useNavigate } from "react-router-dom"
 import ReCAPTCHA from "react-google-recaptcha";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import MaskedInput from "../cnpjInput"
 import Swal from "sweetalert2";
 import StoreContext from "../Storage/Context";
@@ -15,6 +15,7 @@ import {BASE_URL} from '../../utils/requests'
 import {TabGroup, Tab} from '../styledComponents/containers'
 import { number } from "prop-types";
 import { toUnitless } from "@mui/material/styles/cssUtils";
+import { cnpj } from "cpf-cnpj-validator";
 //Definindo um valor inicial para o estado
 function initialState() {
     return {
@@ -29,12 +30,13 @@ function initialInternalState(){
         SENHA:""
     }
 }
-
+const SERVER_DOWN = "O servidor está fora do ar. Acione o suporte!"
 export function LoginUserForm() {
     //Estado do captcha
     const [state, setState] = useState({ isVerified: false });
     const [isForgotPasswordVisible, setIsForgotPasswordVisible] = useState(false)
     const [isInternal, setIsInternal] = useState(false)
+	const [ errorMessage, setErrorMessage ] = useState('');
     
 
     //Mudar o estado do captcha
@@ -53,6 +55,21 @@ export function LoginUserForm() {
     const { setToken,setAdmin } = useContext(StoreContext);
     const navigate = useNavigate();
 
+    useEffect(() => {
+         verifyServerStatus();
+    }, [])
+
+    async function verifyServerStatus(){
+       await axios.get(BASE_URL + '/ramos')
+        .then(res => {
+           console.log("O sistema está no ar, interaja através da interface!")
+           setErrorMessage('');
+        })
+        .catch(err => {
+            setErrorMessage(SERVER_DOWN);
+        })
+    }
+    
     //Funções para capturar os valores do formulário
     function handleChangeCNPJ(value) {
         setValues({
@@ -96,8 +113,7 @@ export function LoginUserForm() {
                 'Allow-Control-Allow-Origin': '*'
             }
         }) //Fazendo a requisição
-            .then(res => {          
-                      
+            .then(res => {
                 console.log(res)
                 if (res.status === 200) { 
                     setToken(res.data.token) //Setando o token nos cookies
@@ -106,7 +122,7 @@ export function LoginUserForm() {
                     if(res.data.isAdmin){ //Se for admin, redireciona para a pagina de administração
                         navigate('/admin/portal-chamados') //Redirecionando para a página de administração
                     }else{ //Se não for admin, redireciona para a página de cliente
-                        navigate('/user/portal') //Redirecionando para a página de cliente
+                        navigate('/user/dashboard') //Redirecionando para a página de cliente
                     }
                     return { token:res.data.token} //Retornando o token
                 } else {
@@ -152,19 +168,40 @@ export function LoginUserForm() {
 
     function handleSubmit(event){
         event.preventDefault();
-        localStorage.setItem('cnpj', values.CNPJ)
-        login(values.CNPJ, values.PASSWORD) //Chamando a função de login com os valores do formulário
-
+        if(values.CNPJ === '' && cookie.get('cnpj')){
+           values.CNPJ = cookie.get('cnpj');
+        }
+        cookie.set('cnpj', values.CNPJ === cookie.get('cnpj') ? cookie.get('cnpj') : values.CNPJ);
+        localStorage.setItem("cnpj", values.CNPJ);
+        if(errorMessage === SERVER_DOWN){
+            Swal.fire({
+                title: 'Ops...',
+                text: 'Aconteceu algum problema de conexão, tente mais tarde. Já estamos trabalhando para que você possa utilizar o sistema o mais rápido possível',
+                icon: 'info',
+                confirmButtonText: 'Fechar'
+            })
+        }else{
+            login(values.CNPJ, values.PASSWORD)
+        } //Chamando a função de login com os valores do formulário
 
     }
 
     function handleSubmitInternal(e){
         e.preventDefault()
         localStorage.setItem('usuario',internalValues.USUARIO)
-        loginInterno(internalValues.USUARIO,internalValues.SENHA)
+        if(errorMessage === SERVER_DOWN){
+            Swal.fire({
+                title: 'Ops...',
+                text: 'Aconteceu algum problema de conexão, tente mais tarde. Já estamos trabalhando para que você possa utilizar o sistema o mais rápido possível',
+                icon: 'info',
+                confirmButtonText: 'Fechar'
+            })
+        }else{
+            loginInterno(internalValues.USUARIO,internalValues.SENHA)
+        }
     }
     
-    
+   
 
     return (
         
@@ -194,11 +231,11 @@ export function LoginUserForm() {
                         <>
                         <div className="form-group">
                         <label htmlFor="cnpj">CNPJ:</label>
-                        <MaskedInput className="input-form"  onSend={handleChangeCNPJ} placeholder="" required />
+                        <MaskedInput className="input-form" autoFocus onSend={handleChangeCNPJ} placeholder="" required />
                     </div>
                     <div className="form-group">
                         <label htmlFor="senha">Senha:</label>
-                        <input type='password' className='input-form' onChange={handleChangePassword} defaultValue={values.password} required />
+                        <input type='password' className='input-form' on onChange={handleChangePassword} defaultValue={values.password} required />
                     </div>
                     </>
                     ) : (

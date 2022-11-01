@@ -46,11 +46,10 @@ const MaskedInput = ({name,className,id,placeholder,onBeforeBlur,onSend,required
         <input placeholder={placeholder} className={className} id={id} maxLength={19} value={cnpjMask(state)}
             onChange={handleChange}
             onBlur={handleBlur}
+            onFocus={() => console.log('Focado')}
             name={name}
-            
+            autoFocus 
             required={required} />
-
-
     )
 
 }

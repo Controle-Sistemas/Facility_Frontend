@@ -31,11 +31,11 @@ export const colorPallete = {
     }
 }
 
-export let tema = localStorage.getItem('Tema') 
+export let tema = 'light' //localStorage.getItem('Tema') 
 
 export function setTema(isDarkMode){
     if(isDarkMode){
-        tema = 'dark'
+        tema = 'light'
     } else {
         tema = 'light'
     }

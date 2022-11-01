@@ -25,6 +25,7 @@ import Swal from 'sweetalert2';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { FormFilterTutoriais } from '../../components/Modais/forms/FormFilterTutoriais';
+import Container from '@mui/material/Container';
 
 export function TutorialPage() {
 	const [ tutorialData, setTutorialData ] = useState([]);
@@ -239,8 +240,9 @@ export function TutorialPage() {
 						tutorialData={tutorialData}
 						isAdmin={isAdmin}
 					/>
-				</ContainerAdminContas>
+				</ContainerAdminContas>				
 			</ContainerAdmin>
+			
 		);
 	}
 }

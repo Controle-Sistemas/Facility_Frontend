@@ -270,6 +270,13 @@ export default function Sidebar(props: Props) {
 	}
 
 	//Componente do menu lateral
+	/**
+	 * <Item className="item">
+					<ItemText className="item-text">
+						<SwitchDarkMode />
+					</ItemText>
+				</Item>
+	 */
 	const drawer = (
 		<div>
 			<Toolbar>
@@ -282,12 +289,7 @@ export default function Sidebar(props: Props) {
 				<TreeView tree={tree} />
 			</List>
 			<Divider />
-			<ItemList>
-				<Item className="item">
-					<ItemText className="item-text">
-						<SwitchDarkMode />
-					</ItemText>
-				</Item>
+			<ItemList>				
 				<Item className="item" onClick={handleLogout}>
 					<ItemText className="item-text">
 						<i className="fa-solid fa-right-from-bracket" />

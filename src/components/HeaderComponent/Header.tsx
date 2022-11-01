@@ -63,7 +63,7 @@ export default function Header() {
 	
 	const handleLogout = () => {
 		localStorage.removeItem('cnpj'); // remove o cnpj do usuário logado
-		localStorage.removeItem('token'); // remove o token do usuário logado
+		localStorage.removeItem('token'); // re'move o token do usuário logado
 		cookie.remove('id'); // remove o cookie do usuário logado
 	};
 

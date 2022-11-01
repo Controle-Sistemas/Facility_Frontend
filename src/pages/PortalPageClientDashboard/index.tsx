@@ -87,11 +87,10 @@ export function PortalPageClientDashboard() {
 	const [ errorMessage, setErrorMessage ] = useState('');
 	const [ clientData, setClientData ] = useState<any>(initialData);
 	const [ totaisDia, setTotaisDia ] = useState([]);
-	const [ formatedData, setFormatedData ] = useState({});	
 	const [ cardData, setCardData ] = useState<DashboardDataType>();
 	const [ dataMonth, setDataMonth] = useState('');
 	const [ dataYear, setDataYear] = useState('');
-	const [ dashpage, setPage] = useState(HISTORICORESULTADOS);
+	const [ dashpage, setPage] = useState(MONITORAMENTOTEMPOREAL);
 	const [ dashpageIndex, setPageIndex] = useState(0);
 
 	const cnpj = localStorage.getItem('cnpj');
@@ -103,6 +102,12 @@ export function PortalPageClientDashboard() {
 		() => {	
 			axios.get(`${BASE_URL}/dashboard/real-time`).then((res) => {
 				setClientData(res.data.data)
+				setTotaisDia([
+					{"Operacao":"Cancelamentos", "Total" : clientData.TotalDiaCancelamentos},
+					{"Operacao":"Cortesias concedidas", "Total" : clientData.TotalDiaCortesias},
+					{"Operacao":"Taxa de serviço", "Total" : clientData.TotalDiaDescontos},
+					{"Operacao":"Descontos", "Total" : clientData.TotalDiaTaxaServico},
+				])
 				console.log(clientData)
 			}).catch(err => {
 				setError(true)
@@ -111,59 +116,44 @@ export function PortalPageClientDashboard() {
 		},
 		[]
 	);
-
-	async function getData() {
-		const response = await axios.get(`${BASE_URL}/dashboard/real-time`).then(response => {			
-			return response.data.data
-			console.log(clientData)
-		})
-		.catch(error => {
-			console.log(error)
-		})
-		return response
 		
-	  };
-	  var somaProdutosDia = 0;
-	  const totalProdutosDia = _.map(clientData.RankingProdutos,(value, key)=>{
-		  somaProdutosDia += clientData.RankingProdutos[key].ValorTotal	
-	  })
+	var somaProdutosDia = 0;
+	const totalProdutosDia = _.map(clientData.RankingProdutos,(value, key)=>{
+		somaProdutosDia += clientData.RankingProdutos[key].ValorTotal	
+	})
 
-	  const somaToTaisDia = _.sum([clientData.TotalDiaCancelamentos + clientData.TotalDiaCortesias + clientData.TotalDiaDescontos + clientData.TotalDiaTaxaServico]).toFixed(2);
-	  
-	  const vendasPorHora = _.groupBy(clientData.VendasPorHora, (value)=> value.Hora);
+	const somaTotaisDia = parseFloat(_.sum([clientData.TotalDiaCancelamentos + clientData.TotalDiaCortesias + clientData.TotalDiaDescontos + clientData.TotalDiaTaxaServico]).toFixed(2));
+	
+	const vendasPorHora = _.groupBy(clientData.VendasPorHora, (value)=> value.Hora);
 
-	  const dataVendasHoraResult = _.map(vendasPorHora,(value, key)=>{
-		  console.log(value)
-		  return [
-			  key, _.sumBy(vendasPorHora[key], (v) => v.Valor)
-		  ]
-	  })
-	  
-	  var totalPagamentos = 0;
-	  const totalPagamentosDia = _.map(clientData.VendasFormaPagamento,(value, key)=>{
-		  totalPagamentos += clientData.VendasFormaPagamento[key].Valor	
-	  })
+	const dataVendasHoraResult = _.map(vendasPorHora,(value, key)=>{
+		console.log(value)
+		return [
+			key, _.sumBy(vendasPorHora[key], (v) => v.Valor)
+		]
+	})
+	
+	var totalVendasPorTipo = 0;
+	const somaVendasPorTipo = _.map(clientData.VendasPorTipo,(value, key)=>{
+		totalVendasPorTipo += clientData.VendasPorTipo[key].Valor	
+	})
+	
+	const dataVendasPorTipo = _.groupBy(clientData.VendasPorTipo, (value)=> value.Tipo);
+	const dataVendasPorTipoResult = _.map(dataVendasPorTipo,(value, key)=>{		
+		return [
+			key, _.sumBy(dataVendasPorTipo[key], (v) => v.Valor)
+		]
+	})
 
-	  var totalVendasPorTipo = 0;
-	  const somaVendasPorTipo = _.map(clientData.VendasPorTipo,(value, key)=>{
-		  totalVendasPorTipo += clientData.VendasPorTipo[key].Valor	
-	  })
-	  
-	  const dataVendasPorTipo = _.groupBy(clientData.VendasPorTipo, (value)=> value.Tipo);
-	  const dataVendasPorTipoResult = _.map(dataVendasPorTipo,(value, key)=>{		
-		  return [
-			  key, _.sumBy(dataVendasPorTipo[key], (v) => v.Valor)
-		  ]
-	  })
 
-	  const dataEvolucaoVendasMes = _.groupBy(clientData.VendasPorTipo, (value)=> value.Mes);
+	const dataEvolucaoVendasMes = _.groupBy(clientData.EvolucaoVendasMes, (value)=> value.Mes);
 
-	  const dataEvolucaoVendasMesResult = _.map(dataEvolucaoVendasMes,(value, key)=>{		
-		  var aux  = [
-			  dataUtil.getMeses()[parseInt(key.substring(0,2)) - 1].name.substring(0,3),(_.sumBy(dataEvolucaoVendasMes[key], (v) => v.Valor))
-		  ]
-		  return aux;
-	  })
+	const dataEvolucaoVendasMesResult = _.map(dataEvolucaoVendasMes,(value, key)=>{		
+		var aux  = [
+			dataUtil.getMeses()[parseInt(key.substring(0,2)) - 1].name.substring(0,3),(_.sumBy(dataEvolucaoVendasMes[key], (v) => v.Valor))
+		]
+		return aux;
+	})
 
 	function getVendasPorTipo(){
 		return [["Tipo", "Valor"], ...dataVendasPorTipoResult];
@@ -175,6 +165,19 @@ export function PortalPageClientDashboard() {
 
 	function getEvolucaoVendasMes(){
 		return [["Mês", "Vendas"], ...dataEvolucaoVendasMesResult];
+	}
+
+	function getTotalPagamentosDia(){
+		return _.sumBy(clientData.VendasFormaPagamento, "Valor")
+	}
+
+	function getRankingProdutosDia(){
+		return _.sumBy(clientData.RankingProdutos, "ValorTotal")
+	}
+
+	function getSomaVendasPorTipo(){
+		console.log(dataVendasPorTipoResult)
+		return _.sumBy(clientData.VendasPorTipo, 'Valor')
 	}
 
 	const handleChangeYear = (event: SelectChangeEvent) => {
@@ -279,7 +282,7 @@ export function PortalPageClientDashboard() {
 														<TableRow key={pagamento.Forma}>
 														<TableCell align="left" style={{fontWeight: 'bold'}}>{pagamento.Forma}</TableCell>
 														<TableCell align="center">{pagamento.Valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
-														<TableCell align="center">{((pagamento.Valor / formatedData[3]) * 100).toFixed(1)} %</TableCell>														
+														<TableCell align="center">{((pagamento.Valor / getTotalPagamentosDia()) * 100).toFixed(1)} %</TableCell>														
 														</TableRow>
 													))}
 													</TableBody>
@@ -299,7 +302,7 @@ export function PortalPageClientDashboard() {
 														<TableRow key={total.Operacao}>
 														<TableCell align="left" style={{fontWeight: 'bold'}}>{total.Operacao}</TableCell>
 														<TableCell align="center">{total.Total.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
-														<TableCell align="center">{((total.Total / formatedData[4]) * 100).toFixed(1)} %</TableCell>														
+														<TableCell align="center">{((total.Total / somaTotaisDia ) * 100).toFixed(1)} %</TableCell>														
 														</TableRow>
 													))}
 													</TableBody>
@@ -321,7 +324,7 @@ export function PortalPageClientDashboard() {
 															<TableRow key={item.Produto}>
 															<TableCell align="left" style={{fontWeight: 'bold'}}>{item.Produto}</TableCell>
 															<TableCell align="center">{item.Qtde}</TableCell>
-															<TableCell align="center">{((item.ValorTotal / formatedData[5]) * 100).toFixed(2)} %</TableCell>														
+															<TableCell align="center">{((item.ValorTotal / getRankingProdutosDia()) * 100).toFixed(2)} %</TableCell>														
 															</TableRow>
 														))}
 														</TableBody>
@@ -363,7 +366,7 @@ export function PortalPageClientDashboard() {
 														<TableRow key={item.Tipo}>
 														<TableCell align="left" style={{fontWeight: 'bold'}}>{item.Tipo}</TableCell>
 														<TableCell align="center">{item.Valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
-														<TableCell align="center">{((item.Valor / formatedData[6]) * 100).toFixed(2)} %</TableCell>														
+														<TableCell align="center">{((item.Valor / getSomaVendasPorTipo()) * 100).toFixed(2)} %</TableCell>														
 														</TableRow>
 													))}
 													</TableBody>
@@ -385,7 +388,7 @@ export function PortalPageClientDashboard() {
 							</Box>
 						) 
 					: dashpage === DETALHAMENTODECUSTOS ? 
-						(
+						(/**
 							<Container >
 								<div className='full-width'>
 									<div className='row'>
@@ -415,8 +418,12 @@ export function PortalPageClientDashboard() {
 									</div>
 								</div>
 							</Container>							
+							**/
+							<Container>
+								<div><img src='https://www.aemarinhais.pt/sitio/images/EB23_MARINHAIS/Frontpage/pagina_em_construcao.png' alt="Em breve" className='emBreve-img'/></div>
+							</Container>
 						) 
-					: 	(
+					: 	(/**
 							<Container>
 								<div className="fit-content">
 								
@@ -446,6 +453,10 @@ export function PortalPageClientDashboard() {
 										options={tableChartOptions}
 									/>
 								</div>
+							</Container>
+							**/
+							<Container>
+								<div><img src='https://static.wixstatic.com/media/1d7838_ec0f300f08c24f3d80df1a380324b13c~mv2.png/v1/fill/w_600,h_456,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/paginaEmConstrucao2.png' alt="Em breve" className='emBreve-img'/></div>
 							</Container>
 						) 
 					}						

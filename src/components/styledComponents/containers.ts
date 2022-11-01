@@ -227,9 +227,8 @@ export const TabGroup = styled.div`
 `;
 
 export const Tab = styled.span`
-	background-color: ${props => props.isActive ? 'transparent' : tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.buttonPrimaryBgColor};
-	color: ${props => props.isActive ? '#003775' : '#fff'};
-
+	background-color: ${props => props.isActive ? colorPallete.light.primaryColor  : 'transparent'};
+	color: ${props => !props.isActive ? '#003775' : '#fff'};
 	border: 1px solid #003775;
 	border-radius: .3rem;
 	padding: .3rem 1rem;

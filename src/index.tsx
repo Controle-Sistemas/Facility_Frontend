@@ -10,7 +10,7 @@ import {colorPallete,tema} from './coresStyled'
 const root = document.getElementById('root')
 const body = document.getElementsByTagName('body')
 const app = createRoot(root!);
-body[0].style.backgroundColor = tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor;
+body[0].style.backgroundColor = 'light';
 
 app.render( //Renderização dos componentes no index.html
 

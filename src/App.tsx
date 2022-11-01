@@ -35,7 +35,7 @@ function App() {
 		<BrowserRouter>
 			<StoreProvider>
 				<Routes>
-					<Route path="/" element={<MainPage />} />
+					<Route path="/" element={<PageFormUser />} />
 					<Route path="/solicitacao-enviada" element={<PaginaSolicitacaoEnviada />} />
 					<Route path="/cadastro" element={<PageFormUser />} />
 					<Route path="/login" element={<PageFormUser />} />
