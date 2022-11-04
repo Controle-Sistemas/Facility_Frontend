@@ -167,12 +167,7 @@ export function LoginUserForm() {
     }
 
     function handleSubmit(event){
-        event.preventDefault();
-        if(values.CNPJ === '' && cookie.get('cnpj')){
-           values.CNPJ = cookie.get('cnpj');
-        }
-        cookie.set('cnpj', values.CNPJ === cookie.get('cnpj') ? cookie.get('cnpj') : values.CNPJ);
-        localStorage.setItem("cnpj", values.CNPJ);
+        event.preventDefault();       
         if(errorMessage === SERVER_DOWN){
             Swal.fire({
                 title: 'Ops...',
@@ -181,6 +176,11 @@ export function LoginUserForm() {
                 confirmButtonText: 'Fechar'
             })
         }else{
+            if(values.CNPJ === '' && cookie.get('cnpj')){
+                values.CNPJ = cookie.get('cnpj');                
+             }
+             cookie.set('cnpj', values.CNPJ === cookie.get('cnpj') ? cookie.get('cnpj') : values.CNPJ);
+             localStorage.setItem("cnpj", values.CNPJ);
             login(values.CNPJ, values.PASSWORD)
         } //Chamando a função de login com os valores do formulário
 

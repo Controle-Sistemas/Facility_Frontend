@@ -11,6 +11,7 @@ import {
 } from '../../components/styledComponents/containers';
 import _ from 'lodash'
 import * as React from 'react';
+import { useNavigate } from 'react-router';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -83,6 +84,9 @@ interface DashboardCardDataType {
 const initialData = new DataTest().getCleanJSON() as DashboardDataType;
 
 export function PortalPageClientDashboard() {
+	
+	const navigate = useNavigate();	
+	const [ loading, setLoading ] = useState(true);
 	const [ error, setError ] = useState(false);
 	const [ errorMessage, setErrorMessage ] = useState('');
 	const [ clientData, setClientData ] = useState<any>(initialData);
@@ -92,7 +96,6 @@ export function PortalPageClientDashboard() {
 	const [ dataYear, setDataYear] = useState('');
 	const [ dashpage, setPage] = useState(MONITORAMENTOTEMPOREAL);
 	const [ dashpageIndex, setPageIndex] = useState(0);
-
 	const cnpj = localStorage.getItem('cnpj');
 	const dataUtil = new DataTest()
 	const data = ''
@@ -107,11 +110,15 @@ export function PortalPageClientDashboard() {
 					{"Operacao":"Cortesias concedidas", "Total" : clientData.TotalDiaCortesias},
 					{"Operacao":"Taxa de serviço", "Total" : clientData.TotalDiaDescontos},
 					{"Operacao":"Descontos", "Total" : clientData.TotalDiaTaxaServico},
-				])
-				console.log(clientData)
+				]);
+				setLoading(false);
 			}).catch(err => {
-				setError(true)
-				console.log('erro')
+				setError(true);				
+				setLoading(false);
+				Swal.fire('Ops...', 'Houve um problema na busca dos dados de Dashboard. Tente novamente mais tarde.', 'info').then(() => {
+					navigate("/user/documentos")
+					
+				})
 			})
 		},
 		[]
@@ -206,7 +213,9 @@ export function PortalPageClientDashboard() {
 		console.log('Página atual: ' + dashpage);	
 	}	
 
-	return (
+	if (loading) {
+		return <LoadingComponent />;
+	} return (
 		<ContainerAdmin>
 			<SidebarContainer>
 				<Sidebar />

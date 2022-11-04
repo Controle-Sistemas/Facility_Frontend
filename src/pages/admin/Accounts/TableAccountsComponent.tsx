@@ -186,7 +186,7 @@ export default function TableComponent(props) {
 
 	const onDelete = (id) => {
 		axios
-			.delete(`http://localhost:8000/clientes/${id}`)
+			.delete(`${BASE_URL}/clientes/${id}`)
 			.then((res) => {
 				Swal.fire({
 					title: 'Sucesso',
