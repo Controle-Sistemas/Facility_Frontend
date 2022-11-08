@@ -38,12 +38,11 @@ export function ForgotPassword({isVisible, isInternal}) { //Componente para recu
             .catch(error=>{
                 Swal.fire({
                     title: 'Erro',
-                    text:   error.data.message,
+                    text:  error.data.message,
                     icon: 'error'
                 })
             })
-        }
-        
+        }        
     }
 
     function handleChangeCNPJ(cnpj) {

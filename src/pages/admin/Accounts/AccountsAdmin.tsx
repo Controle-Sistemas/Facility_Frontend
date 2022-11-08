@@ -1,5 +1,6 @@
 import TableComponent from './TableAccountsComponent';
 import Switch from '../../../components/SwitchComponent';
+import Swal from 'sweetalert2';
 import React, { useEffect } from 'react';
 import FilterComponent from '../../../components/filterComponent';
 import Sidebar from '../../../components/Sidebar/sidebar';
@@ -16,7 +17,7 @@ async function getDadosApi() {
 
 	//Requisição para o backend
 	const dados = await axios
-		.get('http://localhost:8000/clientes/admin', {
+		.get(`${BASE_URL}/clientes/admin`, {
 			headers: {
 				'Content-Type': 'application/json',
 				'Access-Control-Allow-Origin': '*'
@@ -39,7 +40,7 @@ async function getDadosApi() {
 async function getRamos() {
 	//Requisição para o backend
 	const dados = await axios
-		.get('http://localhost:8000/ramos/')
+		.get(`${BASE_URL}/ramos/`)
 		.then((res) => {
 			return res.data;
 		})
@@ -54,7 +55,7 @@ async function getDadosApiByID(id: number) {
 	let data: any[] = []; //Inicializar o array para armazenar os dados
 	//Requisição para o backend
 	const dados = await axios
-		.get(`http://localhost:8000/clientes/${id}`, {
+		.get(`${BASE_URL}/clientes/${id}`, {
 			headers: {
 				'Content-Type': 'application/json',
 				'Access-Control-Allow-Origin': '*'
@@ -75,28 +76,39 @@ async function getDadosApiByID(id: number) {
 }
 
 //Função para atualizar o status de um cliente (ativo e inativo)
-export async function patchStatusApi(id: string, STATUS: string) {
+export async function patchStatusApi(id: string, STATUS: boolean) {
 	//Requisição para o backend
+	console.log(STATUS)
 	await axios
-		.patch(`http://localhost:8000/clientes/${id}`, {
+		.patch(`${BASE_URL}/clientes/${id}`, {
 			STATUS
 		})
 		.then((res) => {
 			console.log(res);
+			Swal.fire({
+				title: 'Alterado',
+				text:  STATUS  ? 'Ativo' : 'Inativo',
+				icon: 'info'
+			});
 		})
 		.catch((err) => {
 			console.log(err.response.data);
 		});
 }
 
-export async function patchAdminApi(id: string, ADMIN: string) {
+export async function patchAdminApi(id: string, ADMIN: boolean) {
 	//Requisição para o backend
 	await axios
-		.patch(`http://localhost:8000/clientes/${id}`, {
+		.patch(`${BASE_URL}/clientes/${id}`, {
 			ADMIN
 		})
 		.then((res) => {
 			console.log(res);
+			Swal.fire({
+				title: 'Alterado',
+				text:   ADMIN  ? 'ADM Ativado' : 'ADM Desativado',
+				icon: 'info'
+			});
 		})
 		.catch((err) => {
 			console.log(err.response.data);

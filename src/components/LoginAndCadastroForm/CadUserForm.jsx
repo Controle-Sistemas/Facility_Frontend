@@ -227,24 +227,16 @@ export function CadUserForm() {
                                     }) : null}
                                 </select>
                             </div>
-                            </>
-
-
+                        </>
                     )}
-
-
                     <div className="captcha">
-
                         <ReCAPTCHA
                             sitekey="6LeS-1khAAAAAOWzMs0OiUBnynUM9zCXQsJZumGz"
                             onChange={handleChange}
                         />
                     </div>
-
                     <button type='submit' className='btn-form btn-form-second' disabled={!state.isVerified }>Enviar</button>
-
                 </form>
-
             </div></>
 
     )

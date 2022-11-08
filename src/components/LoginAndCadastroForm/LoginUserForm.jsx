@@ -78,6 +78,7 @@ export function LoginUserForm() {
         })
 
     }
+
     function handleSetForgotPassword(event) {
         setIsForgotPasswordVisible(!isForgotPasswordVisible)
     }
@@ -89,16 +90,14 @@ export function LoginUserForm() {
         })
     }
 
-
     function handleChangePassword(event) {
         const password = event.target;
         setValues({
             ...values,
             PASSWORD: password.value
         })
-
-
     }
+
     //Função para "mudar" para a pagina de cadastro
     const handleChangePage = (event) => {
         event.preventDefault();
@@ -144,7 +143,7 @@ export function LoginUserForm() {
     }
 
     async function loginInterno(USUARIO, SENHA){
-        axios.post(BASE_URL+'/internos/login', {USUARIO,SENHA})
+        axios.post(BASE_URL+'/internos/login', {USUARIO, SENHA})
         .then(res => {
             if (res.status === 200) { 
                 cookie.set('id', parseInt(res.data.id))
@@ -153,7 +152,6 @@ export function LoginUserForm() {
                 navigate("/interno/chamados")
             }
             return { token:res.data.token} //Retornando o token
-
         })
         .catch(err => {
             console.log(err)
@@ -178,9 +176,9 @@ export function LoginUserForm() {
         }else{
             if(values.CNPJ === '' && cookie.get('cnpj')){
                 values.CNPJ = cookie.get('cnpj');                
-             }
-             cookie.set('cnpj', values.CNPJ === cookie.get('cnpj') ? cookie.get('cnpj') : values.CNPJ);
-             localStorage.setItem("cnpj", values.CNPJ);
+            }
+            cookie.set('cnpj', values.CNPJ === cookie.get('cnpj') ? cookie.get('cnpj') : values.CNPJ);
+            localStorage.setItem("cnpj", values.CNPJ);
             login(values.CNPJ, values.PASSWORD)
         } //Chamando a função de login com os valores do formulário
 
@@ -201,8 +199,6 @@ export function LoginUserForm() {
         }
     }
     
-   
-
     return (
         
         <><div className="first-column">
@@ -224,7 +220,6 @@ export function LoginUserForm() {
                     <Tab onClick={() => setIsInternal(false)} isActive={!isInternal}> Cliente/Admin </Tab>
                     <Tab onClick={() => setIsInternal(true)} isActive={isInternal}> Interno </Tab>
                 </TabGroup>
-
 
                 <form className="form-login" onSubmit={(e) => !isInternal ? handleSubmit(e) : handleSubmitInternal(e)}>
                     {!isInternal ? (
@@ -249,9 +244,7 @@ export function LoginUserForm() {
                             <input type='password' className='input-form' onChange={handleChangeInternalValues} name="SENHA" required />
                         </div>
                         </>
-
                     )}
-                    
                     
                     <ForgotPasswordSpan onClick={handleSetForgotPassword}>{isForgotPasswordVisible ? `Informe o ${isInternal ? "usuário" : "CNPJ"} para enviarmos sua nova senha`: "Esqueci minha senha/Não recebi o email"}</ForgotPasswordSpan>
                     <ForgotPassword isVisible={isForgotPasswordVisible} isInternal={isInternal} />
