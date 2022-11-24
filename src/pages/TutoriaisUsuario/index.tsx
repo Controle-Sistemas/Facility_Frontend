@@ -52,6 +52,7 @@ export function TutorialPage() {
 			.then((res) => {
 				setTutorialData(res.data.data);
 				setLoading(false);
+				console.log(res.data.data)
 			})
 			.catch((err) => {
 				console.log(err);

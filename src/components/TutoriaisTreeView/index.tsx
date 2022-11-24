@@ -11,6 +11,7 @@ import {BASE_URL} from '../../utils/requests';
 import Swal from 'sweetalert2';
 import TreeViewComponent from '@mui/lab/TreeView';
 import TreeItem from '@mui/lab/TreeItem';
+import { width } from '@mui/system';
 
 
 interface Props { //Propriedades do componente TutoriaisTreeView
@@ -58,20 +59,26 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
     //Organiza os dados em treeview
 	const TreeViewDataOrganize = () => {
 		tutorialData.forEach((tutorial) => { //Percorre todos os tutoriais
+            console.log("Tutorial: " + tutorial.TITULO)
 			categorias.forEach((categoria) => { //Percorre todas as categorias
-				if (categoria.ID === tutorial.CATEGORIA) { //Verifica se a categoria do tutorial é igual a categoria atual
+				if (categoria.ID === parseInt(tutorial.CATEGORIA)) {
+                    console.log("Categoria de Tutorial encontrado: " + tutorial.TITULO) //Verifica se a categoria do tutorial é igual a categoria atual
 					if (TreeViewData.length === 0) { //Se ainda não tiver nenhum dado na TreeView, adiciona o primeiro item
 						TreeViewData.push({ 
 							ID: categoria.ID, //ID da categoria
 							NOME: categoria.NOME, //Nome da categoria
 							TUTORIALS: [ tutorial ] //Tutoriais da categoria
 						});
+                        
+                        console.log("Adicionando o primeito tutorial: " + tutorial.TITULO)
 					} else {
 						let isFound = false; //Variável para verificar se a categoria já foi adicionada
 						TreeViewData.forEach((item) => { //Percorre todos os itens da TreeView
 							if (item.ID === categoria.ID) { //Verifica se a categoria já foi adicionada
 								item.TUTORIALS.push(tutorial); //Adiciona o tutorial na categoria
 								isFound = true; 
+                                
+                                console.log("Adicionando tutorial na categoria " + tutorial.TITULO)
 							}
 						});
 						if (!isFound) { //Se a categoria não foi adicionada, adiciona ela
@@ -80,6 +87,8 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
 								NOME: categoria.NOME,
 								TUTORIALS: [ tutorial ]
 							});
+                            
+                            console.log("Adicionando categoria: " + tutorial.TITULO)
 						}
 					}
 				}
@@ -87,7 +96,7 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
 		});
 	};
 
-	// console.log(TreeViewData);
+	 //console.log("Data do TreeView", TreeViewData);
 
     function handleOpenModalEdit(id: string) {
         setIsModalEditOpen(!isModalEditOpen);
