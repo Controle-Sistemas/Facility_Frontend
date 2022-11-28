@@ -55,7 +55,7 @@ function TreeView({ tree }) { //Componente para o treeview
 	const onDeleteModule = (id: string) => {
 		//Função para excluir um modulo
 		axios
-			.delete(`http://localhost:8000/menu/item/${id}`)
+			.delete(`${BASE_URL}/menu/item/${id}`)
 			.then((res) => {
 				tree.forEach((item) => {
 					//Percorre o array de modulos
@@ -79,7 +79,7 @@ function TreeView({ tree }) { //Componente para o treeview
 	const onEditModule = (id: string, item = {}) => {
 		//Função para editar um modulo
 		axios
-			.patch(`http://localhost:8000/menu/item/${id}`, item)
+			.patch(`${BASE_URL}/menu/item/${id}`, item)
 			.then(() => {
 				axios.get(BASE_URL + '/menu/item').then((res) => {
 					//Pega os modulos do banco

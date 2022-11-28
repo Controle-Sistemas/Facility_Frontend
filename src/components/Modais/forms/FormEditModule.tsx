@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Switch from '../../SwitchComponent';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { BASE_URL } from '../../../utils/requests';
 import { MultipleSelect } from '../../MultipleSelectComponent';
 import { PrimaryButton, DangerButton } from '../../styledComponents/buttons';
 import { ButtonFormGroup, DataGroup, InputContainer, FormRowContainer } from '../../styledComponents/containers';
@@ -10,7 +11,7 @@ import './styles/Forms.css';
 async function patchStatusApi(id: string, ativo: Boolean) {
 	//Requisição para o backend
 	await axios
-		.patch(`http://localhost:8000/menu/item/${id}`, {
+		.patch(`${BASE_URL}/menu/item/${id}`, {
 			ativo
 		})
 		.catch((err) => {
@@ -25,7 +26,7 @@ async function patchStatusApi(id: string, ativo: Boolean) {
 async function patchAdminApi(id: string, admin: Boolean) {
 	//Requisição para o backend
 	await axios
-		.patch(`http://localhost:8000/menu/item/${id}`, {
+		.patch(`${BASE_URL}/menu/item/${id}`, {
 			admin
 		})
 		.catch((err) => {
@@ -65,7 +66,7 @@ export function FormEditModule(props) {
 	useEffect(
 		() => {
 			axios
-				.get(`http://localhost:8000/menu/item/${props.idModule}`, {
+				.get(`${BASE_URL}/menu/item/${props.idModule}`, {
 					headers: {
 						'Content-Type': 'application/json',
 						'Access-Control-Allow-Origin': '*'
@@ -98,7 +99,7 @@ export function FormEditModule(props) {
 	);
 
 	useEffect(() => {
-		axios.get('http://localhost:8000/ramos/').then((res) => {
+		axios.get('${BASE_URL}/ramos/').then((res) => {
 			setRamos(res.data);
 		});
 	}, []);

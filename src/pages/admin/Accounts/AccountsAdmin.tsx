@@ -4,9 +4,10 @@ import Swal from 'sweetalert2';
 import React, { useEffect } from 'react';
 import FilterComponent from '../../../components/filterComponent';
 import Sidebar from '../../../components/Sidebar/sidebar';
-import { ContainerAdmin, ContainerAdminContas, SidebarContainer } from '../../../components/styledComponents/containers';
+import { ContainerAdmin, ContainerAdminContas, FilterContainer, SidebarContainer } from '../../../components/styledComponents/containers';
 import axios from 'axios';
 import { BASE_URL } from '../../../utils/requests';
+import { MainTitle } from '../../../components/styledComponents/Texts';
 
 //Funções de Integração com o backend
 //Inicio
@@ -182,7 +183,9 @@ useEffect(() => {
 			<SidebarContainer>
 				<Sidebar />
 			</SidebarContainer>
-			<ContainerAdminContas>
+			<ContainerAdminContas>		
+				<br />		
+			<MainTitle> Contas </MainTitle>
 				<div className="table-container">
 					<FilterComponent
 						onFilter={(e) => setFilterText(e.target.value)}

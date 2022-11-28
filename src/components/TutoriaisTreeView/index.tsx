@@ -61,7 +61,7 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
 		tutorialData.forEach((tutorial) => { //Percorre todos os tutoriais
             console.log("Tutorial: " + tutorial.TITULO)
 			categorias.forEach((categoria) => { //Percorre todas as categorias
-				if (categoria.ID === parseInt(tutorial.CATEGORIA)) {
+				if (categoria.ID === parseInt(tutorial.CATEGORIA)) { //ID da categoria vinda no tutorial é string (por enquanto)
                     console.log("Categoria de Tutorial encontrado: " + tutorial.TITULO) //Verifica se a categoria do tutorial é igual a categoria atual
 					if (TreeViewData.length === 0) { //Se ainda não tiver nenhum dado na TreeView, adiciona o primeiro item
 						TreeViewData.push({ 
@@ -70,15 +70,12 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
 							TUTORIALS: [ tutorial ] //Tutoriais da categoria
 						});
                         
-                        console.log("Adicionando o primeito tutorial: " + tutorial.TITULO)
 					} else {
 						let isFound = false; //Variável para verificar se a categoria já foi adicionada
 						TreeViewData.forEach((item) => { //Percorre todos os itens da TreeView
 							if (item.ID === categoria.ID) { //Verifica se a categoria já foi adicionada
 								item.TUTORIALS.push(tutorial); //Adiciona o tutorial na categoria
-								isFound = true; 
-                                
-                                console.log("Adicionando tutorial na categoria " + tutorial.TITULO)
+								isFound = true;                                 
 							}
 						});
 						if (!isFound) { //Se a categoria não foi adicionada, adiciona ela

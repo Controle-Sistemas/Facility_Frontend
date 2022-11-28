@@ -5,6 +5,7 @@ import './App.css';
 import { TutorialPage } from './pages/TutoriaisUsuario';
 import Header from './components/HeaderComponent/Header';
 import ContasAdmin from './pages/admin/Accounts/AccountsAdmin';
+import EnterprisesGroupsPage from './pages/admin/Groups/EnterprisesGroupsPage';
 import AddMenuItem from './components/MenuItems/AddMenuItem';
 import CookieComponent from './components/CookiesBox/cookies';
 import StoreProvider from './components/Storage/Provider';
@@ -124,6 +125,15 @@ function App() {
 							<ProtectedRoute>
 								<Header />
 								<ContasAdmin />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path="/admin/grupos"
+						element={
+							<ProtectedRoute>
+								<Header />
+								<EnterprisesGroupsPage />
 							</ProtectedRoute>
 						}
 					/>
