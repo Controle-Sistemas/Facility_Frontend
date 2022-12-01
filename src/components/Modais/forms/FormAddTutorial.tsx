@@ -106,7 +106,7 @@ export function FormAddTutorial({ handleClose, addTutorial, categorias }) {
 			) : null}
 			<InputContainer>
 				<label>Data Inclusão</label>
-				<input type="date" className="form-control" name="DATAINCLUSAO" onChange={handleChange} />
+				<input type="date" className="form-control" required name="DATAINCLUSAO" onChange={handleChange} />
 			</InputContainer>
 			<ButtonGroup justifyContent="center">
 				<PrimaryButton>Salvar Tutorial</PrimaryButton>

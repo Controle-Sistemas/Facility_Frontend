@@ -4,7 +4,7 @@ import { LinearProgressBar } from '../LinearProgressBar';
 interface CardProps {
 	title?: string;
 	data: any[];
-	totalChamados: number;
+	totalChamados?: number;
 }
 
 export function CardChamados({ title, data, totalChamados }: CardProps) {
@@ -25,22 +25,24 @@ export function CardChamados({ title, data, totalChamados }: CardProps) {
 			<CardTitle>{title}</CardTitle>
 			<CardBody>
 				{data.length > 0 &&
-					sortData(data).map((item, index) => {
-						if (item.length > 0 && index < 5) {
-							const porcentagemBarra = (item.length * 100 / totalChamados).toFixed(1);
+					sortData(data).map((item) => {
+							const porcentagemBarra = (item.TOTAL * 100 / totalChamados).toFixed(1);
+							console.log('NOME ', item.NOME);
+							console.log('TOTAL ', item.TOTAL);
+							console.log('PERCENT ', porcentagemBarra);
 							return (
 								<div>
-									<CardStatistic status={item[0].NOME.trim().toUpperCase()}>
+									<CardStatistic status={item.NOME.trim().toUpperCase()}>
 										{title.toLowerCase().includes('status') ? (
 											<i className="fa-solid fa-circle-exclamation" style={{ width: '1.4rem' }} />
 										) : null}
-										{item[0].NOME}
+										{item.NOME}
 									</CardStatistic>
 									<LinearProgressBar value={porcentagemBarra} />
-									<span>{item.length}</span>
+									<span>{item.TOTAL}</span>
 								</div>
 							);
-						}
+						
 					})}
 			</CardBody>
 		</CardContainer>

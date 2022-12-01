@@ -47,85 +47,66 @@ export function PortalChamados() {
 		});
 	}, []);
 
-
-	function getChamadosPorCliente(chamados) {
-		const chamadosPorCliente = clientes.map((cliente) => {
-			return chamados.filter((chamado) => cliente.ID === chamado.IDCLIENTE);
-		});
-
-		return chamadosPorCliente.map((item) => {
-			return item.map((chamado) => {
-				const aux = clientes.filter((cliente) => cliente.ID === chamado.IDCLIENTE);
-				return aux.pop();
-			});
-		});
-	}
-
-	function getChamadosPorSetor(chamados) {
-		const chamadosPorSetor = setores.map((setor) => {
-			return chamados.filter((chamado) => setor.ID === chamado.SETOR && chamado.STATUS !== 3);
-		});
-
-		return chamadosPorSetor.map((item) => {
-			return item.map((chamado) => {
-				const aux = setores.filter((setor) => setor.ID === chamado.SETOR && chamado.STATUS !== 3);
-				return aux.pop();
-			});
-		});
-	}
-
-	function getChamadosPorInterno(chamados) {
-		const chamadosPorInterno = internos.map((interno) => {
-			return chamados.filter((chamado) => interno.USUARIO === chamado.INTERNORECEPTOR);
-		});
-
-		return chamadosPorInterno.map((item) => {
-			return item.map((chamado) => {
-				const aux = internos.filter(
-					(interno) => interno.USUARIO === chamado.INTERNORECEPTOR
-				);
-				return aux.pop();
-			});
-		});
-	}
-
-	function getChamadosPorStatus(chamados) {
-		const chamadosPorStatus = statusChamado.map((status) => {
-			
-			return chamados.filter((chamado) => (status.ID !== 3 ? status.ID === chamado.STATUS : false));
-		});
-
-		return chamadosPorStatus.map((item) => {
-			return item.map((chamado) => {
-				const aux = statusChamado.filter((status) => status.ID === chamado.STATUS);
-				return aux.pop();
-			});
-		});
-	}
-
 	function transformData(data) {
         return data.map(item => {
-            if(item && item.length > 0){
+            if(item){
                 return {
-                    label: item[0].NOME,
-                    value: item.length
+                    label: item.NOME,
+                    value: item.TOTAL
                 }
             } 
         }).filter(item => item !== undefined)
     }
 	
-	const chamadosPorCliente = getChamadosPorCliente(chamados);
-	const totalchamadosCliente = _.groupBy(chamados, (value)=> value.IDCLIENTE);
-	const chamadosPorSetor = getChamadosPorSetor(chamados);
-	const totalchamadosSetor = _.groupBy(chamados, (value)=> value.SETOR);
-	const chamadosPorInternos = getChamadosPorInterno(chamados);
-	const totalchamadosInterno = _.groupBy(chamados, (value)=> value.INTERNORECEPTOR);
-	const chamadosPorStatus = getChamadosPorStatus(chamados);
-	const totalchamadosStatus = _.groupBy(chamados, (value)=> value.STATUS);
-	console.log('Total chamados cliente', totalchamadosCliente);
-	console.log('Total chamados setor', totalchamadosSetor);
-	console.log('Total chamados interno', totalchamadosSetor);
-	console.log('Total chamados status', totalchamadosStatus);
+	const chamadosClientes = arrayChamadosClientes();
+	const chamadosSetor = arrayChamadosSetores();
+	const chamadosInternos = arrayChamadosInternos();
+	const chamadosStatus = arrayChamadosStatus();
+
+	function arrayChamadosClientes(){
+		var data = _.groupBy(chamados, (value)=> value.IDCLIENTE);
+		var x = [];
+		for(var key in data){
+			x.push({"NOME": _.filter(clientes, {'ID': parseFloat(key)})[0].NOME, "TOTAL": data[key].length})
+		}
+		//console.log(x);
+		return x;
+	}
+
+	function arrayChamadosSetores(){
+		var data = _.groupBy(chamados, (value)=> value.SETOR);
+		var x = [];
+		//console.log(data)
+		for(var key in data){
+			x.push({"NOME": _.filter(setores, {'ID': parseFloat(key)})[0].NOME, "TOTAL": data[key].length})
+		}
+		//console.log(x);
+		return x;
+	}
+
+	function arrayChamadosInternos(){
+		var data = _.groupBy(chamados, (value)=> value.INTERNORECEPTOR);
+		var x = [];
+		for(var key in data){
+			x.push({"NOME": _.filter(internos, {'USUARIO': key})[0].USUARIO, "TOTAL": data[key].length})
+		}
+		return x;
+	}
+
+	function arrayChamadosStatus(){
+		var data = _.groupBy(chamados, (value)=> value.STATUS);
+		var x = [];
+		for(var key in data){
+			x.push({"NOME": _.filter(statusChamado, {'ID': parseInt(key)})[0].NOME, "TOTAL": data[key].length})
+		}
+		console.log(x);
+		return x;
+	}
+
+	
+
+
+
 	const totalChamados = _.size(chamados);
     
 	return (
@@ -138,14 +119,14 @@ export function PortalChamados() {
 					<TopCardsContainer>
 						<CardsGrid>
 							
-								<CardChamados title="Chamados por Cliente" data={chamadosPorCliente} totalChamados={totalChamados}/>
+								<CardChamados title="Chamados por Cliente" data={chamadosClientes} totalChamados={_.size(chamados)} />
 							
 							
-								<CardChamados title="Chamados por Setor" data={chamadosPorSetor} totalChamados={totalChamados}/>
+								<CardChamados title="Chamados por Setor" data={chamadosSetor} totalChamados={_.size(chamados)} />
 							
 							
-								<CardChamados title="Chamados por Interno" data={chamadosPorInternos} totalChamados={totalChamados}/>
-								<CardChamados title="Chamados por STATUS" data={chamadosPorStatus} totalChamados={totalChamados}/>
+								<CardChamados title="Chamados por Interno" data={chamadosInternos} totalChamados={_.size(chamados)} />
+								<CardChamados title="Chamados por STATUS" data={chamadosStatus} totalChamados={_.size(chamados)} />
 
 							
                             
@@ -204,7 +185,7 @@ export function PortalChamados() {
 						<ChartContainer>
 							{chartType === '1' ? (
 								<AreaChartComponent
-									data={chartOption === '1' ? transformData(chamadosPorStatus) : chartOption === '2' ?  transformData(chamadosPorSetor):chartOption === '3' ? transformData(chamadosPorInternos) :  transformData(chamadosPorCliente)}
+									data={chartOption === '1' ? transformData(chamadosStatus) : chartOption === '2' ?  transformData(chamadosSetor):chartOption === '3' ? transformData(chamadosInternos) :  transformData(chamadosClientes)}
 									title={
 										'Chamados por ' +
 										(chartOption === '1' ? 'status' : chartOption === '2' ? 'setor' : chartOption === '3' ? 'interno' : 'cliente')
@@ -214,7 +195,7 @@ export function PortalChamados() {
 								/>
 							) : chartType === '2' ? (
 								<LineChartComponent
-									data={chartOption === '1' ? transformData(chamadosPorStatus) : chartOption === '2' ?  transformData(chamadosPorSetor):chartOption === '3' ? transformData(chamadosPorInternos) :  transformData(chamadosPorCliente)}
+									data={chartOption === '1' ? transformData(chamadosStatus) : chartOption === '2' ?  transformData(chamadosSetor):chartOption === '3' ? transformData(chamadosInternos) :  transformData(chamadosClientes)}
 									title={
 										'Chamados por ' +
 										(chartOption === '1' ? 'status' : chartOption === '2' ? 'setor' : chartOption === '3' ? 'interno' : 'cliente')
@@ -224,7 +205,7 @@ export function PortalChamados() {
 								/>
 							) : chartType === '3' ? (
 								<BarChartComponent
-									data={chartOption === '1' ? transformData(chamadosPorStatus) : chartOption === '2' ?  transformData(chamadosPorSetor):chartOption === '3' ? transformData(chamadosPorInternos) :  transformData(chamadosPorCliente)}
+									data={chartOption === '1' ? transformData(chamadosStatus) : chartOption === '2' ?  transformData(chamadosSetor):chartOption === '3' ? transformData(chamadosInternos) :  transformData(chamadosClientes)}
 									title={
 										'Chamados por ' +
 										(chartOption === '1' ? 'status' : chartOption === '2' ? 'setor' :chartOption === '3' ? 'interno' :  'cliente')
@@ -234,7 +215,7 @@ export function PortalChamados() {
 								/>
 							) : chartType === '4' ? (
 								<ScatterChartComponent
-									data={chartOption === '1' ? transformData(chamadosPorStatus) : chartOption === '2' ?  transformData(chamadosPorSetor):chartOption === '3' ? transformData(chamadosPorInternos) :  transformData(chamadosPorCliente)}
+									data={chartOption === '1' ? transformData(chamadosStatus) : chartOption === '2' ?  transformData(chamadosSetor):chartOption === '3' ? transformData(chamadosInternos) :  transformData(chamadosClientes)}
 									title={
 										'Chamados por ' +
 										(chartOption === '1' ? 'status' : chartOption === '2' ? 'setor' : chartOption === '3' ? 'interno' : 'cliente')
