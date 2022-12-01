@@ -263,6 +263,7 @@ export const FormContainer = styled.form`
 	align-items: center;
 	justify-content: center;
 	width: 100%;
+	height: fit-content;
 	margin-top: .5rem;
 	padding: 0 .5rem;
 	animation: ${(props) => props.animation && slideIn} .5s ease-in-out;

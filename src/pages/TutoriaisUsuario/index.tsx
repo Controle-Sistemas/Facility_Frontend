@@ -175,7 +175,7 @@ export function TutorialPage() {
 					isModalOpen={isModalAddCategoriaOpen}
 					isModalClosed={handleModalAddCategoriaOpen}
 					width="30%"
-					height="30vh"
+					height="40vh"
 				>
 					<FormAddCategoria handleClose={handleModalAddCategoriaOpen} addCategoria={onAddCategoria} />
 				</ModalForm>
@@ -184,7 +184,7 @@ export function TutorialPage() {
 					isModalOpen={modalSortIsOpen}
 					isModalClosed={handleOpenModalSort}
 					width="20%"
-					height="30vh"
+					height="40vh"
 				>
 					<FormSortTutoriais handleClose={handleOpenModalSort} setSort={setOrderBy} setParentSort={setParentSort} />
 				</ModalForm>
@@ -193,7 +193,7 @@ export function TutorialPage() {
 					isModalOpen={modalFilterIsOpen}
 					isModalClosed={handleOpenModalFilter}
 					width="40%"
-					height="37vh"
+					height="45vh"
 					>
 						<FormFilterTutoriais handleClose={handleOpenModalFilter} filterBy={filterBy} setFilterBy={setFilterBy} categorias={categorias} />
 					</ModalForm>

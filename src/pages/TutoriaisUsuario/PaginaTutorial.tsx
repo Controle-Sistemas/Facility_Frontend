@@ -107,7 +107,7 @@ export function PaginaTutorial() {
 				<ModalForm
 					isModalOpen={isModalEditOpen}
 					isModalClosed={handleOpenModalEditDocument}
-					height={'40vh'}
+					height={'fit-content'}
 					width={'40%'}
 					title={'Editar Tutorial'}
 				>

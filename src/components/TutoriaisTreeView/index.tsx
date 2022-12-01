@@ -295,7 +295,7 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
                 isModalClosed={handleOpenModalEdit}
                 title="Editar Categoria"
                 width="30%"
-                height="30vh"
+                height="40vh"
                 >
                 <FormEditCategory onEdit={onEditCategory} handleClose={handleOpenModalEdit} id={targetId}/>
             </ModalForm>

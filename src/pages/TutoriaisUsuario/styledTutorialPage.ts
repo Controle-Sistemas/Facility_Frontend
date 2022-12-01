@@ -38,7 +38,6 @@ export const TutorialText = styled.p`
 		width: 80vw;
 	}
 	
-	
 `
 
 export const TutorialBody = styled.div`
