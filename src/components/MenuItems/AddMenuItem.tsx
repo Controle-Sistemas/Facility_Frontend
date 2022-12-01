@@ -7,8 +7,9 @@ import Treeview from '../treeview';
 import { BASE_URL } from '../../utils/requests';
 import axios from 'axios';
 import { PrimaryButton } from '../styledComponents/buttons';
-import { ContainerAdmin, SidebarContainer } from '../styledComponents/containers';
+import { ContainerAdmin, ContainerAdminContas, SidebarContainer } from '../styledComponents/containers';
 import { ButtonGroup } from '@mui/material';
+import { MainTitle } from '../styledComponents/Texts';
 
 export interface Tree {
 	//Interface para o tipo de dados do treeview
@@ -102,8 +103,8 @@ function AddMenuItem(props) {
 			<SidebarContainer>
 				<Sidebar />
 			</SidebarContainer>
-
-			<div className='menu-item'>
+			<ContainerAdminContas>
+			<MainTitle>Módulos</MainTitle>
 				<ModalForm
 					isModalOpen={modalFormIsOpen}
 					isModalClosed={closeModalForm}
@@ -122,7 +123,7 @@ function AddMenuItem(props) {
 						Cadastrar módulo
 					</PrimaryButton>
 				</ButtonGroup>
-			</div>
+			</ContainerAdminContas>
 		</ContainerAdmin>
 	);
 }

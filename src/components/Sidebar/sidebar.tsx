@@ -25,7 +25,7 @@ import DarkModeToggle from "react-dark-mode-toggle";
 
 //Dados para o menu lateral
 
-const drawerWidth = 200; //Largura do menu lateral
+const drawerWidth = 'fit-content'; //Largura do menu lateral
 
 interface Props {
 	window?: () => Window;

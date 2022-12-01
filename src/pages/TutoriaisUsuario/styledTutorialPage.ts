@@ -32,6 +32,14 @@ export const TutorialTitle = styled.div`
 	}
 
 `
+export const TutorialText = styled.p`
+	width: 70vw;
+	@media (max-width: 768px) {
+		width: 80vw;
+	}
+	
+	
+`
 
 export const TutorialBody = styled.div`
     display: flex;

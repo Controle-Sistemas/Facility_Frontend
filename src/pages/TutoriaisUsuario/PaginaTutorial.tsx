@@ -5,7 +5,7 @@ import { LoadingComponent } from '../../components/Loading';
 import { BASE_URL } from '../../utils/requests';
 import { SidebarContainer, ContainerAdmin, ContainerAdminContas } from '../../components/styledComponents/containers';
 import { ButtonActionTable } from '../../components/styledComponents/buttons';
-import { TutorialContainer, TutorialTitle, TutorialBody, TutorialFileContainer, TutorialActions, TutorialBodyLabel, TutorialVideoContainer } from './styledTutorialPage';
+import { TutorialContainer, TutorialTitle, TutorialBody, TutorialFileContainer, TutorialActions, TutorialBodyLabel, TutorialVideoContainer, TutorialText } from './styledTutorialPage';
 import { formatData } from '../../utils/Masks';
 import ModalForm from '../../components/Modais/modalForm';
 import { FormEditTutorial } from '../../components/Modais/forms/FormEditTutorial';
@@ -151,8 +151,8 @@ export function PaginaTutorial() {
 									tutorial.TIPO === 1 ? (
 										<TutorialBodyLabel>
 											<h3>Tutorial</h3>
-											<div id="texto-tutorial" dangerouslySetInnerHTML={{ __html: tutorial.TEXTO }}>
-											</div>
+											<TutorialText id="texto-tutorial" dangerouslySetInnerHTML={{ __html: tutorial.TEXTO }}>
+											</TutorialText>
 										</TutorialBodyLabel>
 
 									) : tutorial.TIPO === 2 ? (

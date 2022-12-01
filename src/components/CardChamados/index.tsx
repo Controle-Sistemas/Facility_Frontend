@@ -18,7 +18,7 @@ export function CardChamados({ title, data, totalChamados }: CardProps) {
 			return 0;
 		});
 	}
-
+	
 
 	return (
 		<CardContainer>

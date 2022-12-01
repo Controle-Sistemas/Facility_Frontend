@@ -16,6 +16,8 @@ import {
 	ScatterChartComponent
 } from '../PortalPageClient/Charts';
 import { CardChamados } from '../../components/CardChamados';
+import { ChamadosType } from '../../types';
+import _ from 'lodash'
 
 export function PortalChamados() {
 	const [ chamados, setChamados ] = useState([]);
@@ -111,11 +113,20 @@ export function PortalChamados() {
             } 
         }).filter(item => item !== undefined)
     }
-
+	
 	const chamadosPorCliente = getChamadosPorCliente(chamados);
+	const totalchamadosCliente = _.groupBy(chamados, (value)=> value.IDCLIENTE);
 	const chamadosPorSetor = getChamadosPorSetor(chamados);
+	const totalchamadosSetor = _.groupBy(chamados, (value)=> value.SETOR);
 	const chamadosPorInternos = getChamadosPorInterno(chamados);
+	const totalchamadosInterno = _.groupBy(chamados, (value)=> value.INTERNORECEPTOR);
 	const chamadosPorStatus = getChamadosPorStatus(chamados);
+	const totalchamadosStatus = _.groupBy(chamados, (value)=> value.STATUS);
+	console.log('Total chamados cliente', totalchamadosCliente);
+	console.log('Total chamados setor', totalchamadosSetor);
+	console.log('Total chamados interno', totalchamadosSetor);
+	console.log('Total chamados status', totalchamadosStatus);
+	const totalChamados = _.size(chamados);
     
 	return (
 		<ContainerAdmin>
@@ -127,14 +138,14 @@ export function PortalChamados() {
 					<TopCardsContainer>
 						<CardsGrid>
 							
-								<CardChamados title="Chamados por Cliente" data={chamadosPorCliente} totalChamados={chamados.length}/>
+								<CardChamados title="Chamados por Cliente" data={chamadosPorCliente} totalChamados={totalChamados}/>
 							
 							
-								<CardChamados title="Chamados por Setor" data={chamadosPorSetor} totalChamados={chamados.length}/>
+								<CardChamados title="Chamados por Setor" data={chamadosPorSetor} totalChamados={totalChamados}/>
 							
 							
-								<CardChamados title="Chamados por Interno" data={chamadosPorInternos} totalChamados={chamados.length}/>
-								<CardChamados title="Chamados por STATUS" data={chamadosPorStatus} totalChamados={chamados.length}/>
+								<CardChamados title="Chamados por Interno" data={chamadosPorInternos} totalChamados={totalChamados}/>
+								<CardChamados title="Chamados por STATUS" data={chamadosPorStatus} totalChamados={totalChamados}/>
 
 							
                             

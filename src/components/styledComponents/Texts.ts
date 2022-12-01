@@ -9,6 +9,9 @@ export const MainTitle = styled.h1`
     justify-content: center;
     color: ${tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.primaryColor};
     text-shadow: 0 .1rem .2rem rgba(0, 0, 0, 0.4);
+    @media (max-width: 600px) {
+        margin-top: 8vh;
+      }
 `
 
 export const MainParagraph = styled.p`
