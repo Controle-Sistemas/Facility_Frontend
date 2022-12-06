@@ -6,7 +6,7 @@ import './styles/modais.css'
 function ModalEdit(props) {
   const isMobile = window.innerWidth < 768
   const actualWidth = isMobile ? '90%' : props.width
-  const actualHeight = isMobile ? '50vh' : props.height
+  const actualHeight = isMobile ? '83vh' : props.height
 
   const customStylesModal = {
     overlay: {

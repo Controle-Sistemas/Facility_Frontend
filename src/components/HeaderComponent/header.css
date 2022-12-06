@@ -20,13 +20,15 @@ a{
 	background-color: #003775;
 	color: #fff;
 	margin-bottom: .3rem;
+    position: fixed;
+	z-index: 5;
 }
 
 @media (max-width: 600px)
 {
   .header-container {
     position: fixed;
-	z-index: 0.5;
+	z-index: 5;
    }
 }
 

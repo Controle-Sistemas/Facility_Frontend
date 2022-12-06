@@ -306,6 +306,7 @@ export default function Sidebar(props: Props) {
 			<AppBar
 				position="fixed"
 				color="transparent"
+				style={{zIndex: 6}}
 				sx={{
 					top: 0,
 					bottom: 'auto',
@@ -313,6 +314,7 @@ export default function Sidebar(props: Props) {
 					boxShadow: 'none',
 					zIndex: { sm: -1, xs: 0 },
 					width: { sm: `calc(100% - ${drawerWidth}px)` }
+					
 				}}
 			>
 				<Toolbar style={{ minHeight: 0 }}>
@@ -320,6 +322,7 @@ export default function Sidebar(props: Props) {
 						aria-label="open drawer"
 						onClick={handleDrawerToggle}
 						sx={{ mr: 2, display: { sm: 'none' } }}
+						
 					>
 						<MenuIcon style={{ color: '#fff' }} />
 					</IconButton>

@@ -18,6 +18,8 @@ import {
 import { CardChamados } from '../../components/CardChamados';
 import { ChamadosType } from '../../types';
 import _ from 'lodash'
+import { LoadingComponent } from '../../components/Loading';
+import { MainTitle } from '../../components/styledComponents/Texts';
 
 export function PortalChamados() {
 	const [ chamados, setChamados ] = useState([]);
@@ -28,10 +30,12 @@ export function PortalChamados() {
 	const [ chartOption, setChartOption ] = useState('1');
 	const [ chartType, setChartType ] = useState(localStorage.getItem('chartType') || '4');
 	const [ chartColor, setChartColor ] = useState(localStorage.getItem('chartColor') || '#003775');
+	const [ loading, setLoading ] = useState(true);
 
 	useEffect(() => {
 		axios.get(`${BASE_URL}/chamados/`).then((res) => {
 			setChamados(res.data.data);
+			console.log('c', chamados)
 		});
 		axios.get(BASE_URL + '/internos/').then((res) => {
 			setInternos(res.data.data);
@@ -44,8 +48,12 @@ export function PortalChamados() {
 		});
 		axios.get(BASE_URL + '/clientes/admin').then((res) => {
 			setClientes(res.data.data);
+			console.log('clientes', clientes)
 		});
+		
+		setLoading(false)
 	}, []);
+
 
 	function transformData(data) {
         return data.map(item => {
@@ -66,8 +74,10 @@ export function PortalChamados() {
 	function arrayChamadosClientes(){
 		var data = _.groupBy(chamados, (value)=> value.IDCLIENTE);
 		var x = [];
-		for(var key in data){
+		try{for(var key in data){
 			x.push({"NOME": _.filter(clientes, {'ID': parseFloat(key)})[0].NOME, "TOTAL": data[key].length})
+		}}catch (error){
+
 		}
 		//console.log(x);
 		return x;
@@ -77,8 +87,10 @@ export function PortalChamados() {
 		var data = _.groupBy(chamados, (value)=> value.SETOR);
 		var x = [];
 		//console.log(data)
-		for(var key in data){
+		try{for(var key in data){
 			x.push({"NOME": _.filter(setores, {'ID': parseFloat(key)})[0].NOME, "TOTAL": data[key].length})
+		}}catch (error){
+
 		}
 		//console.log(x);
 		return x;
@@ -87,8 +99,10 @@ export function PortalChamados() {
 	function arrayChamadosInternos(){
 		var data = _.groupBy(chamados, (value)=> value.INTERNORECEPTOR);
 		var x = [];
-		for(var key in data){
+		try{for(var key in data){
 			x.push({"NOME": _.filter(internos, {'USUARIO': key})[0].USUARIO, "TOTAL": data[key].length})
+		}}catch (error){
+
 		}
 		return x;
 	}
@@ -96,40 +110,32 @@ export function PortalChamados() {
 	function arrayChamadosStatus(){
 		var data = _.groupBy(chamados, (value)=> value.STATUS);
 		var x = [];
-		for(var key in data){
+		try{for(var key in data){
 			x.push({"NOME": _.filter(statusChamado, {'ID': parseInt(key)})[0].NOME, "TOTAL": data[key].length})
+		}}catch (error){
+
 		}
-		console.log(x);
 		return x;
 	}
 
-	
-
-
-
 	const totalChamados = _.size(chamados);
     
-	return (
+	if (loading) {
+		return <LoadingComponent />;
+	}return (
 		<ContainerAdmin>
 			<SidebarContainer>
 				<Sidebar />
 			</SidebarContainer>
 			<ContainerAdminContas>
+					<MainTitle>Chamados</MainTitle>
 				<MainContainer>
 					<TopCardsContainer>
 						<CardsGrid>
-							
 								<CardChamados title="Chamados por Cliente" data={chamadosClientes} totalChamados={_.size(chamados)} />
-							
-							
 								<CardChamados title="Chamados por Setor" data={chamadosSetor} totalChamados={_.size(chamados)} />
-							
-							
 								<CardChamados title="Chamados por Interno" data={chamadosInternos} totalChamados={_.size(chamados)} />
 								<CardChamados title="Chamados por STATUS" data={chamadosStatus} totalChamados={_.size(chamados)} />
-
-							
-                            
 						</CardsGrid>
 					</TopCardsContainer>
 

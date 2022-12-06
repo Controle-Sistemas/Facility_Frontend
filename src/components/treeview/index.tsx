@@ -177,7 +177,7 @@ function TreeView({ tree }) { //Componente para o treeview
 
 	if (location.pathname.includes('/admin/menu')) { //Se o admin estiver na pagina de menu
 		return (
-			<TreeViewContainer>
+			<TreeViewContainer className="menu-item">
 				<ModalForm
 					isModalOpen={modalFormIsOpen}
 					isModalClosed={closeModalForm}

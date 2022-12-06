@@ -5,6 +5,7 @@ export const MainTitle = styled.h1`
     font-size: 2rem;
     font-weight: bold;
     display: flex;
+    margin-top: 8vh;
     align-items: center;
     justify-content: center;
     color: ${tema === 'light' ? colorPallete.light.primaryColor : colorPallete.dark.primaryColor};

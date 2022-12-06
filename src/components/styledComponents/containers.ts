@@ -19,7 +19,7 @@ export const ContainerAdmin = styled.div`
 `;
 
 export const ContainerAdminContas = styled.div`
-	width: 100%;
+	width: 83%;
 	height: 100%;
 	display: flex;
 	flex-direction: column;

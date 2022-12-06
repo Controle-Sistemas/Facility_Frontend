@@ -93,10 +93,8 @@ export function TreeItem({ descricao, iconNameFontAwesome, items, id, setIdModul
 						//Verifica se a página está em admin
 						if (menu) {
 							//Verifica se o menu existe
-							if (items.length <= 0 && !menu.contains(e)) {
-								//Verifica se o item clicado não é um item e não está no menu
-								
-								navigate(link); //Redireciona para o item clicado
+							if(menu.contains(e.parentNode) || menu.contains(e.parentNode.parentNode)){
+								navigate(link); //Redireciona para o item clicado								
 							}
 						} else {
 							//Se o menu não existir, redireciona para o item clicado
