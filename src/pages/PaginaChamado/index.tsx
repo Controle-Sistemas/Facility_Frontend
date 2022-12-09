@@ -31,6 +31,7 @@ import TreeViewComponent from '@mui/lab/TreeView';
 import TreeItem from '@mui/lab/TreeItem';
 import cookie from 'js-cookie'
 import {ErrorPage} from '../ErrorPage/Error'
+import { MainTitle } from '../../components/styledComponents/Texts';
 
 export function PaginaChamado() {
 	const [ chamado, setChamado ] = useState<any>({});
@@ -225,6 +226,7 @@ export function PaginaChamado() {
 					<Sidebar />
 				</SidebarContainer>
 				<ContainerAdminContas>
+					<MainTitle>Chamado #{chamado.ID}</MainTitle>
 					<ChamadoHeader>
 								<div>
 								Publicado por: <span>{interno.USUARIO}</span> dia <span>{dataFormatada}</span>  as <span>{horaFormatada}</span>

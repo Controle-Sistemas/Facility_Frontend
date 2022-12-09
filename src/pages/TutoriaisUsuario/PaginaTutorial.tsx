@@ -11,6 +11,7 @@ import ModalForm from '../../components/Modais/modalForm';
 import { FormEditTutorial } from '../../components/Modais/forms/FormEditTutorial';
 import { ImagePostIt } from '../../components/PostItImageComponent';
 import Sidebar from '../../components/Sidebar/sidebar';
+import { MainTitle } from '../../components/styledComponents/Texts';
 
 import Swal from 'sweetalert2';
 
@@ -117,6 +118,7 @@ export function PaginaTutorial() {
 					<Sidebar />
 				</SidebarContainer>
 				<ContainerAdminContas>
+					<MainTitle>Tutorial #{tutorialId}</MainTitle>
 					<TutorialContainer>
 						<TutorialActions>
 							{isAdmin && (
