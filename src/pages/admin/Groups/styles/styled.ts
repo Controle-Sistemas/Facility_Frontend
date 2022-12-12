@@ -1,22 +1,69 @@
 import styled from 'styled-components';
-export const OcorrenciaItem = styled.span`
-	display: flex;
-	flex-direction: row;
-	align-items: start;
-	justify-content: space-between;
-`;
+import { colorPallete,tema } from '../../../../coresStyled';
+
+export const AddMatrizButton = styled.button`
+        
+        width: fit-content;
+        margin: .4rem;
+        padding: .5rem 1rem;
+        border-radius: .3rem;
+        border: 1px solid transparent;
+        font-size: 1rem;
+        box-shadow: 0 .1rem .1rem 1px rgba(116, 116, 116, 0.37);
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color .5s ease-in-out;
+        background-color: ${tema === 'light' ? colorPallete.light.buttonPrimaryBgColor : colorPallete.dark.buttonPrimaryBgColor};
+        color:  ${tema === 'light' ? colorPallete.light.buttonTextColor : colorPallete.dark.buttonTextPrimaryColor};
+        border: 1px solid  ${tema === 'light' ? colorPallete.light.buttonPrimaryBgColor : colorPallete.dark.buttonPrimaryBgColor};
+        box-shadow: 0 .1rem .1rem 1px rgba(14, 0, 77, 0.37);
+        width: ${props => (props.width ? props.width : 'auto')};
+
+        &:hover {
+            border: 1px solid  ${tema === 'light' ? colorPallete.light.buttonPrimaryBgColor : colorPallete.dark.buttonPrimaryBgColor};
+            
+            background-color: transparent;
+            color:  ${tema === 'light' ? colorPallete.light.buttonTextHoverColorPrimary : colorPallete.dark.buttonTextHoverColorPrimary};
+
+        }
+
+    @media (max-width: 700px) {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        border-radius: 50%;
+        height: 2.8em;
+        width: 2.8em;
+        z-index: 5;
+}    
+`
 
 export const MatrizesList = styled.ul`
     display: flex
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-evenly;
+    width: 100%;
+    margin-top: .8rem;
 `
 export const MatrizesListItem = styled.li`
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     width:100%;
+    padding: .8rem;
+    box-shadow: 0.01em 0.01em 1em 0.01em grey;
+    margin-bottom: .8rem;
+    border-radius: .4rem;
+    transition: .2s;
+    :hover {
+        color:  #A84C11;
+        transform: scale(1.01);
+    }
+    
 `
 export const MatrizesContainer = styled.div`
     display: flex
@@ -30,7 +77,7 @@ export const MatrizesListItemControl = styled.div`
     align-items: center;
     justify-content: center;
     display: flex;
-    width: 15%; 
+    width: 25%; 
 `
 export const MatrizesListItemInfo = styled.div`
     width: 100%;

@@ -15,13 +15,15 @@ import ModalForm from '../../../components/Modais/modalForm';
 import Tooltip from '@mui/material/Tooltip';
 import _ from 'lodash'
 import { number } from 'prop-types';
-import { FiliaisUl, FilialListItem, MatrizesContainer, MatrizesList, MatrizesListItem, MatrizesListItemControl, MatrizesListItemInfo } from './styles/styled'
+import { AddMatrizButton, FiliaisUl, FilialListItem, MatrizesContainer, MatrizesList, MatrizesListItem, MatrizesListItemControl, MatrizesListItemInfo } from './styles/styled'
 import { valueToPercent } from '@mui/base';
 
 function EnterprisesGroupsPage() {
 	const [data, setData] = useState([]);
 	const [idCloud, setIdCloud] = useState('');
+	const [idCloudFilial, setIdCloudFilial] = useState('');
 	const [matrizFormData, setMatrizFormData] = useState({ IDCLOUDMATRIZ: number, CNPJ: "" });
+	const [filialFormData, setFilialFormData] = useState({ IDMATRIZ: number ,IDCLOUD: number, CNPJ: "" });
 	const [empresas, setEmpresasData] = useState([]);
 	const [matrizes, setMatrizesData] = useState([]);
 	const [matrizesList, setMatrizesListData] = useState([]);
@@ -29,6 +31,7 @@ function EnterprisesGroupsPage() {
 	const [filiaisList, setFiliaisListData] = useState([]);
 	const [grupos, setGruposData] = useState([]);
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isFilialModalOpen, setIsFilialModalOpen] = useState(false);
 	useEffect(() => {
 		var empresasData = []
 		axios.get(`${BASE_URL}/clientes/admin`)
@@ -69,9 +72,25 @@ function EnterprisesGroupsPage() {
 		setIsModalOpen(!isModalOpen);
 	}
 
+	function handleFilialOpenModal(matrizexploded) {
+		if(!matrizexploded.type){
+			var idMatriz = matrizes.find(matriz => matriz.IDCLOUDMATRIZ == matrizexploded.IDCLOUD).ID
+			console.log('idmatriz', idMatriz)
+			setFilialFormData({...filialFormData, IDMATRIZ: idMatriz})
+			console.log(filialFormData)
+		}	
+		
+		setIsFilialModalOpen(!isFilialModalOpen);
+	}
+		
+
 	function handleChangeIdCloud(event: SelectChangeEvent) {
 		setIdCloud(event.target.value);
 		console.log(idCloud)
+	}
+	function handleChangeIdCloudFilial(event: SelectChangeEvent) {
+		setIdCloudFilial(event.target.value);
+		console.log(idCloudFilial)
 	}
 
 	async function getMatrizes() {
@@ -170,6 +189,49 @@ function EnterprisesGroupsPage() {
 		await getFiliais();
 	}
 
+	async function handleFilialSubmit() {
+		setIsFilialModalOpen(!isFilialModalOpen);
+
+		var data = data = { "IDCLOUD": filialFormData.IDCLOUD, "IDMATRIZ" : filialFormData.IDMATRIZ }
+		await _.forEach(empresas, function (key, value) {
+			key.IDCLOUD == filialFormData.IDCLOUD ?
+				data = { ...data, "CNPJ": key.CNPJ } : console.log('outro')
+		})
+		console.log(data);
+		// Fazer requisição na sequencia
+		await axios.post(BASE_URL + '/grupos/filiais', data, {
+			headers: {
+				'Allow-Control-Allow-Origin': '*'
+			}
+		}).then(res => {
+			console.log(res)
+			if (res.status >= 500) {
+				Swal.fire({
+					title: 'Erro',
+					text: res.data.message.code,
+					icon: 'error',
+				})
+			} else {
+				Swal.fire({
+					title: 'Sucesso',
+					text: res.data.message,
+					icon: 'success',
+				})
+			}
+		}).catch(err => {
+			console.log(err)
+			Swal.fire({
+				title: 'Erro',
+				text: err.response.data.message,
+				icon: 'error',
+				confirmButtonText: 'Fechar'
+			})
+		})
+		await getMatrizes();
+		await getFiliais();
+	}
+
+
 	function handleDeleteMatriz(matrizExloded) {
 		var matriz = _.find(matrizes, { "IDCLOUDMATRIZ": matrizExloded.IDCLOUD })
 		console.log('Deletando matriz', matriz);
@@ -193,6 +255,29 @@ function EnterprisesGroupsPage() {
 
 	}
 
+	function handleDeleteFilial(filialExloded) {
+		var filial = _.find(filiais, { "IDCLOUD": filialExloded.IDCLOUD })
+		console.log('Deletando filial', filial);
+		Swal.fire({
+			title: 'Você tem certeza?',
+			text: 'Você não poderá reverter isso!',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#003775',
+			cancelButtonColor: '#DC354f',
+			confirmButtonText: 'Sim, deletar!'
+		}).then((result) => {
+			if (result.value) {
+				axios.delete(`${BASE_URL}/grupos/filiais/${filial.ID}`).then((res) => {
+					Swal.fire('Deletada!', 'A filial foi deletada.', 'success')
+					getMatrizes();
+					getFiliais();
+				});
+			}
+		});
+
+	}
+
 	return (
 		<ContainerAdmin>
 			<SidebarContainer>
@@ -203,11 +288,11 @@ function EnterprisesGroupsPage() {
 				<ModalForm
 					isModalOpen={isModalOpen}
 					isModalClosed={handleOpenModal}
-					title="Matriz"
-					height="42vh"
-					width="30%"
+					title="Criar novo grupo"
+					height="40%"
+					width="40%"
 				>
-					<h2>Selecione uma empresa </h2>
+					<h2>Selecione a empresa Matriz </h2>
 					<FormControl sx={{ m: 1, minWidth: 150 }}>
 						<InputLabel id="mes-label">Empresa</InputLabel>
 						<Select
@@ -235,9 +320,9 @@ function EnterprisesGroupsPage() {
 				</ModalForm>
 				<ButtonGroup>
 					<ButtonRow>
-						<PrimaryButton onClick={handleOpenModal}>
+						<AddMatrizButton onClick={handleOpenModal}>
 							<i className="fa-solid fa-plus" />
-						</PrimaryButton>
+						</AddMatrizButton>
 					</ButtonRow>
 				</ButtonGroup>
 				<MatrizesContainer>
@@ -251,7 +336,7 @@ function EnterprisesGroupsPage() {
 											getFiliaisByMatriz(matriz).map((filial) => (
 												<FilialListItem>
 													<p><strong>{_.find(empresas, {"IDCLOUD": filial.IDCLOUD}).NOME}</strong> - {_.find(empresas, {"IDCLOUD": filial.IDCLOUD}).NOMEESTABELECIMENTO}</p>
-													<DangerButton onClick={() => alert('delete '+ filial.ID)}>
+													<DangerButton onClick={() => handleDeleteFilial(filial)}>
 														<i className="fa-solid fa-trash" />
 													</DangerButton>
 												</FilialListItem>
@@ -262,7 +347,7 @@ function EnterprisesGroupsPage() {
 									}
 								</MatrizesListItemInfo>
 								<MatrizesListItemControl>
-									<PrimaryButton onClick={() => console.log("asds")}>
+									<PrimaryButton onClick={() => handleFilialOpenModal(matriz)}>
 										<i className="fa-solid fa-plus" />
 									</PrimaryButton>
 									<DangerButton onClick={() => handleDeleteMatriz(matriz)}>
@@ -273,6 +358,39 @@ function EnterprisesGroupsPage() {
 						))}
 					</MatrizesList>
 				</MatrizesContainer>
+				<ModalForm
+					isModalOpen={isFilialModalOpen}
+					isModalClosed={handleFilialOpenModal}
+					title="Vincular Filial "
+					height="42vh"
+					width="30%"
+				>
+					<h2>Selecione a empresa filial </h2>
+					<FormControl sx={{ m: 1, minWidth: 150 }}>
+						<InputLabel id="mes-label">Empresa</InputLabel>
+						<Select
+							id="selectEmpresa"
+							value={idCloudFilial}
+							onChange={handleChangeIdCloudFilial}
+							autoWidth
+							label="IDCLOUD - EMPRESA"
+						>
+							<MenuItem value={""}><em>Selecione uma empresa</em></MenuItem>
+							{empresas.map((empresa) => (
+								<MenuItem onClick={() => { setFilialFormData({ ...filialFormData, IDCLOUD: empresa.IDCLOUD }) }} value={empresa.IDCLOUD}>
+									<Tooltip title={`${empresa.IDCLOUD} - ${empresa.NOME}`} placement="right">
+										<label htmlFor="" style={{ cursor: "pointer" }}>{empresa.NOMEESTABELECIMENTO}</label>
+									</Tooltip>
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+					<ButtonRow>
+						<PrimaryButton onClick={handleFilialSubmit}>
+							Confirmar
+						</PrimaryButton>
+					</ButtonRow>
+				</ModalForm>
 			</ContainerAdminContas>
 		</ContainerAdmin>
 	);
