@@ -128,7 +128,6 @@ export const ButtonFormGroup = styled.div`
 	align-items: flex-end;
 	width: 100%;
 	margin-top: 1rem;
-	position: absolute;
 	bottom: 0;
 	background: ${tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor};
 
@@ -140,6 +139,7 @@ export const ButtonFormGroup = styled.div`
 		align-items: center;
 		flex-direction: column;
 		width: 100%;
+		height: fit-content;
 		margin-top: 2rem;
 	}
 `;
@@ -253,7 +253,6 @@ export const DataGroup = styled.div`
 	align-items: center;
 
 	@media (max-width: 768px) {
-		margin-bottom: 7rem;
 	}
 `;
 
@@ -278,6 +277,9 @@ export const FormRowContainer = styled(FormContainer)`
 	margin-top: .5rem;
 	padding: 0 .5rem;
 	height: 70vh;
+	@media (max-width: 768px) {
+		height: fit-content;
+	}
 `;
 
 export const FilterContainer = styled.div`
@@ -348,7 +350,6 @@ export const PortalChartsContainer = styled.div`
 	height: ${(props) => props.heightAuto ? 'auto' : '100vh'};
 	@media (max-width: 1040px) {
 		height: ${(props) => props.heightAuto ? 'auto' : '30vh'};
-
 	}
 
 `;
