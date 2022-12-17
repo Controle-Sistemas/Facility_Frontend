@@ -10,13 +10,14 @@ import { ContainerAdmin, ContainerAdminContas, ButtonGroup, ButtonRow, SidebarCo
 import axios from 'axios';
 import { BASE_URL } from '../../../utils/requests';
 import { MainTitle } from '../../../components/styledComponents/Texts';
-import { DangerButton, PrimaryButton } from '../../../components/styledComponents/buttons';
+import { DangerButton, PrimaryButton, WarningButton } from '../../../components/styledComponents/buttons';
 import ModalForm from '../../../components/Modais/modalForm';
 import Tooltip from '@mui/material/Tooltip';
 import _ from 'lodash'
 import { number } from 'prop-types';
-import { AddMatrizButton, FiliaisUl, FilialListItem, MatrizesContainer, MatrizesList, MatrizesListItem, MatrizesListItemControl, MatrizesListItemInfo } from './styles/styled'
+import { AddMatrizButton, EmptyListItem, FiliaisUl, FilialListItem, MatrizesContainer, MatrizesList, MatrizesListItem, MatrizesListItemControl, MatrizesListItemInfo } from './styles/styled'
 import { valueToPercent } from '@mui/base';
+import { Divider } from '@mui/material';
 
 function EnterprisesGroupsPage() {
 	const [data, setData] = useState([]);
@@ -331,17 +332,19 @@ function EnterprisesGroupsPage() {
 							<MatrizesListItem>
 								<MatrizesListItemInfo>
 									<p><strong>{matriz.NOME}</strong> - {matriz.NOMEESTABELECIMENTO}</p>
-									{<FiliaisUl>
+									{<FiliaisUl>	
+										<Divider></Divider>									
 										{getFiliaisByMatriz(matriz).length > 0 ?
+											
 											getFiliaisByMatriz(matriz).map((filial) => (
 												<FilialListItem>
 													<p><strong>{_.find(empresas, {"IDCLOUD": filial.IDCLOUD}).NOME}</strong> - {_.find(empresas, {"IDCLOUD": filial.IDCLOUD}).NOMEESTABELECIMENTO}</p>
 													<DangerButton onClick={() => handleDeleteFilial(filial)}>
 														<i className="fa-solid fa-trash" />
-													</DangerButton>
+													</DangerButton>		
 												</FilialListItem>
 											)) :
-											<li>Sem filials vinculadas</li>
+											<EmptyListItem>Sem filials vinculadas</EmptyListItem>
 										}
 									</FiliaisUl>
 									}

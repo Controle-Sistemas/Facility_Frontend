@@ -11,7 +11,7 @@ a{
 .header-container {
 	
 	width: 100%;
-	height: 8vh;
+	height: 6vh;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -27,9 +27,12 @@ a{
 @media (max-width: 600px)
 {
   .header-container {
+	
+    height: fit-content;
     position: fixed;
 	z-index: 5;
 	align-items: flex-end;
+	flex-direction: column;
 
    }
 }
@@ -52,8 +55,8 @@ a{
 }
 .header-container .header-content .header-content-user {
 	display: flex;
-	justify-content: flex-end;
-	align-items: center;
+	justify-content: baseline;
+	align-items: baseline;
 	flex-direction: column;
 	gap: 0;
 	font-size: 1.2rem;

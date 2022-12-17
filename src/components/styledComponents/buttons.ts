@@ -49,6 +49,7 @@ export const DangerButton = styled(Button)`
   	color:  ${tema === 'light' ? colorPallete.light.buttonTextColor : colorPallete.dark.buttonTextDangerColor};
     border: 1px solid #c82333;
 	box-shadow: 0 .1rem .1rem 1px rgba(83, 0, 0, 0.37);
+	width: ${props => (props.width ? props.width : 'auto')};
 
     &:hover {
 		border: 1px solid ${tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.dangerColor};
@@ -62,6 +63,7 @@ export const SuccessButton = styled(Button)`
     background-color: #00a854;
     color: #fff;
     border: 1px solid #00a854;
+	width: ${props => (props.width ? props.width : 'auto')};
     box-shadow: 0 .1rem .1rem 1px rgba(0, 0, 0, 0.37);
     &:hover {
         background-color: #fff;
@@ -73,6 +75,7 @@ export const WarningButton = styled(Button)`
     background-color: #f5a623;
     color: #fff;
     border: 1px solid #f5a623;
+	width: ${props => (props.width ? props.width : 'auto')};
     box-shadow: 0 .1rem .1rem 1px rgba(255, 165, 0, 0.37);
     &:hover {
         background-color: #fff;

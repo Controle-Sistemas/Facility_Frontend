@@ -77,6 +77,7 @@ export const MatrizesListItemControl = styled.div`
     align-items: center;
     justify-content: center;
     display: flex;
+    flex-direction: column;
     width: 25%; 
 `
 export const MatrizesListItemInfo = styled.div`
@@ -87,6 +88,7 @@ export const MatrizesListItemInfo = styled.div`
     align-items: baseline;
 `
 export const FiliaisUl = styled.ul`
+    padding-left: 0;
     width: 100%;
 `
 export const FilialListItem = styled.li`
@@ -95,8 +97,18 @@ export const FilialListItem = styled.li`
     flex-direction: row;
     justify-content: space-between;
     align-items: baseline;
+    padding-left: 2em;
     button{
         width: fit-content;
     }
+`
+
+export const EmptyListItem = styled.li`
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    font-weight: 300;
+    color: darkgray;
+    margin-top: 0.4em;
 `
 
