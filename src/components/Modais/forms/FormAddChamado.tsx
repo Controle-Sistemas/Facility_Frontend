@@ -4,7 +4,8 @@ import {
 	DataGroup,
 	InputContainer,
 	InputGroupContainer,
-	CheckboxGroup
+	CheckboxGroup,
+	ButtonRow
 } from '../../styledComponents/containers';
 import { PrimaryButton } from '../../styledComponents/buttons';
 import { useState, useEffect } from 'react';
@@ -270,9 +271,9 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 						<label>Recorrente</label>
 					</CheckboxGroup>
 				</InputContainer>
-				<ButtonFormGroup>
+				<ButtonRow>
 					<PrimaryButton type="submit">Enviar Chamado</PrimaryButton>
-				</ButtonFormGroup>
+				</ButtonRow>
 			</DataGroup>
 		</FormRowContainer>
 	);
