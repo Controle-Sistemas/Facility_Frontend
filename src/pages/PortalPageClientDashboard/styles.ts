@@ -21,7 +21,6 @@ export const TableContainer = styled.div`
   margin: 2rem auto;
   max-width: 600px;
   height: fit-content;
-  max-height: 500px;
   align-items: center;
   width: 100%;
 

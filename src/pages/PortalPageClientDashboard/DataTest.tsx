@@ -303,6 +303,277 @@ class DataTest{
                 }],
         }
     }
+
+    getSalesInAMonth(){
+        return {
+            "VWSalesInAmonth": [
+                {
+                    "TotalRegistros": 24,
+                    "DataHora": "02-06-2022 19:54:59"
+                }
+            ],
+            "VWSalesInAmonth_D": [
+                {
+                    "DAYOFMONTH": "01",
+                    "AWEEKDAY": "QUARTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 6311.59
+                },
+                {
+                    "DAYOFMONTH": "02",
+                    "AWEEKDAY": "QUINTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 6293.89
+                },
+                {
+                    "DAYOFMONTH": "03",
+                    "AWEEKDAY": "SEXTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 9117.55
+                },
+                {
+                    "DAYOFMONTH": "04",
+                    "AWEEKDAY": "SABADO",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 10624.44
+                },
+                {
+                    "DAYOFMONTH": "07",
+                    "AWEEKDAY": "TERCA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 5881.55
+                },
+                {
+                    "DAYOFMONTH": "08",
+                    "AWEEKDAY": "QUARTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 6187.5
+                },
+                {
+                    "DAYOFMONTH": "09",
+                    "AWEEKDAY": "QUINTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 6051.1
+                },
+                {
+                    "DAYOFMONTH": "10",
+                    "AWEEKDAY": "SEXTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 14109.95
+                },
+                {
+                    "DAYOFMONTH": "11",
+                    "AWEEKDAY": "SABADO",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 12811.72
+                },
+                {
+                    "DAYOFMONTH": "12",
+                    "AWEEKDAY": "DOMINGO",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 1733.9
+                },
+                {
+                    "DAYOFMONTH": "14",
+                    "AWEEKDAY": "TERCA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 6007.45
+                },
+                {
+                    "DAYOFMONTH": "15",
+                    "AWEEKDAY": "QUARTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 7650.45
+                },
+                {
+                    "DAYOFMONTH": "16",
+                    "AWEEKDAY": "QUINTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 8546.65
+                },
+                {
+                    "DAYOFMONTH": "17",
+                    "AWEEKDAY": "SEXTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 9007.8
+                },
+                {
+                    "DAYOFMONTH": "18",
+                    "AWEEKDAY": "SABADO",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 10083.2
+                },
+                {
+                    "DAYOFMONTH": "21",
+                    "AWEEKDAY": "TERCA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 5392.1
+                },
+                {
+                    "DAYOFMONTH": "22",
+                    "AWEEKDAY": "QUARTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 6658.05
+                },
+                {
+                    "DAYOFMONTH": "23",
+                    "AWEEKDAY": "QUINTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 5442.51
+                },
+                {
+                    "DAYOFMONTH": "24",
+                    "AWEEKDAY": "SEXTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 11827.35
+                },
+                {
+                    "DAYOFMONTH": "25",
+                    "AWEEKDAY": "SABADO",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 8432.27
+                },
+                {
+                    "DAYOFMONTH": "27",
+                    "AWEEKDAY": "SEGUNDA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 59
+                },
+                {
+                    "DAYOFMONTH": "28",
+                    "AWEEKDAY": "TERCA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 7877.51
+                },
+                {
+                    "DAYOFMONTH": "29",
+                    "AWEEKDAY": "QUARTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 6151.05
+                },
+                {
+                    "DAYOFMONTH": "30",
+                    "AWEEKDAY": "QUINTA-FEIRA",
+                    "DINHEIRO": 1200.00,
+                    "CARTAO": 7539.45,
+                    "eWALLET": 500.00,
+                    "CREDIARIO": 8000,
+                    "CORTESIA": 65.49,
+                    "AMOUNT": 8033.85
+                }
+            ]
+        }
+    }
+
+    getTotalSalesInAMonth(){
+        const total = _.sumBy(this.getSalesInAMonth().VWSalesInAmonth_D, "AMOUNT");
+        const cartao = _.sumBy(this.getSalesInAMonth().VWSalesInAmonth_D, "CARTAO");
+        const eWallet = _.sumBy(this.getSalesInAMonth().VWSalesInAmonth_D, "eWALLET");
+        const crediario = _.sumBy(this.getSalesInAMonth().VWSalesInAmonth_D, "CREDIARIO");
+        const cortesia = _.sumBy(this.getSalesInAMonth().VWSalesInAmonth_D, "CORTESIA");
+        const dinheiro = _.sumBy(this.getSalesInAMonth().VWSalesInAmonth_D, "AMOUNT");
+        
+        return {
+            "DINHEIRO" : dinheiro,
+            "CARTAO": (cartao + eWallet),
+            "eWALLET": eWallet,
+            "CREDIARIO": crediario,
+            "CORTESIA": cortesia,
+            "TOTAL": total,
+        }
+    }
 };
 
 export default DataTest

@@ -11,6 +11,10 @@
     
 }
 
+.tableHeaderRow{
+    color: white;
+}
+
 .inverseInResponsive{
     display: flex;
     flex-direction: column;
