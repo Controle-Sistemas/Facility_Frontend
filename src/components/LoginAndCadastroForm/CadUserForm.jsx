@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import MaskedInput from "../cnpjInput"
-import {MultipleSelect} from '../MultipleSelectComponent'
+import { MultipleSelect } from '../MultipleSelectComponent'
 import { BASE_URL } from '../../utils/requests'
 import Logo from '../../assets/logoBranca.png'
-import {TabGroup, Tab} from '../styledComponents/containers'
+import { TabGroup, Tab } from '../styledComponents/containers'
 
 
 //Definindo um valor inicial para o estado
@@ -29,9 +29,9 @@ const initialInternalState = () => {
     return {
         USUARIO: "",
         SENHA: "",
-        SETOR:"",
-        EMAIL:"",
-        NOME:"",
+        SETOR: "",
+        EMAIL: "",
+        NOME: "",
     }
 }
 
@@ -44,10 +44,19 @@ export function CadUserForm() {
 
     //Enviando os dados para o banco de dados 
     async function postData(url = '', data = {}) {
+                
         await axios.post(url, data)
             .then(res => {
-                if(isInternal){
-                    navigate('/login')
+                if (isInternal) {
+                    Swal.fire({ 
+                        title: 'Sucesso ' + internalValues.NOME,
+                        text: 'Email enviado para ' + internalValues.EMAIL + ", confira lá sua senha de acesso!",
+                        icon: 'success',
+                        confirmButtonText: 'Fechar'
+                    })
+                    const body = document.querySelector('body');
+                    body.className = 'sign-up-js'
+                    //navigate('/login')
                 } else {
                     navigate('/solicitacao-enviada') //redireciona para a página solicitacao-enviada caso tudo funcione bem
 
@@ -69,7 +78,7 @@ export function CadUserForm() {
         isVerified: false
     })
     const [isInternal, setIsInternal] = useState(false)
-     const [setores,setSetores] = useState([])
+    const [setores, setSetores] = useState([])
 
     //Estado dos valores do formulário
     const [values, setValues] = useState(initialState())
@@ -87,12 +96,12 @@ export function CadUserForm() {
             })
 
         axios.get(BASE_URL + '/setores/')
-        .then(res => {
-            setSetores(res.data.data)
-        })
-        .catch(err =>{
-            console.log(err)
-        })
+            .then(res => {
+                setSetores(res.data.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }, [])
 
     //Funções para capturar os valores do formulário
@@ -100,23 +109,23 @@ export function CadUserForm() {
     const handleChangeValue = e => {
         const { name, value } = e.target;
 
-        if(isInternal){
+        if (isInternal) {
             setInternalValues({
                 ...internalValues,
-                [name]:value
+                [name]: value
             })
         } else {
-            setValues(prevState =>({
+            setValues(prevState => ({
                 ...prevState,
-                [name]:value
-               }))
+                [name]: value
+            }))
         }
     };
 
     const handleChangeCNPJ = (cnpj) => {
         setValues({
             ...values,
-            CNPJ:cnpj
+            CNPJ: cnpj
         })
     }
 
@@ -143,13 +152,13 @@ export function CadUserForm() {
         event.preventDefault();
         values.IDCLOUD = Number(values.CNPJ.replace(/\D/g, '').substring(0, 6)) //Remove os caracteres não numéricos e pega os 6 primeiros caracteres
         values.RAMODEATIVIDADE = values.RAMODEATIVIDADE.toString()
-        postData(BASE_URL+'/clientes/', values) //Envia os dados para o banco de dados
+        postData(BASE_URL + '/clientes/', values) //Envia os dados para o banco de dados
     }
 
     const handleSubmitInternal = (event) => {
         event.preventDefault()
-        postData(BASE_URL+'/internos/',internalValues)
-        
+        postData(BASE_URL + '/internos/', internalValues)
+
     }
 
     return (
@@ -200,17 +209,17 @@ export function CadUserForm() {
                                 </label>
                             </div></>
                     ) : (
-                            <><div className="form-group-double">
-                                <label htmlFor="nome">Nome:
+                        <><div className="form-group-double">
+                            <label htmlFor="nome">Nome:
                                 <input type='text' name="NOME" className='form-control' onChange={handleChangeValue} required />
-                                </label>
+                            </label>
 
-                                <label htmlFor="usuario">Usuário:
+                            <label htmlFor="usuario">Usuário:
                                 <input type='text' name="USUARIO" className='form-control' onChange={handleChangeValue} required />
 
-                                </label>
+                            </label>
 
-                            </div>
+                        </div>
                             <div className="form-group">
                                 <label htmlFor="email">Email:</label>
                                 <input type='email' name="EMAIL" className='form-control' onChange={handleChangeValue} required />
@@ -235,7 +244,7 @@ export function CadUserForm() {
                             onChange={handleChange}
                         />
                     </div>
-                    <button type='submit' className='btn-form btn-form-second' disabled={!state.isVerified }>Enviar</button>
+                    <button type='submit' className='btn-form btn-form-second' disabled={!state.isVerified}>Enviar</button>
                 </form>
             </div></>
 

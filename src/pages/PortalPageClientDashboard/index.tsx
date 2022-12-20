@@ -5,59 +5,34 @@ import {
 	ContainerAdminContas,
 	SidebarContainer,
 	ContainerAdmin,
-	PortalChartsContainer,
 	ButtonGroup,
 	InputGroupContainer,
 } from '../../components/styledComponents/containers';
 import _ from 'lodash'
-import * as React from 'react';
 import { useNavigate } from 'react-router';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { PrimaryButton } from '../../components/styledComponents/buttons';
-import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
-import { CardPortal } from '../../components/Card';
-import {
-	AreaChartComponent,
-	PieChartComponent,
-	LineChartComponent,
-	BarChartComponent,
-	RadialChartComponent,
-	ScatterChartComponent
-} from './Charts';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import ModalForm from '../../components/Modais/modalForm';
-import { FormAddCard } from '../../components/Modais/forms/FormAddCard';
 import axios from 'axios';
-import cookie from 'js-cookie';
 import { BASE_URL, EXTERNAL_API_URL } from '../../utils/requests';
 import Swal from 'sweetalert2';
 import { LoadingComponent } from '../../components/Loading';
-import { ErrorPage } from '../ErrorPage/Error';
 import { Box, listClasses, TableBody, TableCell, TableHead, TableRow, ToggleButton } from '@mui/material';
-import { func } from 'prop-types';
 import { Container } from '../ChangePassword/styled';
 import { Chart } from 'react-google-charts';
-import { dataTable, dataCandle, dataBar, dataArea, dataBar2, dataLine, LineChartOptions, tableChartOptions, barChartOptions, candleChartOptions, areaChartOptions, dataArea2 } from './Data'
 import './style.css'
 import { TableContainer, TableHeader } from "./styles";
 import DataTest from './DataTest'
-import { Legend } from 'recharts';
 import dayjs, { Dayjs } from 'dayjs';
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { MainTitle } from '../../components/styledComponents/Texts';
 const MONITORAMENTOTEMPOREAL = 'Monitoramento em Tempo Real';
 const DETALHAMENTOPAGAMENTOS = 'Detalhamentos de Pagamentos';
-const EVOLUCAOMES = 'Evolução vendas mês';
+const EVOLUCAOMES = 'Evolução vendas dia a dia';
 
 
 interface DashboardDataType {
@@ -97,6 +72,7 @@ export function PortalPageClientDashboard() {
 	const navigate = useNavigate();
 	const [evolutionMonthDateFrom, setEvolutionMonthDateFrom] = useState(dayjs('2022-10-10'))
 	const [evolutionMonthDateTo, setEvolutionMonthDateTo] = useState(dayjs('2022-10-10'))
+	const [evolutionMonth, setEvolutionMonthData] = useState<any>({})
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
@@ -132,13 +108,13 @@ export function PortalPageClientDashboard() {
 					'Houve um problema na busca dos dados de Dashboard. Tente novamente mais tarde.',
 					'info').then(() => {
 						navigate("/user/documentos")
-					})
+				})
 			})
+
+			setEvolutionMonthData(dataUtil.getSalesInAMonth().VWSalesInAmonth_D)
 		},
 		[]
 	);
-
-	const evolutionMonth = dataUtil.getSalesInAMonth().VWSalesInAmonth_D;
 
 	var somaProdutosDia = 0;
 	const totalProdutosDia = _.map(clientData.RankingProdutos, (value, key) => {
@@ -239,7 +215,7 @@ export function PortalPageClientDashboard() {
 			<ContainerAdminContas>
 				<MainTitle className='title'>{dashpage}</MainTitle>
 				<ButtonGroup>
-					<PrimaryButton onClick={() => prevPage()}><i className="fa-solid fa-chevron-left" /></PrimaryButton> <PrimaryButton onClick={() => nextPage()}><i className="fa-solid fa-chevron-right" /></PrimaryButton>
+					<PrimaryButton onClick={() => prevPage()}><i className="fa-solid fa-chevron-left" /></PrimaryButton> <img src={logo} alt="logo" className='logo' /> <PrimaryButton onClick={() => nextPage()}><i className="fa-solid fa-chevron-right" /></PrimaryButton>
 				</ButtonGroup>
 				{dashpage === MONITORAMENTOTEMPOREAL && clientData ?
 					(
@@ -377,14 +353,14 @@ export function PortalPageClientDashboard() {
 							</Box>
 						</Box>
 					)
-					: dashpage === DETALHAMENTOPAGAMENTOS ?
+					: dashpage === EVOLUCAOMES && evolutionMonth?
 						(
 							<TableContainer>
 								<InputGroupContainer>
 									<div>
 										<FormControl sx={{ m: 1, minWidth: 150, width: 600 }}>
-											<LocalizationProvider dateAdapter={AdapterMoment} >
-													<div style={{display: "flex", flexDirection: "row", justifyContent: "space-evenly", width: "100%"}}>
+											<div style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", width: "100%" }}>
+												<LocalizationProvider dateAdapter={AdapterDayjs}>
 													<MobileDatePicker
 														label="Filtrar de"
 														value={evolutionMonthDateFrom}
@@ -402,13 +378,13 @@ export function PortalPageClientDashboard() {
 														}}
 														renderInput={(params) => <TextField {...params} />}
 													/>
-													<PrimaryButton onClick={() => alert('Periodo da busca ' + ` ${evolutionMonthDateFrom.toISOString().substring(0,10)} >_<  ${evolutionMonthDateTo.toISOString().substring(0,10)}`)}><i className="fa-solid fa-magnifying-glass" /></PrimaryButton>
-													</div>
-											</LocalizationProvider>
+												</LocalizationProvider>
+												<PrimaryButton onClick={() => alert(`Periodo da busca  ${evolutionMonthDateFrom.toISOString().substring(0, 10)} >_<  ${evolutionMonthDateTo.toISOString().substring(0, 10)}`)}><i className="fa-solid fa-magnifying-glass" /></PrimaryButton>
+											</div>
 										</FormControl>
 									</div>
 								</InputGroupContainer>
-								<table style={{minWidth: "55em"}}>
+								<table style={{ minWidth: "55em" }}>
 									<TableHead>
 										<TableRow className='tableHeaderRow' style={{ backgroundColor: '#003775' }}>
 											<TableCell align="center"><i className="fa fa-calendar" aria-hidden="true" ></i> <br /> Data</TableCell>
@@ -423,15 +399,15 @@ export function PortalPageClientDashboard() {
 									<TableBody>
 										{evolutionMonth.map((dia) => (
 											<TableRow >
-												<TableCell align="center" style={{fontWeight: "bold"}}>{dia.DAYOFMONTH + '/12/22'}
+												<TableCell align="center" style={{ fontWeight: "bold" }}>{dia.DAYOFMONTH + '/12/22'}
 													<br />
 													<span style={{ fontSize: "xx-small", fontWeight: "bold", color: "#a84c11" }}>{dia.AWEEKDAY}</span></TableCell>
-												<TableCell align="center"  style={{color: 'gray'}}>{dia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center"  style={{color: 'gray'}}>{dia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center"  style={{color: 'gray'}}>{dia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center"  style={{color: 'gray'}}>{dia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center"  style={{color: 'gray'}}>{dia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center"  style={{fontWeight: "bold"}}>{dia.AMOUNT.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ color: 'gray' }}>{dia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ color: 'gray' }}>{dia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ color: 'gray' }}>{dia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ color: 'gray' }}>{dia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ color: 'gray' }}>{dia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ fontWeight: "bold" }}>{dia.AMOUNT.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
 											</TableRow>
 										))}
 										<TableRow className='tableHeaderRow'>
@@ -448,34 +424,7 @@ export function PortalPageClientDashboard() {
 							</TableContainer>
 						) : (
 							<Box>
-								<TableContainer>
-									<table>
-										<TableHead>
-											<TableRow className='tableHeaderRow' style={{ backgroundColor: '#003775' }}>
-												<TableCell align="center"><i className="fa fa-calendar" aria-hidden="true"></i> <br /> Data</TableCell>
-												<TableCell align="center"><i className="fa fa-money-bill-1" aria-hidden="true"></i> <br /> Dinheiro</TableCell>
-												<TableCell align="center"><i className="fa fa-credit-card" aria-hidden="true"></i> <br /> Crédito</TableCell>
-												<TableCell align="center"><i className="fa fa-credit-card" aria-hidden="true"></i> <br /> Débito</TableCell>
-												<TableCell align="center"><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true"></i> <br /> Crediário</TableCell>
-												<TableCell align="center"><i className="fa fa-gift" aria-hidden="true"></i> <br /> Cortesia</TableCell>
-												<TableCell align="center"><i className="fa fa-sack-dollar" aria-hidden="true"></i> <br /> Total</TableCell>
-											</TableRow>
-										</TableHead>
-										<TableBody>
-											{evolutionMonth.map((dia) => (
-												<TableRow >
-													<TableCell align="center">{dia.DAYOFMONTH + '/12/22'}</TableCell>
-													<TableCell align="center">--</TableCell>
-													<TableCell align="center">--</TableCell>
-													<TableCell align="center">--</TableCell>
-													<TableCell align="center">--</TableCell>
-													<TableCell align="center">--</TableCell>
-													<TableCell align="center">{dia.AMOUNT.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												</TableRow>
-											))}
-										</TableBody>
-									</table>
-								</TableContainer>
+								<img src="./pagina_em_construcao1.png" alt="Página em construção"  />
 							</Box>
 						)
 				}

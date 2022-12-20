@@ -79,7 +79,7 @@ export default function Header() {
 					</div>
 				</div>
 			</div>
-			<div className="header-content-info-user">
+			<div className="header-content-info-user" onMouseLeave={handleOpen}>
 				{isInternal ? (
 					<> 
 					<div className="header-content-info-user-icon info-icon">
@@ -124,7 +124,7 @@ export default function Header() {
 							</Link>
 						) : null}
 					</span>
-					<span>
+					<span className="logout">
 						<Link to="/login" className="logout" onClick={handleLogout}>
 							<i className="fa-solid fa-right-from-bracket" />Sair
 						</Link>

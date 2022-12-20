@@ -306,18 +306,16 @@ export default function Sidebar(props: Props) {
 			<AppBar
 				position="fixed"
 				color="transparent"
-				style={{zIndex: 6}}
+				style={{zIndex: 6, width: "fit-content", left: 0,}}
 				sx={{
 					top: 0,
 					bottom: 'auto',
 					border: 0,
 					boxShadow: 'none',
-					zIndex: { sm: -1, xs: 0 },
-					width: { sm: `calc(100% - ${drawerWidth}px)` }
-					
+					zIndex: { sm: -1, xs: 0 }					
 				}}
 			>
-				<Toolbar style={{ minHeight: 0 }}>
+				<Toolbar style={{ minHeight: 0, height: "2.8rem", display:"flex", alignItems: "center" }}>
 					<IconButton
 						aria-label="open drawer"
 						onClick={handleDrawerToggle}
