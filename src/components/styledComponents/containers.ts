@@ -19,20 +19,36 @@ export const ContainerAdmin = styled.div`
 `;
 
 export const ContainerAdminContas = styled.div`
-	width: 83%;
+	width: 180%;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
 	background: ${tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor};
 
-
-
+	@media (max-width: 1500px) {
+		width: 130%;
+	}
+	@media (max-width: 1500px) {
+		width: 120%;
+	}
+	@media (max-width: 1300px) {
+		width: 110%;
+	}
+	@media (max-width: 1200px) {
+		width: 90%;
+	}
+	@media (max-width: 1100px) {
+		width: 80%;
+	}
 	@media (max-width: 960px) {
-		width: 75%;
+		width: 77%;
+	}
+	@media (max-width: 840px) {
+		width: 72%;
 	}
 	@media (max-width: 720px) {
-		width: 70%;
+		width: 68%;
 	}
 	@media (max-width: 600px) {
 		width: 100%;

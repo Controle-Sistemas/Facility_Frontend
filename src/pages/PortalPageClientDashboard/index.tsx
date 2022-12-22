@@ -22,7 +22,7 @@ import { Box, listClasses, TableBody, TableCell, TableHead, TableRow, ToggleButt
 import { Container } from '../ChangePassword/styled';
 import { Chart } from 'react-google-charts';
 import './style.css'
-import { TableContainer, TableHeader } from "./styles";
+import { EvolutionTableContainer, TableContainer, TableHeader } from "./styles";
 import DataTest from './DataTest'
 import dayjs, { Dayjs } from 'dayjs';
 import TextField from '@mui/material/TextField';
@@ -355,11 +355,12 @@ export function PortalPageClientDashboard() {
 					)
 					: dashpage === EVOLUCAOMES && evolutionMonth ?
 						(
-							<div style={{ overflowX: "auto" }}>
-								<InputGroupContainer>
-										<FormControl sx={{ m: 1, minWidth: 150, width: 600 }} className='formDateControlContainer'>
-											<div className='formDateControl'>
-												<LocalizationProvider className='dateControl' dateAdapter={AdapterDayjs} >
+							<div >
+								<InputGroupContainer style={{ display: "flex", alignItems: "center", width:"100%", flexDirection: "column"}}>
+									<FormControl>
+										<div className='formDateControlContainer'>
+											<div className='formDateControl' style={{ display: "flex"}}>
+												<LocalizationProvider dateAdapter={AdapterDayjs} >
 													<MobileDatePicker
 														label="Filtrar de"
 														value={evolutionMonthDateFrom}
@@ -369,7 +370,7 @@ export function PortalPageClientDashboard() {
 														renderInput={(params) => <TextField {...params} />}
 													/>
 												</LocalizationProvider>
-												<LocalizationProvider className='dateControl' dateAdapter={AdapterDayjs} >
+												<LocalizationProvider dateAdapter={AdapterDayjs} >
 													<MobileDatePicker
 														label="Até"
 														value={evolutionMonthDateTo}
@@ -382,9 +383,10 @@ export function PortalPageClientDashboard() {
 												</LocalizationProvider>
 											</div>
 											<PrimaryButton onClick={() => alert(`Periodo da busca  ${evolutionMonthDateFrom.toISOString().substring(0, 10)} < -- | -- >  ${evolutionMonthDateTo.toISOString().substring(0, 10)}`)}><i className="fa-solid fa-magnifying-glass" /></PrimaryButton>
-										</FormControl>
+										</div>
+									</FormControl>
 								</InputGroupContainer>
-								<TableContainer style={{ overflowX: "auto" }}>
+								<EvolutionTableContainer className="" style={{ overflowX: "auto", width: "100" }}>
 									<table style={{ minWidth: "55em", marginLeft: "auto" }}>
 										<TableHead>
 											<TableRow className='tableHeaderRow' style={{ backgroundColor: '#003775' }}>
@@ -422,7 +424,7 @@ export function PortalPageClientDashboard() {
 											</TableRow>
 										</TableBody>
 									</table>
-								</TableContainer>
+								</EvolutionTableContainer>
 
 							</div>
 						) : (

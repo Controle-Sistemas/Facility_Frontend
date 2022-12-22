@@ -29,6 +29,20 @@ export const TableContainer = styled.div`
   }
 `;
 
+export const EvolutionTableContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 2rem auto;
+  height: fit-content;
+  align-items: center;
+  width: 100%;
+
+  table {
+    width: 100%;
+  }
+`;
+
 export const CustomDialog = styled(Dialog)`
   h2 {
     display: flex;
