@@ -108,7 +108,7 @@ export function PortalPageClientDashboard() {
 					'Houve um problema na busca dos dados de Dashboard. Tente novamente mais tarde.',
 					'info').then(() => {
 						navigate("/user/documentos")
-				})
+					})
 			})
 
 			setEvolutionMonthData(dataUtil.getSalesInAMonth().VWSalesInAmonth_D)
@@ -353,14 +353,13 @@ export function PortalPageClientDashboard() {
 							</Box>
 						</Box>
 					)
-					: dashpage === EVOLUCAOMES && evolutionMonth?
+					: dashpage === EVOLUCAOMES && evolutionMonth ?
 						(
-							<TableContainer>
+							<div style={{ overflowX: "auto" }}>
 								<InputGroupContainer>
-									<div>
-										<FormControl sx={{ m: 1, minWidth: 150, width: 600 }}>
-											<div style={{ display: "flex", flexDirection: "row", justifyContent: "space-evenly", width: "100%" }}>
-												<LocalizationProvider dateAdapter={AdapterDayjs}>
+										<FormControl sx={{ m: 1, minWidth: 150, width: 600 }} className='formDateControlContainer'>
+											<div className='formDateControl'>
+												<LocalizationProvider className='dateControl' dateAdapter={AdapterDayjs} >
 													<MobileDatePicker
 														label="Filtrar de"
 														value={evolutionMonthDateFrom}
@@ -369,6 +368,8 @@ export function PortalPageClientDashboard() {
 														}}
 														renderInput={(params) => <TextField {...params} />}
 													/>
+												</LocalizationProvider>
+												<LocalizationProvider className='dateControl' dateAdapter={AdapterDayjs} >
 													<MobileDatePicker
 														label="Até"
 														value={evolutionMonthDateTo}
@@ -379,52 +380,54 @@ export function PortalPageClientDashboard() {
 														renderInput={(params) => <TextField {...params} />}
 													/>
 												</LocalizationProvider>
-												<PrimaryButton onClick={() => alert(`Periodo da busca  ${evolutionMonthDateFrom.toISOString().substring(0, 10)} >_<  ${evolutionMonthDateTo.toISOString().substring(0, 10)}`)}><i className="fa-solid fa-magnifying-glass" /></PrimaryButton>
 											</div>
+											<PrimaryButton onClick={() => alert(`Periodo da busca  ${evolutionMonthDateFrom.toISOString().substring(0, 10)} < -- | -- >  ${evolutionMonthDateTo.toISOString().substring(0, 10)}`)}><i className="fa-solid fa-magnifying-glass" /></PrimaryButton>
 										</FormControl>
-									</div>
 								</InputGroupContainer>
-								<table style={{ minWidth: "55em" }}>
-									<TableHead>
-										<TableRow className='tableHeaderRow' style={{ backgroundColor: '#003775' }}>
-											<TableCell align="center"><i className="fa fa-calendar" aria-hidden="true" ></i> <br /> Data</TableCell>
-											<TableCell align="center"><i className="fa fa-money-bill-1" aria-hidden="true"></i> <br /> Dinheiro</TableCell>
-											<TableCell align="center"><i className="fa fa-credit-card" aria-hidden="true"></i> <br /> Cartão</TableCell>
-											<TableCell align="center"><i className="fa fa-wallet" aria-hidden="true"></i> <br /> Carteira Digital</TableCell>
-											<TableCell align="center"><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true"></i> <br /> Crediário</TableCell>
-											<TableCell align="center"><i className="fa fa-gift" aria-hidden="true"></i> <br /> Cortesia</TableCell>
-											<TableCell align="center"><i className="fa fa-sack-dollar" aria-hidden="true"></i> <br /> Total</TableCell>
-										</TableRow>
-									</TableHead>
-									<TableBody>
-										{evolutionMonth.map((dia) => (
-											<TableRow >
-												<TableCell align="center" style={{ fontWeight: "bold" }}>{dia.DAYOFMONTH + '/12/22'}
-													<br />
-													<span style={{ fontSize: "xx-small", fontWeight: "bold", color: "#a84c11" }}>{dia.AWEEKDAY}</span></TableCell>
-												<TableCell align="center" style={{ color: 'gray' }}>{dia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center" style={{ color: 'gray' }}>{dia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center" style={{ color: 'gray' }}>{dia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center" style={{ color: 'gray' }}>{dia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center" style={{ color: 'gray' }}>{dia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center" style={{ fontWeight: "bold" }}>{dia.AMOUNT.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+								<TableContainer style={{ overflowX: "auto" }}>
+									<table style={{ minWidth: "55em", marginLeft: "auto" }}>
+										<TableHead>
+											<TableRow className='tableHeaderRow' style={{ backgroundColor: '#003775' }}>
+												<TableCell align="center"><i className="fa fa-calendar" aria-hidden="true" ></i> <br /> Data</TableCell>
+												<TableCell align="center"><i className="fa fa-money-bill-1" aria-hidden="true"></i> <br /> Dinheiro</TableCell>
+												<TableCell align="center"><i className="fa fa-credit-card" aria-hidden="true"></i> <br /> Cartão</TableCell>
+												<TableCell align="center"><i className="fa fa-wallet" aria-hidden="true"></i> <br /> Carteira Digital</TableCell>
+												<TableCell align="center"><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true"></i> <br /> Crediário</TableCell>
+												<TableCell align="center"><i className="fa fa-gift" aria-hidden="true"></i> <br /> Cortesia</TableCell>
+												<TableCell align="center"><i className="fa fa-sack-dollar" aria-hidden="true"></i> <br /> Total</TableCell>
 											</TableRow>
-										))}
-										<TableRow className='tableHeaderRow'>
-											<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-coins" aria-hidden="true" ></i> <br /> Total</TableCell>
-											<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-											<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-											<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-											<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-											<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-											<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.TOTAL.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-										</TableRow>
-									</TableBody>
-								</table>
-							</TableContainer>
+										</TableHead>
+										<TableBody>
+											{evolutionMonth.map((dia) => (
+												<TableRow >
+													<TableCell align="center" style={{ fontWeight: "bold" }}>{dia.DAYOFMONTH + '/12/22'}
+														<br />
+														<span style={{ fontSize: "xx-small", fontWeight: "bold", color: "#a84c11" }}>{dia.AWEEKDAY}</span></TableCell>
+													<TableCell align="center" style={{ color: 'gray' }}>{dia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+													<TableCell align="center" style={{ color: 'gray' }}>{dia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+													<TableCell align="center" style={{ color: 'gray' }}>{dia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+													<TableCell align="center" style={{ color: 'gray' }}>{dia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+													<TableCell align="center" style={{ color: 'gray' }}>{dia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+													<TableCell align="center" style={{ fontWeight: "bold" }}>{dia.AMOUNT.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												</TableRow>
+											))}
+											<TableRow className='tableHeaderRow'>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-coins" aria-hidden="true" ></i> <br /> Total</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.TOTAL.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+											</TableRow>
+										</TableBody>
+									</table>
+								</TableContainer>
+
+							</div>
 						) : (
 							<Box>
-								<img src="./pagina_em_construcao1.png" alt="Página em construção"  />
+								<img src="./pagina_em_construcao1.png" alt="Página em construção" />
 							</Box>
 						)
 				}

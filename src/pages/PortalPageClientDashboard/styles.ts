@@ -73,3 +73,5 @@ export const TableHeader = styled.div`
     border: 
   }
 `;
+
+export const teste = styled.div``;
