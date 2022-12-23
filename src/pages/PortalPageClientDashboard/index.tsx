@@ -1,6 +1,7 @@
 import Sidebar from '../../components/Sidebar/sidebar';
 import Grid from '@mui/material/Grid';
 import logo from './logov2.png';
+import pageOnConstruction from './pagina_em_construcao1.png';
 import {
 	ContainerAdminContas,
 	SidebarContainer,
@@ -31,7 +32,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { MainTitle } from '../../components/styledComponents/Texts';
 const MONITORAMENTOTEMPOREAL = 'Monitoramento em Tempo Real';
-const DETALHAMENTOPAGAMENTOS = 'Detalhamentos de Pagamentos';
+const PAGINAEMCONSTRUCAO = 'Em breve...';
 const EVOLUCAOMES = 'Evolução vendas dia a dia';
 
 
@@ -190,7 +191,7 @@ export function PortalPageClientDashboard() {
 	function prevPage() {
 		{
 			dashpage === MONITORAMENTOTEMPOREAL ? setPage(EVOLUCAOMES) :
-				dashpage === EVOLUCAOMES ? setPage(DETALHAMENTOPAGAMENTOS) :
+				dashpage === EVOLUCAOMES ? setPage(PAGINAEMCONSTRUCAO) :
 					setPage(MONITORAMENTOTEMPOREAL)
 		}
 		console.log('Página atual: ' + dashpage);
@@ -198,8 +199,8 @@ export function PortalPageClientDashboard() {
 
 	function nextPage() {
 		{
-			dashpage === MONITORAMENTOTEMPOREAL ? setPage(DETALHAMENTOPAGAMENTOS) :
-				dashpage === DETALHAMENTOPAGAMENTOS ? setPage(EVOLUCAOMES) :
+			dashpage === MONITORAMENTOTEMPOREAL ? setPage(PAGINAEMCONSTRUCAO) :
+				dashpage === PAGINAEMCONSTRUCAO ? setPage(EVOLUCAOMES) :
 					setPage(MONITORAMENTOTEMPOREAL)
 		}
 		console.log('Página atual: ' + dashpage);
@@ -428,8 +429,8 @@ export function PortalPageClientDashboard() {
 
 							</div>
 						) : (
-							<Box>
-								<img src="./pagina_em_construcao1.png" alt="Página em construção" />
+							<Box style={{ display: "flex", alignItems: "center", width:"100%", flexDirection: "column"}}>
+								<img src={pageOnConstruction} alt="Página em construção" style={{width: "90%", marginTop: "2em"}} />
 							</Box>
 						)
 				}

@@ -574,6 +574,8 @@ class DataTest{
             "TOTAL": total,
         }
     }
+
+    
 };
 
 export default DataTest
