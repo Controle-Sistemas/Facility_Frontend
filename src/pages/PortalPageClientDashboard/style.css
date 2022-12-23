@@ -130,6 +130,10 @@
     gap: 1em;
 }
 
+table{
+    box-shadow: 0 1px 5px 1px #efefef;
+}
+
 @media screen and (max-width: 800px) {
     .inverseInResponsive {
         flex-direction: column-reverse;

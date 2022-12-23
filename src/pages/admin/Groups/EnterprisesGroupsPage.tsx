@@ -290,7 +290,7 @@ function EnterprisesGroupsPage() {
 					isModalOpen={isModalOpen}
 					isModalClosed={handleOpenModal}
 					title="Criar novo grupo"
-					height="40%"
+					height="fit-content"
 					width="40%"
 				>
 					<h2>Selecione a empresa Matriz </h2>

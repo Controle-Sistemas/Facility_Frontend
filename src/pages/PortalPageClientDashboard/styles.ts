@@ -37,7 +37,7 @@ export const EvolutionTableContainer = styled.div`
   height: fit-content;
   align-items: center;
   width: 100%;
-
+  box-shadow: 0 1px 5px 1px #efefef;
   table {
     width: 100%;
   }

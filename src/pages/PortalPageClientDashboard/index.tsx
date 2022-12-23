@@ -107,7 +107,7 @@ export function PortalPageClientDashboard() {
 				Swal.fire('Ops...',
 					'Houve um problema na busca dos dados de Dashboard. Tente novamente mais tarde.',
 					'info').then(() => {
-						navigate("/user/documentos")
+						navigate("/user/tutoriais")
 					})
 			})
 

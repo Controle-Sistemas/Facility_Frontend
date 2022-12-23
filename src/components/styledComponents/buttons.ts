@@ -6,7 +6,7 @@ const Button = styled.button`
 	border-radius: .3rem;
 	border: 1px solid transparent;
 	font-size: 1rem;
-	box-shadow: 0 .1rem .1rem 1px rgba(116, 116, 116, 0.37);
+	box-shadow: 3px 3px 4px 0px rgb(14 0 77 / 37%);
 	font-weight: bold;
 	cursor: pointer;
 	display: flex;
@@ -32,7 +32,7 @@ export const PrimaryButton = styled(Button)`
     background-color: ${tema === 'light' ? colorPallete.light.buttonPrimaryBgColor : colorPallete.dark.buttonPrimaryBgColor};
     color:  ${tema === 'light' ? colorPallete.light.buttonTextColor : colorPallete.dark.buttonTextPrimaryColor};
     border: 1px solid  ${tema === 'light' ? colorPallete.light.buttonPrimaryBgColor : colorPallete.dark.buttonPrimaryBgColor};
-	box-shadow: 0 .1rem .1rem 1px rgba(14, 0, 77, 0.37);
+	box-shadow: 3px 3px 4px 0px rgb(14 0 77 / 37%);
 	width: ${props => (props.width ? props.width : 'auto')};
 
     &:hover {
@@ -48,7 +48,7 @@ export const DangerButton = styled(Button)`
     background-color: ${tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.dangerColor};
   	color:  ${tema === 'light' ? colorPallete.light.buttonTextColor : colorPallete.dark.buttonTextDangerColor};
     border: 1px solid #c82333;
-	box-shadow: 0 .1rem .1rem 1px rgba(83, 0, 0, 0.37);
+	box-shadow: 3px 3px 4px 0px rgb(14 0 77 / 37%);
 	width: ${props => (props.width ? props.width : 'auto')};
 
     &:hover {
@@ -64,7 +64,7 @@ export const SuccessButton = styled(Button)`
     color: #fff;
     border: 1px solid #00a854;
 	width: ${props => (props.width ? props.width : 'auto')};
-    box-shadow: 0 .1rem .1rem 1px rgba(0, 0, 0, 0.37);
+    box-shadow: 3px 3px 4px 0px rgb(14 0 77 / 37%);
     &:hover {
         background-color: #fff;
         color: #00a854;
@@ -76,7 +76,7 @@ export const WarningButton = styled(Button)`
     color: #fff;
     border: 1px solid #f5a623;
 	width: ${props => (props.width ? props.width : 'auto')};
-    box-shadow: 0 .1rem .1rem 1px rgba(255, 165, 0, 0.37);
+    box-shadow: 3px 3px 4px 0px rgb(14 0 77 / 37%);
     &:hover {
         background-color: #fff;
         color: #f5a623;

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { colorPallete,tema } from '../../../../coresStyled';
 
-export const AddMatrizButton = styled.button`
+export const AddMatrizButton = styled.div`
         
         width: fit-content;
         margin: .4rem;

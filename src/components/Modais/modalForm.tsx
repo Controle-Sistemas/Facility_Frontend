@@ -1,11 +1,12 @@
 import Modal from 'react-modal';
+import { callbackify } from 'util';
 import {tema, colorPallete} from '../../coresStyled'
 import './styles/modais.css';
 
 function ModalForm(props) {
 	const isMobile = window.innerWidth < 768;
 	const actualWidth = isMobile ? '90%' : props.width;
-	const actualHeight = isMobile ? '50vh' : props.height;
+	const actualHeight = isMobile ? 'fit-content' : props.height;
 
 	const customStylesModal = {
 		overlay: {
