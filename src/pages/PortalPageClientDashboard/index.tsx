@@ -1,5 +1,7 @@
+import * as React from 'react'
 import Sidebar from '../../components/Sidebar/sidebar';
 import Grid from '@mui/material/Grid';
+import Tooltip from '@mui/material/Tooltip';
 import logo from './logov2.png';
 import pageOnConstruction from './pagina_em_construcao1.png';
 import {
@@ -74,6 +76,7 @@ export function PortalPageClientDashboard() {
 	const [evolutionMonthDateFrom, setEvolutionMonthDateFrom] = useState(dayjs('2022-10-10'))
 	const [evolutionMonthDateTo, setEvolutionMonthDateTo] = useState(dayjs('2022-10-10'))
 	const [evolutionMonth, setEvolutionMonthData] = useState<any>({})
+	const [evolutionMonthSum, setEvolutionMonthSum] = useState<any>(Number)
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
@@ -113,6 +116,7 @@ export function PortalPageClientDashboard() {
 			})
 
 			setEvolutionMonthData(dataUtil.getSalesInAMonth().VWSalesInAmonth_D)
+			console.log("Evolução", dataUtil.getEvolutionInAMonth())
 		},
 		[]
 	);
@@ -179,6 +183,8 @@ export function PortalPageClientDashboard() {
 		return _.sumBy(clientData.VendasPorTipo, 'Valor')
 	}
 
+
+
 	const handleChangeYear = (event: SelectChangeEvent) => {
 		setDataYear(event.target.value);
 	};
@@ -204,6 +210,20 @@ export function PortalPageClientDashboard() {
 					setPage(MONITORAMENTOTEMPOREAL)
 		}
 		console.log('Página atual: ' + dashpage);
+	}
+
+	var auxEvolutionPerDay = 0;
+	function getEvolutionPercent(amount) {
+		var aux = auxEvolutionPerDay
+		auxEvolutionPerDay = amount
+		return aux <= 0 ?
+			<TableCell align="center" style={{ color: "grey" }}>0 %</TableCell>
+			:
+			auxEvolutionPerDay > aux ?
+				<TableCell align="center" style={{ color: "grey" }}>+{(((auxEvolutionPerDay - aux) / aux) * 100).toFixed(2)} %</TableCell>
+				:
+				<TableCell align="center" style={{ color: "#a84c11" }}>{(((auxEvolutionPerDay - aux) / aux) * 100).toFixed(2)} %</TableCell>
+
 	}
 
 	if (loading) {
@@ -357,10 +377,10 @@ export function PortalPageClientDashboard() {
 					: dashpage === EVOLUCAOMES && evolutionMonth ?
 						(
 							<div >
-								<InputGroupContainer style={{ display: "flex", alignItems: "center", width:"100%", flexDirection: "column"}}>
+								<InputGroupContainer style={{ display: "flex", alignItems: "center", width: "100%", flexDirection: "column" }}>
 									<FormControl>
 										<div className='formDateControlContainer'>
-											<div className='formDateControl' style={{ display: "flex"}}>
+											<div className='formDateControl' style={{ display: "flex" }}>
 												<LocalizationProvider dateAdapter={AdapterDayjs} >
 													<MobileDatePicker
 														label="Filtrar de"
@@ -383,12 +403,12 @@ export function PortalPageClientDashboard() {
 													/>
 												</LocalizationProvider>
 											</div>
-											<PrimaryButton onClick={() => alert(`Periodo da busca  ${evolutionMonthDateFrom.toISOString().substring(0, 10)} < -- | -- >  ${evolutionMonthDateTo.toISOString().substring(0, 10)}`)}><i className="fa-solid fa-magnifying-glass" /></PrimaryButton>
+											<PrimaryButton onClick={() => alert(`Periodo da busca  ${evolutionMonthDateFrom.toISOString().substring(0, 10)} < -- | -- >  ${evolutionMonthDateTo.toISOString().substring(0, 10)}`) /** Refazer req e atualizar a fonte de dados da tabela */}><i className="fa-solid fa-magnifying-glass" /></PrimaryButton>
 										</div>
 									</FormControl>
 								</InputGroupContainer>
 								<EvolutionTableContainer className="" style={{ overflowX: "auto", width: "100" }}>
-									<table style={{ minWidth: "55em", marginLeft: "auto" }}>
+									<table style={{ minWidth: "60em", marginLeft: "auto" }}>
 										<TableHead>
 											<TableRow className='tableHeaderRow' style={{ backgroundColor: '#003775' }}>
 												<TableCell align="center"><i className="fa fa-calendar" aria-hidden="true" ></i> <br /> Data</TableCell>
@@ -398,21 +418,32 @@ export function PortalPageClientDashboard() {
 												<TableCell align="center"><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true"></i> <br /> Crediário</TableCell>
 												<TableCell align="center"><i className="fa fa-gift" aria-hidden="true"></i> <br /> Cortesia</TableCell>
 												<TableCell align="center"><i className="fa fa-sack-dollar" aria-hidden="true"></i> <br /> Total</TableCell>
+												<TableCell align="center"><i className="fa fa-percent" aria-hidden="true"></i> <br /> Evolução</TableCell>
 											</TableRow>
 										</TableHead>
 										<TableBody>
 											{evolutionMonth.map((dia) => (
-												<TableRow >
-													<TableCell align="center" style={{ fontWeight: "bold" }}>{dia.DAYOFMONTH + '/12/22'}
-														<br />
-														<span style={{ fontSize: "xx-small", fontWeight: "bold", color: "#a84c11" }}>{dia.AWEEKDAY}</span></TableCell>
-													<TableCell align="center" style={{ color: 'gray' }}>{dia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-													<TableCell align="center" style={{ color: 'gray' }}>{dia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-													<TableCell align="center" style={{ color: 'gray' }}>{dia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-													<TableCell align="center" style={{ color: 'gray' }}>{dia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-													<TableCell align="center" style={{ color: 'gray' }}>{dia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-													<TableCell align="center" style={{ fontWeight: "bold" }}>{dia.AMOUNT.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												</TableRow>
+												<Tooltip disableHoverListener title={<React.Fragment>
+													<i className="fa fa-calendar" aria-hidden="true" style={{ color: "gold" }}></i>{'  -  '}{dia.DAYOFMONTH + '/12/22'}
+													<br /><i className="fa fa-money-bill-1" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													<br /><i className="fa fa-credit-card" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													<br /><i className="fa fa-wallet" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													<br /><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													<br /><i className="fa fa-gift" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													<br /><i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.AMOUNT.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													<br /><i className="fa fa-percent" aria-hidden="true" style={{ color: "gold" }}></i> {'   '}{auxEvolutionPerDay > 0 ? dia.AMOUNT - auxEvolutionPerDay > 0 ? `+${(((dia.AMOUNT - auxEvolutionPerDay) / auxEvolutionPerDay) * 100).toFixed(2)}`: (((dia.AMOUNT - auxEvolutionPerDay) / auxEvolutionPerDay) * 100).toFixed(2) : 0.00.toFixed(2) } %
+												</React.Fragment>} placement="left-end">
+													<TableRow >
+														<TableCell align="center" style={{ fontWeight: "bold" }}>{dia.DAYOFMONTH + '/12/22'}<br /><span style={{ fontSize: "xx-small", fontWeight: "bold", color: "#a84c11" }}>{dia.AWEEKDAY}</span></TableCell>
+														<TableCell align="center" style={{ color: 'gray' }}>{dia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+														<TableCell align="center" style={{ color: 'gray' }}>{dia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+														<TableCell align="center" style={{ color: 'gray' }}>{dia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+														<TableCell align="center" style={{ color: 'gray' }}>{dia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+														<TableCell align="center" style={{ color: 'gray' }}>{dia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+														<TableCell align="center" style={{ fontWeight: "bold" }}>{dia.AMOUNT.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+														{getEvolutionPercent(dia.AMOUNT)}
+													</TableRow>
+												</Tooltip>
 											))}
 											<TableRow className='tableHeaderRow'>
 												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-coins" aria-hidden="true" ></i> <br /> Total</TableCell>
@@ -422,15 +453,18 @@ export function PortalPageClientDashboard() {
 												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
 												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
 												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.TOTAL.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-coins" aria-hidden="true" ></i> <br /> Total</TableCell>
 											</TableRow>
 										</TableBody>
 									</table>
 								</EvolutionTableContainer>
-
+								<Container style={{ backgroundColor: 'rgb(255 189 0)', color: "white", fontWeight: "bold", display:"flex", alignItens: "center", textAlign: "center", marginBottom: "1em"}} >
+								<i className="fa fa-warning" aria-hidden="true" style={{color:"blanchedalmond"}}></i> <p style={{color:'#ac8411'}}>O percentual de evolução dia a dia é calculado baseado no rendimento do dia comparado com o dia anterior</p>									
+								</Container>					
 							</div>
 						) : (
-							<Box style={{ display: "flex", alignItems: "center", width:"100%", flexDirection: "column"}}>
-								<img src={pageOnConstruction} alt="Página em construção" style={{width: "90%", marginTop: "2em"}} />
+							<Box style={{ display: "flex", alignItems: "center", width: "100%", flexDirection: "column" }}>
+								<img src={pageOnConstruction} alt="Página em construção" style={{ width: "90%", marginTop: "2em" }} />
 							</Box>
 						)
 				}
