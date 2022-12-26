@@ -424,15 +424,25 @@ export function PortalPageClientDashboard() {
 										<TableBody>
 											{evolutionMonth.map((dia) => (
 												<Tooltip disableHoverListener title={<React.Fragment>
-													<i className="fa fa-calendar" aria-hidden="true" style={{ color: "gold" }}></i>{'  -  '}{dia.DAYOFMONTH + '/12/22'}
-													<br /><i className="fa fa-money-bill-1" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
-													<br /><i className="fa fa-credit-card" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
-													<br /><i className="fa fa-wallet" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
-													<br /><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
-													<br /><i className="fa fa-gift" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
-													<br /><i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.AMOUNT.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
-													<br /><i className="fa fa-percent" aria-hidden="true" style={{ color: "gold" }}></i> {'   '}{auxEvolutionPerDay > 0 ? dia.AMOUNT - auxEvolutionPerDay > 0 ? `+${(((dia.AMOUNT - auxEvolutionPerDay) / auxEvolutionPerDay) * 100).toFixed(2)}`: (((dia.AMOUNT - auxEvolutionPerDay) / auxEvolutionPerDay) * 100).toFixed(2) : 0.00.toFixed(2) } %
-												</React.Fragment>} placement="top-start">
+													<div className="toltip">														
+													<p className='toltipItemHeader'><i className="fa fa-calendar" aria-hidden="true" style={{ color: "gold" }}></i> <strong>{dia.DAYOFMONTH + '/12/22'}</strong> 
+													</p>
+													<p className='toltipItem'><strong><i className="fa fa-money-bill-1" aria-hidden="true" style={{ color: "gold" }}></i> Dinheiro:</strong>  {dia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													</p>
+													<p className='toltipItem'><strong><i className="fa fa-credit-card" aria-hidden="true" style={{ color: "gold" }}></i> Cartão:</strong>  {dia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													</p>
+													<p className='toltipItem'><strong><i className="fa fa-wallet" aria-hidden="true" style={{ color: "gold" }}></i> eBanking:</strong>  {dia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													</p>
+													<p className='toltipItem'><strong><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true" style={{ color: "gold" }}></i> Crediário:</strong>  {dia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													</p>
+													<p className='toltipItem'><strong><i className="fa fa-gift" aria-hidden="true" style={{ color: "gold" }}></i> Cortesia:</strong>  {dia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													</p>
+													<p className='toltipItem'><strong><i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "gold" }}></i> Total:</strong>  {dia.AMOUNT.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													</p>
+													<p className='toltipItem'><strong><i className="fa fa-percent" aria-hidden="true" style={{ color: "gold" }}></i> Evolução:</strong>  {auxEvolutionPerDay > 0 ? dia.AMOUNT - auxEvolutionPerDay > 0 ? `+${(((dia.AMOUNT - auxEvolutionPerDay) / auxEvolutionPerDay) * 100).toFixed(2)}`: (((dia.AMOUNT - auxEvolutionPerDay) / auxEvolutionPerDay) * 100).toFixed(2) : 0.00.toFixed(2) } %
+													</p>	
+													</div>
+												</React.Fragment>} placement="top-end">
 													<TableRow >
 														<TableCell align="center" style={{ fontWeight: "bold" }}>{dia.DAYOFMONTH + '/12/22'}<br /><span style={{ fontSize: "xx-small", fontWeight: "bold", color: "#a84c11" }}>{dia.AWEEKDAY}</span></TableCell>
 														<TableCell align="center" style={{ color: 'gray' }}>{dia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>

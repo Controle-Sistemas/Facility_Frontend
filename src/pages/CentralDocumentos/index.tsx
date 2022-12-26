@@ -167,6 +167,7 @@ export function CentralDocumentosPageAdmin() {
 							title="Adicionar Documento"
 							height="75vh"
 							width="50%"
+							margin='0'
 						>
 							<FormAddDocument handleClose={handleOpenModal} adicionar={onAdd} />
 						</ModalForm>

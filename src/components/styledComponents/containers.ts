@@ -33,10 +33,10 @@ export const ContainerAdminContas = styled.div`
 		width: 120%;
 	}
 	@media (max-width: 1300px) {
-		width: 110%;
+		width: 83%;
 	}
 	@media (max-width: 1200px) {
-		width: 90%;
+		width: 82%;
 	}
 	@media (max-width: 1100px) {
 		width: 80%;
@@ -264,7 +264,7 @@ export const DataGroup = styled.div`
 	margin-bottom: 3rem;
 	overflow-y: auto;
 	display: flex;
-	height: 100%;
+	height: 80%;
 	flex-direction: column;
 	align-items: center;
 
