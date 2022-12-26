@@ -133,6 +133,20 @@
 table{
     box-shadow: 0 1px 5px 1px #efefef;
 }
+.toltip, .toltipItemHeader{    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.toltipItem{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;    
+    margin: .5em;
+}
 
 @media screen and (max-width: 800px) {
     .inverseInResponsive {
@@ -158,15 +172,12 @@ table{
         flex-direction: column;
     }
 
-    .formDateControl {
-        flex-direction: column;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 1em;
-    }
 
     table{
         overflow-x: hidden;
     }
+}
+
+@media screen and (max-width: 800px) {
+
 }
