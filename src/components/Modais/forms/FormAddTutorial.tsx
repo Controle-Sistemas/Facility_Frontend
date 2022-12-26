@@ -18,6 +18,7 @@ export function FormAddTutorial({ handleClose, addTutorial, categorias }) {
 	function handleChange(e) {
 		const { name, value } = e.target;
 		setTutorial({ ...tutorial, [name]: value });
+		console.log('Categorai ', e.target.value)
 	}
 
     function handleChangeText(content,editor){
@@ -52,6 +53,7 @@ export function FormAddTutorial({ handleClose, addTutorial, categorias }) {
 			<InputContainer>
 				<label>Categoria</label>
 				<select className="form-control" name="CATEGORIA" onChange={handleChange} required>
+					<option  value='--' >Selecione uma categoria</option>
 					{categorias.map((categoria) => (
 						<option key={categoria.ID} value={categoria.ID}>
 							{categoria.NOME}

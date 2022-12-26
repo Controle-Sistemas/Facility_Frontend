@@ -59,7 +59,7 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
     //Organiza os dados em treeview
 	const TreeViewDataOrganize = () => {
 		tutorialData.forEach((tutorial) => { //Percorre todos os tutoriais
-            console.log("Tutorial: " + tutorial.TITULO)
+            console.log(tutorial)
 			categorias.forEach((categoria) => { //Percorre todas as categorias
 				if (categoria.ID === parseInt(tutorial.CATEGORIA)) { //ID da categoria vinda no tutorial é string (por enquanto)
                     console.log("Categoria de Tutorial encontrado: " + tutorial.TITULO) //Verifica se a categoria do tutorial é igual a categoria atual
@@ -271,6 +271,7 @@ export function TutorialTreeView({ categorias,setCategorias, tutorialData, isAdm
 			return data;
 		} else { //Se o campo de filtro for diferente de todos, retorna os tutoriais filtrados
             data = data.map((categoria) => { 
+                
                 if(filterBy === 'VIDEOS'){
                     categoria.TUTORIALS = categoria.TUTORIALS.filter((tutorial) => tutorial.TIPO === 3)
                 } else if(filterBy === 'TEXTOS'){

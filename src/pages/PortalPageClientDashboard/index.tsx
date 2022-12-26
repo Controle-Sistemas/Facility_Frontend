@@ -411,14 +411,14 @@ export function PortalPageClientDashboard() {
 									<table style={{ minWidth: "60em", marginLeft: "auto" }}>
 										<TableHead>
 											<TableRow className='tableHeaderRow' style={{ backgroundColor: '#003775' }}>
-												<TableCell align="center"><i className="fa fa-calendar" aria-hidden="true" ></i> <br /> Data</TableCell>
-												<TableCell align="center"><i className="fa fa-money-bill-1" aria-hidden="true"></i> <br /> Dinheiro</TableCell>
-												<TableCell align="center"><i className="fa fa-credit-card" aria-hidden="true"></i> <br /> Cartão</TableCell>
-												<TableCell align="center"><i className="fa fa-wallet" aria-hidden="true"></i> <br /> Carteira Digital</TableCell>
-												<TableCell align="center"><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true"></i> <br /> Crediário</TableCell>
-												<TableCell align="center"><i className="fa fa-gift" aria-hidden="true"></i> <br /> Cortesia</TableCell>
-												<TableCell align="center"><i className="fa fa-sack-dollar" aria-hidden="true"></i> <br /> Total</TableCell>
-												<TableCell align="center"><i className="fa fa-percent" aria-hidden="true"></i> <br /> Evolução</TableCell>
+												<TableCell align="center"><i className="fa fa-calendar" aria-hidden="true" style={{ color: "gold" }} ></i> <br /> Data</TableCell>
+												<TableCell align="center"><i className="fa fa-money-bill-1" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Dinheiro</TableCell>
+												<TableCell align="center"><i className="fa fa-credit-card" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Cartão</TableCell>
+												<TableCell align="center"><i className="fa fa-wallet" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Carteira Digital</TableCell>
+												<TableCell align="center"><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Crediário</TableCell>
+												<TableCell align="center"><i className="fa fa-gift" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Cortesia</TableCell>
+												<TableCell align="center"><i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Total</TableCell>
+												<TableCell align="center"><i className="fa fa-percent" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Evolução</TableCell>
 											</TableRow>
 										</TableHead>
 										<TableBody>
@@ -432,7 +432,7 @@ export function PortalPageClientDashboard() {
 													<br /><i className="fa fa-gift" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
 													<br /><i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "gold" }}></i> {' - '}{dia.AMOUNT.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
 													<br /><i className="fa fa-percent" aria-hidden="true" style={{ color: "gold" }}></i> {'   '}{auxEvolutionPerDay > 0 ? dia.AMOUNT - auxEvolutionPerDay > 0 ? `+${(((dia.AMOUNT - auxEvolutionPerDay) / auxEvolutionPerDay) * 100).toFixed(2)}`: (((dia.AMOUNT - auxEvolutionPerDay) / auxEvolutionPerDay) * 100).toFixed(2) : 0.00.toFixed(2) } %
-												</React.Fragment>} placement="left-end">
+												</React.Fragment>} placement="top-start">
 													<TableRow >
 														<TableCell align="center" style={{ fontWeight: "bold" }}>{dia.DAYOFMONTH + '/12/22'}<br /><span style={{ fontSize: "xx-small", fontWeight: "bold", color: "#a84c11" }}>{dia.AWEEKDAY}</span></TableCell>
 														<TableCell align="center" style={{ color: 'gray' }}>{dia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
@@ -446,14 +446,14 @@ export function PortalPageClientDashboard() {
 												</Tooltip>
 											))}
 											<TableRow className='tableHeaderRow'>
-												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-coins" aria-hidden="true" ></i> <br /> Total</TableCell>
-												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}>{totaisDiaDia.TOTAL.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-coins" aria-hidden="true" ></i> <br /> Total</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-coins" aria-hidden="true" style={{ color: "gold" }} ></i> <br /> Totais</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-money-bill-1" aria-hidden="true" style={{ color: "gold" }}></i><br />{totaisDiaDia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-credit-card" aria-hidden="true" style={{ color: "gold" }}></i><br />{totaisDiaDia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-wallet" aria-hidden="true" style={{ color: "gold" }}></i><br />{totaisDiaDia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true" style={{ color: "gold" }}></i><br />{totaisDiaDia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-gift" aria-hidden="true" style={{ color: "gold" }}></i><br />{totaisDiaDia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "gold" }}></i><br />{totaisDiaDia.TOTAL.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+												<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-coins" aria-hidden="true" style={{ color: "gold" }}></i> <br />Totais</TableCell>
 											</TableRow>
 										</TableBody>
 									</table>

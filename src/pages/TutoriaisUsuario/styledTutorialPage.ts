@@ -33,10 +33,7 @@ export const TutorialTitle = styled.div`
 
 `
 export const TutorialText = styled.p`
-	width: 70vw;
-	@media (max-width: 768px) {
-		width: 80vw;
-	}
+	width:100%;
 	
 `
 
@@ -57,7 +54,7 @@ export const TutorialBodyLabel = styled.div`
 	flex-direction: column;
 	align-items: flex-start;
 	justify-content: center;
-	width: 30%;
+	width: 100%;
 	height: 100%;
 	font-size: 1rem;
 	`
@@ -111,7 +108,7 @@ export const TutorialActions = styled.div`
 	display: flex;
 	flex-direction: row;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: flex-end;
 	width: 100%;
 	height: 10%;
 	font-family: 'Poppins', sans-serif;

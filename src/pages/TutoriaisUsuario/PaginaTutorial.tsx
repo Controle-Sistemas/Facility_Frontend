@@ -140,7 +140,7 @@ export function PaginaTutorial() {
 						<TutorialBody>
 							<TutorialBodyLabel>
 								<h3>Descrição</h3>
-								<p>{tutorial.DESCRICAO}</p>
+								<p style={{width:'100%'}}>{tutorial.DESCRICAO}</p>
 
 							</TutorialBodyLabel>
 							<TutorialBodyLabel>
@@ -189,11 +189,6 @@ export function PaginaTutorial() {
 								}
 							</div>
 						</TutorialBody>
-
-
-
-
-
 					</TutorialContainer>
 				</ContainerAdminContas>
 			</ContainerAdmin>
