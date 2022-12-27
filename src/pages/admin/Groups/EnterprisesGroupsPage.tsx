@@ -331,18 +331,21 @@ function EnterprisesGroupsPage() {
 						{matrizesList.map((matriz) => (
 							<MatrizesListItem>
 								<MatrizesListItemInfo>
-									<p><strong>{matriz.NOME}</strong> - {matriz.NOMEESTABELECIMENTO}</p>
+									<p><i className="fa-solid fa-building"></i><strong>  {matriz.NOME} - </strong>  {matriz.NOMEESTABELECIMENTO}</p>
 									{<FiliaisUl>	
 										<Divider></Divider>									
 										{getFiliaisByMatriz(matriz).length > 0 ?
 											
 											getFiliaisByMatriz(matriz).map((filial) => (
-												<FilialListItem>
-													<p><strong>{_.find(empresas, {"IDCLOUD": filial.IDCLOUD}).NOME}</strong> - {_.find(empresas, {"IDCLOUD": filial.IDCLOUD}).NOMEESTABELECIMENTO}</p>
-													<DangerButton onClick={() => handleDeleteFilial(filial)}>
-														<i className="fa-solid fa-trash" />
-													</DangerButton>		
-												</FilialListItem>
+												<>
+													<FilialListItem>
+														<p><i className="fa-solid fa-shop"></i><strong style={{marginLeft: '.4em'}}> {_.find(empresas, {"IDCLOUD": filial.IDCLOUD}).NOME}: </strong> {_.find(empresas, {"IDCLOUD": filial.IDCLOUD}).NOMEESTABELECIMENTO}</p>
+														<DangerButton onClick={() => handleDeleteFilial(filial)}>
+															<i className="fa-solid fa-trash" />
+														</DangerButton>															
+													</FilialListItem>
+													<Divider></Divider>
+												</>
 											)) :
 											<EmptyListItem>Sem filials vinculadas</EmptyListItem>
 										}

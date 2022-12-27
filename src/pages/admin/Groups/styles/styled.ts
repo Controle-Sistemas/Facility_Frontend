@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import { colorPallete,tema } from '../../../../coresStyled';
 
-export const AddMatrizButton = styled.div`
-        
+export const AddMatrizButton = styled.div`        
         width: fit-content;
         margin: .4rem;
         padding: .5rem 1rem;
@@ -54,13 +53,16 @@ export const MatrizesListItem = styled.li`
     align-items: baseline;
     justify-content: space-between;
     width:100%;
+    color:  white;
+    background-color: ${colorPallete.light.buttonPrimaryBgColor};
     padding: .8rem;
     box-shadow: 0.01em 0.01em 1em 0.01em grey;
     margin-bottom: .8rem;
     border-radius: .4rem;
     transition: .2s;
     :hover {
-        color:  #A84C11;
+        background-color:  white;
+        color: #A84C11;
         transform: scale(1.01);
     }
     
@@ -78,7 +80,7 @@ export const MatrizesListItemControl = styled.div`
     justify-content: center;
     display: flex;
     flex-direction: column;
-    width: 25%; 
+    width: fit-content; 
 `
 export const MatrizesListItemInfo = styled.div`
     width: 100%;
@@ -90,6 +92,9 @@ export const MatrizesListItemInfo = styled.div`
 export const FiliaisUl = styled.ul`
     padding-left: 0;
     width: 100%;
+    background-color: lemonchiffon;
+    color: #A84C11;
+    border-radius: .3em;
 `
 export const FilialListItem = styled.li`
     width: 100%;
@@ -97,9 +102,15 @@ export const FilialListItem = styled.li`
     flex-direction: row;
     justify-content: space-between;
     align-items: baseline;
-    padding-left: 2em;
+    padding-left: 1.2em;
     button{
         width: fit-content;
+    }
+    transition: .2s;
+    :hover {
+        color:  white;
+        background-color: ${colorPallete.light.buttonPrimaryBgColor};
+        border-radius: .3em;
     }
 `
 
@@ -108,7 +119,7 @@ export const EmptyListItem = styled.li`
     justify-content: center;
     display: flex;
     font-weight: 300;
-    color: darkgray;
+    color: #ac8411;
     margin-top: 0.4em;
 `
 
