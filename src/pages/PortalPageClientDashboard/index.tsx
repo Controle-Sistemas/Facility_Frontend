@@ -68,6 +68,12 @@ interface DashboardCardDataType {
 	TotalDiaCortesias?: number,
 }
 
+interface FilialType{
+	ID?: number,
+	IDMATRIZ?: number,
+	CNPJ?: string
+}
+
 const initialData = new DataTest().getCleanJSON() as DashboardDataType;
 
 export function PortalPageClientDashboard() {
@@ -93,7 +99,7 @@ export function PortalPageClientDashboard() {
 	const data = ''
 	///clientData;//new DataTest().getDataJSON(); 
 
-	useEffect( // buscar  os dados quando carregar a tela // detar a data pra mes atual
+	useEffect( // buscar  os dados quando carregar a tela 
 		() => {
 			axios.get(`${BASE_URL}/dashboard/real-time`).then((res) => {
 				setClientData(res.data.data)
@@ -108,15 +114,23 @@ export function PortalPageClientDashboard() {
 				setError(true);
 				setLoading(false);
 				nextPage();
-				Swal.fire('Ops...',
+				 Swal.fire('Ops...',
 					'Houve um problema na busca dos dados de Dashboard. Tente novamente mais tarde.',
 					'info').then(() => {
 						navigate("/user/tutoriais")
 					})
 			})
-
+			//buscando evolução
 			setEvolutionMonthData(dataUtil.getSalesInAMonth().VWSalesInAmonth_D)
-			console.log("Evolução", dataUtil.getEvolutionInAMonth())
+			console.log("Cliente logado", cnpj);
+			//buscando filiais
+			axios.get(`${BASE_URL}/grupos/completo/${cnpj}`)
+			.then((res) => {
+				var data = res.data.data
+				console.log('Grupo Completo', data)
+			}).catch(err => {
+				alert('impossível buscar')
+			})
 		},
 		[]
 	);
@@ -411,35 +425,35 @@ export function PortalPageClientDashboard() {
 									<table style={{ minWidth: "60em", marginLeft: "auto" }}>
 										<TableHead>
 											<TableRow className='tableHeaderRow' style={{ backgroundColor: '#003775' }}>
-												<TableCell align="center"><i className="fa fa-calendar" aria-hidden="true" style={{ color: "gold" }} ></i> <br /> Data</TableCell>
-												<TableCell align="center"><i className="fa fa-money-bill-1" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Dinheiro</TableCell>
-												<TableCell align="center"><i className="fa fa-credit-card" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Cartão</TableCell>
-												<TableCell align="center"><i className="fa fa-wallet" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Carteira Digital</TableCell>
-												<TableCell align="center"><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Crediário</TableCell>
-												<TableCell align="center"><i className="fa fa-gift" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Cortesia</TableCell>
-												<TableCell align="center"><i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Total</TableCell>
-												<TableCell align="center"><i className="fa fa-percent" aria-hidden="true" style={{ color: "gold" }}></i> <br /> Evolução</TableCell>
+												<TableCell align="center"><i className="fa fa-calendar" aria-hidden="true" style={{ color: "chocolate" }} ></i> <br /> Data</TableCell>
+												<TableCell align="center"><i className="fa fa-money-bill-1" aria-hidden="true" style={{ color: "chocolate" }}></i> <br /> Dinheiro</TableCell>
+												<TableCell align="center"><i className="fa fa-credit-card" aria-hidden="true" style={{ color: "chocolate" }}></i> <br /> Cartão</TableCell>
+												<TableCell align="center"><i className="fa fa-wallet" aria-hidden="true" style={{ color: "chocolate" }}></i> <br /> Carteira Digital</TableCell>
+												<TableCell align="center"><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true" style={{ color: "chocolate" }}></i> <br /> Crediário</TableCell>
+												<TableCell align="center"><i className="fa fa-gift" aria-hidden="true" style={{ color: "chocolate" }}></i> <br /> Cortesia</TableCell>
+												<TableCell align="center"><i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "chocolate" }}></i> <br /> Total</TableCell>
+												<TableCell align="center"><i className="fa fa-percent" aria-hidden="true" style={{ color: "chocolate" }}></i> <br /> Evolução</TableCell>
 											</TableRow>
 										</TableHead>
 										<TableBody>
 											{evolutionMonth.map((dia) => (
 												<Tooltip disableHoverListener title={<React.Fragment>
 													<div className="toltip">														
-													<p className='toltipItemHeader'><i className="fa fa-calendar" aria-hidden="true" style={{ color: "gold" }}></i> <strong>{dia.DAYOFMONTH + '/12/22'}</strong> 
+													<p className='toltipItemHeader'><i className="fa fa-calendar" aria-hidden="true" style={{ color: "chocolate" }}></i> <strong>{dia.DAYOFMONTH + '/12/22'}</strong> 
 													</p>
-													<p className='toltipItem'><strong><i className="fa fa-money-bill-1" aria-hidden="true" style={{ color: "gold" }}></i> Dinheiro:</strong>  {dia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													<p className='toltipItem'><strong><i className="fa fa-money-bill-1" aria-hidden="true" style={{ color: "chocolate" }}></i> Dinheiro:</strong>  {dia.DINHEIRO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
 													</p>
-													<p className='toltipItem'><strong><i className="fa fa-credit-card" aria-hidden="true" style={{ color: "gold" }}></i> Cartão:</strong>  {dia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													<p className='toltipItem'><strong><i className="fa fa-credit-card" aria-hidden="true" style={{ color: "chocolate" }}></i> Cartão:</strong>  {dia.CARTAO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
 													</p>
-													<p className='toltipItem'><strong><i className="fa fa-wallet" aria-hidden="true" style={{ color: "gold" }}></i> eBanking:</strong>  {dia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													<p className='toltipItem'><strong><i className="fa fa-wallet" aria-hidden="true" style={{ color: "chocolate" }}></i> eBanking:</strong>  {dia.eWALLET.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
 													</p>
-													<p className='toltipItem'><strong><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true" style={{ color: "gold" }}></i> Crediário:</strong>  {dia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													<p className='toltipItem'><strong><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true" style={{ color: "chocolate" }}></i> Crediário:</strong>  {dia.CREDIARIO.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
 													</p>
-													<p className='toltipItem'><strong><i className="fa fa-gift" aria-hidden="true" style={{ color: "gold" }}></i> Cortesia:</strong>  {dia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													<p className='toltipItem'><strong><i className="fa fa-gift" aria-hidden="true" style={{ color: "chocolate" }}></i> Cortesia:</strong>  {dia.CORTESIA.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
 													</p>
-													<p className='toltipItem'><strong><i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "gold" }}></i> Total:</strong>  {dia.AMOUNT.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+													<p className='toltipItem'><strong><i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "chocolate" }}></i> Total:</strong>  {dia.AMOUNT.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
 													</p>
-													<p className='toltipItem'><strong><i className="fa fa-percent" aria-hidden="true" style={{ color: "gold" }}></i> Evolução:</strong>  {auxEvolutionPerDay > 0 ? dia.AMOUNT - auxEvolutionPerDay > 0 ? `+${(((dia.AMOUNT - auxEvolutionPerDay) / auxEvolutionPerDay) * 100).toFixed(2)}`: (((dia.AMOUNT - auxEvolutionPerDay) / auxEvolutionPerDay) * 100).toFixed(2) : 0.00.toFixed(2) } %
+													<p className='toltipItem'><strong><i className="fa fa-percent" aria-hidden="true" style={{ color: "chocolate" }}></i> Evolução:</strong>  {auxEvolutionPerDay > 0 ? dia.AMOUNT - auxEvolutionPerDay > 0 ? `+${(((dia.AMOUNT - auxEvolutionPerDay) / auxEvolutionPerDay) * 100).toFixed(2)}`: (((dia.AMOUNT - auxEvolutionPerDay) / auxEvolutionPerDay) * 100).toFixed(2) : 0.00.toFixed(2) } %
 													</p>	
 													</div>
 												</React.Fragment>} placement="top-end">
