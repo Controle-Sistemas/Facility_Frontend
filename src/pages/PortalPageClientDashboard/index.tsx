@@ -133,7 +133,7 @@ export function PortalPageClientDashboard() {
 				setGroupSelectData(data);
 				console.log('Grupo Completo', data)
 			}).catch(err => {
-				alert('impossível buscar')
+				console.log('Não tem grupo')
 			})
 		},
 		[]
