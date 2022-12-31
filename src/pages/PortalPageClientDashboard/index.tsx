@@ -21,7 +21,7 @@ import axios from 'axios';
 import { BASE_URL, EXTERNAL_API_URL } from '../../utils/requests';
 import Swal from 'sweetalert2';
 import { LoadingComponent } from '../../components/Loading';
-import { Box, listClasses, TableBody, TableCell, TableHead, TableRow, ToggleButton } from '@mui/material';
+import { Box, InputLabel, listClasses, MenuItem, TableBody, TableCell, TableHead, TableRow, ToggleButton } from '@mui/material';
 import { Container } from '../ChangePassword/styled';
 import { Chart } from 'react-google-charts';
 import './style.css'
@@ -79,8 +79,9 @@ const initialData = new DataTest().getCleanJSON() as DashboardDataType;
 export function PortalPageClientDashboard() {
 
 	const navigate = useNavigate();
-	const [evolutionMonthDateFrom, setEvolutionMonthDateFrom] = useState(dayjs('2022-10-10'))
-	const [evolutionMonthDateTo, setEvolutionMonthDateTo] = useState(dayjs('2022-10-10'))
+	const date = new Date()
+	const [evolutionMonthDateFrom, setEvolutionMonthDateFrom] = useState(dayjs(`${date.getFullYear}-${date.getMonth()}-01`))
+	const [evolutionMonthDateTo, setEvolutionMonthDateTo] = useState(dayjs(`${date.getFullYear}-${date.getMonth()}-${date.getDate()}`))
 	const [evolutionMonth, setEvolutionMonthData] = useState<any>({})
 	const [evolutionMonthSum, setEvolutionMonthSum] = useState<any>(Number)
 	const [loading, setLoading] = useState(true);
@@ -95,6 +96,8 @@ export function PortalPageClientDashboard() {
 	const [monthEvolutionData, setMonthEvolution] = useState({})
 	const [dashpageIndex, setPageIndex] = useState(0);
 	const cnpj = localStorage.getItem('cnpj');
+	const [idCloud, setIdCloud] = useState(localStorage.getItem('cnpj').substring(0,6))
+	const [groupSelectData, setGroupSelectData] = useState([]);
 	const dataUtil = new DataTest()
 	const data = ''
 	///clientData;//new DataTest().getDataJSON(); 
@@ -127,6 +130,7 @@ export function PortalPageClientDashboard() {
 			axios.get(`${BASE_URL}/grupos/completo/${cnpj}`)
 			.then((res) => {
 				var data = res.data.data
+				setGroupSelectData(data);
 				console.log('Grupo Completo', data)
 			}).catch(err => {
 				alert('impossível buscar')
@@ -172,6 +176,59 @@ export function PortalPageClientDashboard() {
 		return aux;
 	})
 
+	const handleChangeYear = (event: SelectChangeEvent) => {
+		setDataYear(event.target.value);
+	};
+	const handleChangeMonth = (event: SelectChangeEvent) => {
+		setDataMonth(event.target.value);
+	};
+
+	const totaisDiaDia = dataUtil.getTotalSalesInAMonth();
+
+	async function refreshData(){
+		setLoading(true)
+		//atualizando dados em tempo real
+		await axios.get(`${BASE_URL}/dashboard/real-time/${idCloud}`).then((res) => {
+			setClientData(res.data.data)
+			setTotaisDia([
+				{ "Operacao": "Cancelamentos", "Total": clientData.TotalDiaCancelamentos },
+				{ "Operacao": "Cortesias concedidas", "Total": clientData.TotalDiaCortesias },
+				{ "Operacao": "Taxa de serviço", "Total": clientData.TotalDiaDescontos },
+				{ "Operacao": "Descontos", "Total": clientData.TotalDiaTaxaServico },
+			]);
+		}).catch(err => {
+			setError(true);
+			setLoading(false);
+			nextPage();
+			Swal.fire('Ops...',
+				'Houve um problema na busca dos dados de Dashboard. Tente novamente mais tarde.',
+				'info').then(() => {
+					navigate("/user/tutoriais")
+			})
+		})
+		//buscando evolução
+		setEvolutionMonthData(dataUtil.getSalesInAMonth().VWSalesInAmonth_D)
+		await axios.get(`${BASE_URL}/dashboard/evolution-per-day`).then((res) => {
+			setEvolutionMonthData(res.data.data)		
+		}).catch(err => {
+			setError(true);
+			setLoading(false);
+			nextPage();
+			Swal.fire('Ops...',
+				'Houve um problema na busca dos dados de Dashboard. Tente novamente mais tarde.',
+				'info').then(() => {
+					navigate("/user/tutoriais")
+			})
+		})
+		setLoading(false);
+	}
+
+	function handleChangeIdCloud(event: SelectChangeEvent) {
+		setIdCloud(event.target.value);
+		console.log("IdCloud Selecionado" + idCloud)
+		refreshData();
+	}
+
 	function getVendasPorTipo() {
 		return [["Tipo", "Valor"], ...dataVendasPorTipoResult];
 	}
@@ -196,17 +253,6 @@ export function PortalPageClientDashboard() {
 		console.log(dataVendasPorTipoResult)
 		return _.sumBy(clientData.VendasPorTipo, 'Valor')
 	}
-
-
-
-	const handleChangeYear = (event: SelectChangeEvent) => {
-		setDataYear(event.target.value);
-	};
-	const handleChangeMonth = (event: SelectChangeEvent) => {
-		setDataMonth(event.target.value);
-	};
-
-	const totaisDiaDia = dataUtil.getTotalSalesInAMonth();
 
 	function prevPage() {
 		{
@@ -250,7 +296,29 @@ export function PortalPageClientDashboard() {
 			<ContainerAdminContas>
 				<MainTitle className='title'>{dashpage}</MainTitle>
 				<ButtonGroup>
-					<PrimaryButton onClick={() => prevPage()}><i className="fa-solid fa-chevron-left" /></PrimaryButton> <img src={logo} alt="logo" className='logo' /> <PrimaryButton onClick={() => nextPage()}><i className="fa-solid fa-chevron-right" /></PrimaryButton>
+					<PrimaryButton onClick={() => prevPage()}><i className="fa-solid fa-chevron-left" /></PrimaryButton> 
+					{groupSelectData.length > 0 ? 
+						<FormControl sx={{ m: 1, minWidth: "fit-content" }}>
+						<InputLabel id="mes-label">Empresa</InputLabel>
+						<Select
+							id="selectEmpresa"
+							value={idCloud}
+							onChange={handleChangeIdCloud}
+							autoWidth
+							label="IDCLOUD - EMPRESA"
+						>
+						<MenuItem value={""}><em>{_.find(groupSelectData, {"IDCLOUD": idCloud}).NOMEESTABELECIMENTO}</em></MenuItem>
+						{groupSelectData.map((empresa) => (
+							<MenuItem value={empresa.IDCLOUD}>
+								<Tooltip title={`${empresa.IDCLOUD} - ${empresa.NOME}`} placement="right">
+									<label htmlFor="" style={{ cursor: "pointer" }}>{empresa.NOMEESTABELECIMENTO}</label>
+								</Tooltip>
+							</MenuItem>
+						))}
+						</Select>
+					</FormControl>
+					: <img src={logo} alt="logo" className='logo' />}
+					<PrimaryButton onClick={() => nextPage()}><i className="fa-solid fa-chevron-right" /></PrimaryButton>
 				</ButtonGroup>
 				{dashpage === MONITORAMENTOTEMPOREAL && clientData ?
 					(
