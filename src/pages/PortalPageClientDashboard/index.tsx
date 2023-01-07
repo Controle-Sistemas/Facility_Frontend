@@ -79,9 +79,12 @@ const initialData = new DataTest().getCleanJSON() as DashboardDataType;
 export function PortalPageClientDashboard() {
 
 	const navigate = useNavigate();
-	const date = new Date()
-	const [evolutionMonthDateFrom, setEvolutionMonthDateFrom] = useState(dayjs(`${date.getFullYear}-${date.getMonth()}-01`))
-	const [evolutionMonthDateTo, setEvolutionMonthDateTo] = useState(dayjs(`${date.getFullYear}-${date.getMonth()}-${date.getDate()}`))
+	const actualDate = new Date()
+	const actualDateDay = actualDate.getDate();
+	const actualDateMonth = actualDate.getMonth() +1;
+	const actualDateYear = actualDate.getFullYear();
+	const [evolutionMonthDateFrom, setEvolutionMonthDateFrom] = useState(dayjs(`${actualDateYear}-${actualDateMonth}-01`))
+	const [evolutionMonthDateTo, setEvolutionMonthDateTo] = useState(dayjs(`${actualDateYear}-${actualDateMonth}-${actualDateDay}`))
 	const [evolutionMonth, setEvolutionMonthData] = useState<any>({})
 	const [evolutionMonthSum, setEvolutionMonthSum] = useState<any>(Number)
 	const [loading, setLoading] = useState(true);
@@ -132,6 +135,8 @@ export function PortalPageClientDashboard() {
 				var data = res.data.data
 				setGroupSelectData(data);
 				console.log('Grupo Completo', data)
+				console.log('Matriz', _.filter(res.data.data, {"TIPO":'MATRIZ'}))
+				console.log('Filiais', _.filter(res.data.data, {"TIPO":'FILIAL'}))
 			}).catch(err => {
 				console.log('Não tem grupo')
 			})
@@ -299,7 +304,7 @@ export function PortalPageClientDashboard() {
 					<PrimaryButton onClick={() => prevPage()}><i className="fa-solid fa-chevron-left" /></PrimaryButton> 
 					{groupSelectData.length > 0 ? 
 						<FormControl sx={{ m: 1, minWidth: "fit-content" }}>
-						<InputLabel id="mes-label">Empresa</InputLabel>
+						<InputLabel id="selectEmpresa-label">Empresa</InputLabel>
 						<Select
 							id="selectEmpresa"
 							value={idCloud}
@@ -307,8 +312,8 @@ export function PortalPageClientDashboard() {
 							autoWidth
 							label="IDCLOUD - EMPRESA"
 						>
-						<MenuItem value={""}><em>{_.find(groupSelectData, {"IDCLOUD": idCloud}).NOMEESTABELECIMENTO}</em></MenuItem>
-						{groupSelectData.map((empresa) => (
+						<MenuItem value={idCloud}>{_.find(groupSelectData, {"IDCLOUD": parseInt(idCloud)}).NOMEESTABELECIMENTO}</MenuItem>
+						{_.filter(groupSelectData, {"TIPO": 'FILIAL'}).map((empresa) => (
 							<MenuItem value={empresa.IDCLOUD}>
 								<Tooltip title={`${empresa.IDCLOUD} - ${empresa.NOME}`} placement="right">
 									<label htmlFor="" style={{ cursor: "pointer" }}>{empresa.NOMEESTABELECIMENTO}</label>
@@ -467,6 +472,7 @@ export function PortalPageClientDashboard() {
 													<MobileDatePicker
 														label="Filtrar de"
 														value={evolutionMonthDateFrom}
+														maxDate={dayjs(`${actualDateYear}-${actualDateMonth}-${actualDateDay}`)}
 														onChange={(newValue) => {
 															setEvolutionMonthDateFrom(newValue);
 														}}
@@ -478,6 +484,7 @@ export function PortalPageClientDashboard() {
 														label="Até"
 														value={evolutionMonthDateTo}
 														minDate={dayjs(evolutionMonthDateFrom)}
+														maxDate={dayjs(`${actualDateYear}-${actualDateMonth}-${actualDateDay}`)}
 														onChange={(newValue) => {
 															setEvolutionMonthDateTo(newValue);
 														}}
@@ -485,7 +492,7 @@ export function PortalPageClientDashboard() {
 													/>
 												</LocalizationProvider>
 											</div>
-											<PrimaryButton onClick={() => alert(`Periodo da busca  ${evolutionMonthDateFrom.toISOString().substring(0, 10)} < -- | -- >  ${evolutionMonthDateTo.toISOString().substring(0, 10)}`) /** Refazer req e atualizar a fonte de dados da tabela */}><i className="fa-solid fa-magnifying-glass" /></PrimaryButton>
+											<PrimaryButton onClick={() => alert(`Periodo da busca  ${evolutionMonthDateFrom.toISOString().substring(0, 10)} < -- | -- >  ${evolutionMonthDateTo.toISOString().substring(0, 10)} -- ${dayjs(evolutionMonthDateFrom).toISOString()}`) /** Refazer req e atualizar a fonte de dados da tabela */}><i className="fa-solid fa-magnifying-glass" /></PrimaryButton>
 										</div>
 									</FormControl>
 								</InputGroupContainer>
