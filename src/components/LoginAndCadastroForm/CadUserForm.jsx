@@ -9,6 +9,7 @@ import { MultipleSelect } from '../MultipleSelectComponent'
 import { BASE_URL } from '../../utils/requests'
 import Logo from '../../assets/logoBranca.png'
 import { TabGroup, Tab } from '../styledComponents/containers'
+import _ from 'lodash'
 
 
 //Definindo um valor inicial para o estado
@@ -44,11 +45,11 @@ export function CadUserForm() {
 
     //Enviando os dados para o banco de dados 
     async function postData(url = '', data = {}) {
-                
+
         await axios.post(url, data)
             .then(res => {
                 if (isInternal) {
-                    Swal.fire({ 
+                    Swal.fire({
                         title: 'Sucesso ' + internalValues.NOME,
                         text: 'Email enviado para ' + internalValues.EMAIL + ", confira lá sua senha de acesso!",
                         icon: 'success',
@@ -58,6 +59,7 @@ export function CadUserForm() {
                     body.className = 'sign-up-js'
                     //navigate('/login')
                 } else {
+                    // verificar a existência de CNPJ no sistema interno se sim prosseguir
                     navigate('/solicitacao-enviada') //redireciona para a página solicitacao-enviada caso tudo funcione bem
 
                 }
@@ -83,6 +85,8 @@ export function CadUserForm() {
     //Estado dos valores do formulário
     const [values, setValues] = useState(initialState())
     const [internalValues, setInternalValues] = useState(initialInternalState)
+    const [currentClients, setCurrentClients] = useState({})
+    const [currentNoRecordClients, setCurrentNoRecordClients] = useState({})
 
     const [ramos, setRamos] = useState([])
 
@@ -102,6 +106,22 @@ export function CadUserForm() {
             .catch(err => {
                 console.log(err)
             })
+        axios
+            .get(`${BASE_URL}/clientes/`)
+            .then((response) => {
+                setCurrentClients(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+        axios
+            .get(`${BASE_URL}/empresas/`)
+            .then((response) => {
+                setCurrentNoRecordClients(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error)
+            });
     }, [])
 
     //Funções para capturar os valores do formulário
@@ -150,9 +170,27 @@ export function CadUserForm() {
     //Função para envio dos dados do formualário
     const handleSubmitClient = (event) => {
         event.preventDefault();
-        values.IDCLOUD = Number(values.CNPJ.replace(/\D/g, '').substring(0, 6)) //Remove os caracteres não numéricos e pega os 6 primeiros caracteres
-        values.RAMODEATIVIDADE = values.RAMODEATIVIDADE.toString()
-        postData(BASE_URL + '/clientes/', values) //Envia os dados para o banco de dados
+        if (_.find(currentClients, { "CNPJ": values.CNPJ })) {
+            Swal.fire({ 
+                title: 'Desculpe',
+                text: 'Seu CNPJ já tem cadastro no portal. Verifique seu email para obter a senha de acesso!',
+                icon: 'info',
+                confirmButtonText: 'Fechar'
+            })
+        } else {
+            if (_.find(currentNoRecordClients, { "CNPJ": values.CNPJ })) {
+                values.IDCLOUD = _.find(currentNoRecordClients, { "CNPJ": values.CNPJ }).IDCLOUD;
+                values.RAMODEATIVIDADE = values.RAMODEATIVIDADE.toString()
+                postData(BASE_URL + '/clientes/', values) //Envia os dados para o banco de dados
+            } else {
+                Swal.fire({ //Alerta de erro
+                    title: 'Desculpe',
+                    text: 'Não encontramos seu CNPJ no nosso sistema. Verifique se está correto e tente novamente!',
+                    icon: 'error',
+                    confirmButtonText: 'Fechar'
+                })
+            }
+        }
     }
 
     const handleSubmitInternal = (event) => {
