@@ -171,7 +171,7 @@ export function CadUserForm() {
     const handleSubmitClient = (event) => {
         event.preventDefault();
         if (_.find(currentClients, { "CNPJ": values.CNPJ })) {
-            Swal.fire({ 
+            Swal.fire({
                 title: 'Desculpe',
                 text: 'Seu CNPJ já tem cadastro no portal. Verifique seu email para obter a senha de acesso!',
                 icon: 'info',
@@ -196,7 +196,6 @@ export function CadUserForm() {
     const handleSubmitInternal = (event) => {
         event.preventDefault()
         postData(BASE_URL + '/internos/', internalValues)
-
     }
 
     return (

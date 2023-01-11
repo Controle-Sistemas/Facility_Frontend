@@ -28,22 +28,24 @@ import Swal from 'sweetalert2';
 import FilterComponent from '../../components/filterComponent';
 import { LoadingComponent } from '../../components/Loading';
 import { ErrorPage } from '../ErrorPage/Error';
+import { FormAddTipoChamado } from '../../components/Modais/forms/FormAddTipoChamado';
 
 export function PaginaChamados(props) {
-	const [ chamadosData, setChamadosData ] = useState([]);
-	const [ internalData, setInternalData ] = useState([]);
-	const [ ocorrencias, setOcorrencias ] = useState([]);
-	const [ setores, setSetores ] = useState([]);
-	const [ isModalChamadoOpen, setIsModalChamadoOpen ] = useState(false);
-	const [ isModalStatusOpen, setIsModalStatusOpen ] = useState(false);
-	const [ modalSortIsOpen, setModalSortIsOpen ] = useState(false);
-	const [ modalFilterIsOpen, setModalFilterIsOpen ] = useState(false);
-	const [ filterBy, setFilterBy ] = useState('TODOS');
-	const [ order, setOrder ] = useState('desc');
-	const [ searchText, setSearchText ] = useState('');
-	const [ orderBy, setOrderBy ] = useState('prioridade');
-	const [ loading, setLoading ] = useState(true);
-	const [ error, setError ] = useState(false);
+	const [chamadosData, setChamadosData] = useState([]);
+	const [internalData, setInternalData] = useState([]);
+	const [ocorrencias, setOcorrencias] = useState([]);
+	const [setores, setSetores] = useState([]);
+	const [isModalChamadoOpen, setIsModalChamadoOpen] = useState(false);
+	const [isModalStatusOpen, setIsModalStatusOpen] = useState(false);
+	const [modalSortIsOpen, setModalSortIsOpen] = useState(false);
+	const [modalTypeIsOpen, setModalTypeIsOpen] = useState(false);
+	const [modalFilterIsOpen, setModalFilterIsOpen] = useState(false);
+	const [filterBy, setFilterBy] = useState('TODOS');
+	const [order, setOrder] = useState('desc');
+	const [searchText, setSearchText] = useState('');
+	const [orderBy, setOrderBy] = useState('prioridade');
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
 
 	const isAdmin = window.location.pathname.includes('admin');
 	const idUser = Cookies.get('id');
@@ -133,7 +135,7 @@ export function PaginaChamados(props) {
 					}
 				});
 		},
-		[ idUser, isAdmin, setores ]
+		[idUser, isAdmin, setores]
 	);
 
 	const onAddChamado = (data) => {
@@ -211,6 +213,33 @@ export function PaginaChamados(props) {
 			});
 	};
 
+	const onAddChamadoType = (data) => {
+		setModalTypeIsOpen(!modalTypeIsOpen)
+		/**
+	 * 	axios
+			.post(BASE_URL + '/status-chamado/', data)
+			.then((res) => {
+				if (res.status === 200) {
+					Swal.fire({
+						title: 'Status Adicionado com Sucesso!',
+						icon: 'success',
+						timer: 2000,
+						showConfirmButton: true
+					});
+
+					handleOpenModalStatus();
+				}
+			})
+			.catch((err) => {
+				if (err.res.status !== 404) {
+					console.log(err);
+					setLoading(false);
+					setError(true);
+				}
+			});
+	 */
+	};
+
 	function handleOpenModalChamado() {
 		setIsModalChamadoOpen(!isModalChamadoOpen);
 	}
@@ -220,6 +249,9 @@ export function PaginaChamados(props) {
 	}
 	function handleOpenModalSort() {
 		setModalSortIsOpen(!modalSortIsOpen);
+	}
+	function handleOpenModalType() {
+		setModalTypeIsOpen(!modalTypeIsOpen);
 	}
 	function handleOpenModalFilter() {
 		setModalFilterIsOpen(!modalFilterIsOpen);
@@ -251,10 +283,16 @@ export function PaginaChamados(props) {
 								Abrir Chamado
 							</PrimaryButton>
 							{isAdmin && (
-								<PrimaryButton onClick={handleOpenModalStatus}>
-									<i className="fa-solid fa-plus" />
-									Adicionar Status
-								</PrimaryButton>
+								<>
+									<PrimaryButton onClick={handleOpenModalStatus}>
+										<i className="fa-solid fa-plus" />
+										Adicionar Status
+									</PrimaryButton>
+									<PrimaryButton onClick={handleOpenModalType}>
+										<i className="fa-solid fa-plus" />
+										Adicionar Tipo
+									</PrimaryButton>
+								</>
 							)}
 						</ButtonRow>
 					</ButtonGroup>
@@ -307,8 +345,19 @@ export function PaginaChamados(props) {
 					>
 						<FormAddStatusChamado onAdd={onAddStatusChamado} />
 					</ModalForm>
+
 					<ModalForm
-						isModalOpen={modalSortIsOpen}
+						isModalOpen={modalTypeIsOpen}
+						isModalClosed={handleOpenModalType}
+						title="Adicionar Tipo"
+						height="60vh"
+						width="50%"
+						style={{marginLeft: 'auto'}}
+					>
+						<FormAddTipoChamado onAdd={onAddChamadoType} />
+					</ModalForm>
+					<ModalForm
+						isModalOpen={false}
 						isModalClosed={handleOpenModalSort}
 						title="Ordenar Documentos"
 						height="45vh"

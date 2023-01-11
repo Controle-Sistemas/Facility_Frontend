@@ -1,8 +1,12 @@
 //Importações
 import { BASE_URL } from '../../utils/requests';
 import Swal from 'sweetalert2';
+import * as React from 'react';
 import TreeViewComponent from '@mui/lab/TreeView';
 import TreeItem from '@mui/lab/TreeItem';
+import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -21,8 +25,8 @@ import { formatData, formatTime } from '../../utils/Masks';
 import './style.css';
 interface ChamadosProps {
 	chamados: any[];
-    isAdmin: boolean;
-    order: string;
+	isAdmin: boolean;
+	order: string;
 	orderBy: string;
 	filterBy: string;
 	ocorrencias: any[];
@@ -39,19 +43,40 @@ interface ChamadosData {
 	dataPrevisao: string;
 	prioridade: string | number;
 	nomeStatus: string;
-	statusId:number;
-	clienteId:  number;
+	statusId: number;
+	clienteId: number;
 	clienteName?: string;
 	arrayOcorrencias: any[];
 	ativo: boolean;
 }
-
-export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocorrencias }: ChamadosProps) {
-	const [ internos, setInternos ] = useState([]);
-	const [ setores, setSetores ] = useState([]);
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+	
+	const [progress, setProgress] = React.useState(0);
+	const timer = setInterval(() => {
+		setProgress((prevProgress) => (prevProgress >= props.value ? 0 : prevProgress + 10));
+	}, 800);
+	
+	return (
+		<Box sx={{ display: 'flex', alignItems: 'center' }}>
+			<Box sx={{ width: '100%', mr: 1 }}>
+				<LinearProgress variant="determinate" {...props} />
+			</Box>
+			<Box sx={{ minWidth: 35 }}>
+				<Typography variant="body2" color="black">{`${Math.round(
+					props.value,
+				)}%`}</Typography>
+			</Box>
+		</Box>
+	);
+}
+export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy, ocorrencias }: ChamadosProps) {
+	const [internos, setInternos] = useState([]);
+	const [setores, setSetores] = useState([]);
 	const [statusChamados, setStatusChamado] = useState([])
 	const [clientes, setClientes] = useState([])
 	const organizedData: ChamadosData[] = [];
+
+	
 
 	useEffect(() => {
 		axios.get(BASE_URL + '/internos/').then((res) => {
@@ -60,40 +85,42 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 		axios.get(BASE_URL + '/setores/').then((res) => {
 			setSetores(res.data.data);
 		});
-		axios.get(BASE_URL+'/status-chamado/').then(res => {
+		axios.get(BASE_URL + '/status-chamado/').then(res => {
 			setStatusChamado(res.data.data)
 		})
-		axios.get(BASE_URL+'/clientes/admin').then(res => {
+		axios.get(BASE_URL + '/clientes/admin').then(res => {
 			setClientes(res.data.data)
 		})
+		//buscar resumo de chamados /resumo/geral
+		
 	}, []);
 
-	function handleChangeVistoChamado(id){
-		const aux = chamados.filter(chamado => chamado.ID === id) 
-		axios.patch(BASE_URL + `/chamados/${id}`,{ // faz o patch para marcar como visto a notificação
+	function handleChangeVistoChamado(id) {
+		const aux = chamados.filter(chamado => chamado.ID === id)
+		axios.patch(BASE_URL + `/chamados/${id}`, { // faz o patch para marcar como visto a notificação
 			VISTO: !aux[0].VISTO ? 1 : 1,
 		})
 
 	}
 
-    const sortChamados = (chamados: any) => {
+	const sortChamados = (chamados: any) => {
 		//Função para ordenar os documentos
 		if (order === 'asc') {
 			//verifica se o tipo de ordenação é ascendente ou descendente
 			return chamados.sort((a, b) => {
-				if(orderBy === 'data'){
+				if (orderBy === 'data') {
 					if (a[orderBy] < b[orderBy]) {
 						return -1;
 					}
 					if (a[orderBy] > b[orderBy]) {
 						return 1;
 					}
-					if(a[orderBy] === b[orderBy]){
+					if (a[orderBy] === b[orderBy]) {
 
-						if(a["hora"] > b["hora"]){
+						if (a["hora"] > b["hora"]) {
 							return -1
-						} 
-						if(a["hora"] < b["hora"]){
+						}
+						if (a["hora"] < b["hora"]) {
 							return 1
 						}
 						return 0
@@ -108,7 +135,7 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 					}
 				}
 				//Ordena os documentos pelo campo orderBy
-				
+
 				return 0;
 			});
 		} else {
@@ -128,7 +155,7 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 		//Função para filtrar os documentos
 		if (filterBy === 'TODOS') {
 			//Se o filtro for TODOS, retorna todos os documentos
-			return  chamados;
+			return chamados;
 		} else {
 			return chamados.filter(chamado => chamado.statusId === Number(filterBy))
 		}
@@ -155,12 +182,12 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 					dataPrevisao: formatData(chamado.PREVISAO),
 					prioridade: chamado.PRIORIDADE,
 					statusId: chamado.STATUS,
-					nomeStatus:"",
-					clienteId:chamado.IDCLIENTE,
-					arrayOcorrencias:[],
+					nomeStatus: "",
+					clienteId: chamado.IDCLIENTE,
+					arrayOcorrencias: [],
 					ativo: chamado.ATIVO
 				};
-				const [ data, hora ] = chamado.DATAINCLUSAO.split(' ');
+				const [data, hora] = chamado.DATAINCLUSAO.split(' ');
 				aux.data = formatData(data);
 				aux.hora = formatTime(hora);
 
@@ -182,30 +209,30 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 	}
 
 
-	function setStatus(data:ChamadosData[]){
+	function setStatus(data: ChamadosData[]) {
 		statusChamados.forEach(status => {
 			data.forEach(item => {
-				if(item.statusId === status.ID){
+				if (item.statusId === status.ID) {
 					item.nomeStatus = status.NOME
-				} 
+				}
 			})
 		})
 	}
 
-	function setClienteName(data:ChamadosData[]){
+	function setClienteName(data: ChamadosData[]) {
 		clientes.forEach(cliente => {
 			data.forEach(item => {
-				if(item.clienteId === cliente.ID){
+				if (item.clienteId === cliente.ID) {
 					item.clienteName = cliente.NOME
-				} 
+				}
 			})
 		})
 	}
 
-	function setOcorrenciasChamados(data:ChamadosData[]){
+	function setOcorrenciasChamados(data: ChamadosData[]) {
 		ocorrencias.forEach(ocorrencia => {
 			data.forEach(item => {
-				if(item.id === ocorrencia.IDCHAMADO){
+				if (item.id === ocorrencia.IDCHAMADO) {
 					item.arrayOcorrencias.push(ocorrencia)
 				}
 			})
@@ -219,73 +246,71 @@ export function ChamadosComponent({ chamados,isAdmin,filterBy,order,orderBy,ocor
 		<ChamadosContainer>
 			<TreeViewComponent>
 				{organizedData ? (
-					filterChamados(sortChamados(organizedData)).map((chamado:ChamadosData) => {
+					filterChamados(sortChamados(organizedData)).map((chamado: ChamadosData) => {
 						chamado.prioridade = chamado.prioridade === 1
 							? 'Baixa'
 							: chamado.prioridade === 2 ? 'Média' : chamado.prioridade === 3 ? 'Alta' : 'Urgente'
 
-							if(chamado.ativo || ((!chamado.ativo &&  filterBy === 'TODOS') || (!chamado.ativo && filterBy === "3"))){
-								return (
-									<ChamadoList key={chamado.id}>
-										<ChamadoHeader>
-		
-											<PrioritySection prioridade={chamado.prioridade}>
-												<span>
-													<i className="fa-solid fa-circle-exclamation" />
-													{chamado.prioridade}
-												</span>
-											</PrioritySection>
-											<PrioritySection status={chamado.statusId}>
-												<span>
-													<i className="fa-solid fa-circle-exclamation" />
-													{chamado.nomeStatus}
-												</span>
-											</PrioritySection>
-		
-		
-											
-		
-										</ChamadoHeader>
-		
-										<TreeItem nodeId={chamado.id.toString()} label={(
-											<ChamadosLabel>
-												<span>
-													{chamado.titulo}
-		
-												</span>
-												<OcurrencySpan>
-													{chamado.arrayOcorrencias.length}
-												</OcurrencySpan>
-		
-											</ChamadosLabel>
-										)
-										} onClick={(e) => handleChangeVistoChamado(chamado.id)} >
-											<Link to={`/${isAdmin ? "admin" : "interno"}/chamado/${chamado.id}`} style={{textDecoration:"none"}}>
-												<ChamadoDescription>
-													<div dangerouslySetInnerHTML={{__html:chamado.descricao}} />
-												</ChamadoDescription>
-											</Link>
-		
-										</TreeItem>
-		
-										<ChamadoFooter>
-											<div>
-												<span>{chamado.data}</span> - <span>{chamado.dataPrevisao}</span>
-												
-											</div>
-											<ChamadoHeaderPart>
-												Cliente:<span>{chamado.clienteName}</span>
-											</ChamadoHeaderPart>
-											<ChamadoHeaderPart>
-												Chamado feito por:
-												<span>{chamado.postadoPor}</span>
-												as {chamado.hora}
-											</ChamadoHeaderPart>
-										</ChamadoFooter>
-									</ChamadoList>
-								);
-							}
-						
+						if (chamado.ativo || ((!chamado.ativo && filterBy === 'TODOS') || (!chamado.ativo && filterBy === "3"))) {
+							return (
+								<ChamadoList key={chamado.id}>
+									<ChamadoHeader>
+
+										<PrioritySection prioridade={chamado.prioridade}>
+											<span>
+												<i className="fa-solid fa-circle-exclamation" />
+												{chamado.prioridade}
+											</span>
+										</PrioritySection>
+										<Box sx={{ width: '100%' }}>
+											<LinearProgressWithLabel value={65} />
+										</Box>
+										<PrioritySection status={chamado.statusId}>
+											<span>
+												<i className="fa-solid fa-circle-exclamation" />
+												{chamado.nomeStatus}
+											</span>
+										</PrioritySection>
+									</ChamadoHeader>
+									<TreeItem nodeId={chamado.id.toString()} label={(
+										<ChamadosLabel>
+											<span>
+												{chamado.titulo}
+
+											</span>
+											<OcurrencySpan>
+												{chamado.arrayOcorrencias.length}
+											</OcurrencySpan>
+
+										</ChamadosLabel>
+									)
+									} onClick={(e) => handleChangeVistoChamado(chamado.id)} >
+										<Link to={`/${isAdmin ? "admin" : "interno"}/chamado/${chamado.id}`} style={{ textDecoration: "none" }}>
+											<ChamadoDescription>
+												<div dangerouslySetInnerHTML={{ __html: chamado.descricao }} />
+											</ChamadoDescription>
+										</Link>
+
+									</TreeItem>
+
+									<ChamadoFooter>
+										<div>
+											<span>{chamado.data}</span> - <span>{chamado.dataPrevisao}</span>
+
+										</div>
+										<ChamadoHeaderPart>
+											Cliente:<span>{chamado.clienteName}</span>
+										</ChamadoHeaderPart>
+										<ChamadoHeaderPart>
+											Chamado feito por:
+											<span>{chamado.postadoPor}</span>
+											as {chamado.hora}
+										</ChamadoHeaderPart>
+									</ChamadoFooter>
+								</ChamadoList>
+							);
+						}
+
 					})
 				) : (
 					<h1>Não há chamados</h1>
