@@ -6,27 +6,17 @@ import _ from 'lodash'
 import Divider from "@mui/material/Divider";
 import uuid from 'react-uuid';
 import Swal from "sweetalert2";
-
-interface CHAMADOTYPE {
-    ID: number,
-    TITLE: String
-}
-
-interface CHAMADOTYPESECTIONS {
-    SECTIONS?: Array<{ TITLE?: string }>
-}
-
-interface CHAMADOTYPESECTION {
-    ID: number,
-    TITLE: String,
-    IDTYPE: number
-}
-
-interface CHAMADOTYPESECTIONITEM {
-    ID: number,
-    IDSECTION: number,
-    DESCRIPTION: String,
-    REQUIRED: number
+interface ChamadoType {
+    title: string,
+    sections: Array<{
+        id: string,
+        title: string,
+        itens: Array<{
+            id: string,
+            description: string,
+            required: boolean
+        }>
+    }>
 }
 
 export function FormAddTipoChamado({ onAdd }) {
@@ -39,7 +29,7 @@ export function FormAddTipoChamado({ onAdd }) {
         id: uuid(),
         title: ""
     }])
-    const [sectionsItens, setSectionsItems] = useState([{
+    const [sectionItems, setSectionsItems] = useState([{
         id: uuid(),
         idSection: sections[0].id,
         description: '',
@@ -48,30 +38,35 @@ export function FormAddTipoChamado({ onAdd }) {
 
     function addSection(e) {
         e.preventDefault();
+        var id = uuid();
         sections.push({
-            id: uuid(),
+            id: id,
             title: 'Nome da secção'
         })
-        sectionsItens.push({
+        sectionItems.push({
             id: uuid(),
-            idSection: _.last(sections).id,
+            idSection: id,
             description: '',
             required: false
         })
+        setSectionsItems([...sectionItems]);
+        setSections([...sections]);
         console.log('secções', sections)
-        console.log('itens', sectionsItens)
+        console.log('itens', sectionItems)
     }
 
     function addSectionItem(e) {
         e.preventDefault();
-        sectionsItens.push({
+        sectionItems.push({
             id: uuid(),
             idSection: e.target.attributes['itemid'].value,
             description: '',
             required: false
         })
+        setSectionsItems([...sectionItems]);
         console.log('Adicionando item à secção id: ' + e.target.attributes['itemid'].value)
-        console.log('itens', sectionsItens)
+        console.log('itens', sectionItems)
+
     }
 
     function handleChange(e) {
@@ -81,35 +76,37 @@ export function FormAddTipoChamado({ onAdd }) {
     }
 
     function handleChangeRequired(e) {
-        console.log('alterando obrgatorio do item de id ' + e)
-        var itemReq = _.find(sectionsItens, { "id": e }).required;
-        _.find(sectionsItens, { "id": e }).required = !itemReq;
+        console.log('alterando item de id ' + e +' para',( _.find(sectionItems, { "id": e }).required = !_.find(sectionItems, { "id": e }).required ) == true ? 'Obrigatório' : 'Não obrigatório')
+        setSectionsItems([...sectionItems])
     }
 
     function handleChangeSection(e) {
         var index = parseInt(e.target.attributes.itemID.value);
-        sections[index].title = e.target.value
-        console.log(sections[index])
+        console.log('Alterando secção',sections[index].title = e.target.value)
     }
     function handleChangeSectionItem(e) {
-        var index = parseInt(e.target.attributes.itemID.value);
-        sectionsItens[index].description = e.target.value
-        console.log(sectionsItens[index])
+        var idSection = e.target.attributes.itemID.value;
+        _.find(sectionItems, { "id": e.target.attributes.itemID.value }).description = e.target.value
+        setSectionsItems([...sectionItems])
+        console.log('alterando item de id' + idSection)
     }
 
     function handleDeleteSectionItem(e) {
+        console.log(e.target.attributes.itemID.value);
         var id = e.target.attributes.itemID.value;
-        var item = _.remove(sectionsItens, { "id": id })[0];
-        var sectionSelected = _.find(sections, { 'id': item.idSection });
-        console.log('Deletando item ', item);
-        if (_.filter(sectionsItens, { 'id': item.idSection }).length < 1 && sections.length > 1) {
-            console.log('Secção zerada sendo deletada ', _.remove(sections, { "id": sectionSelected.id }));
+        var item = _.find(sectionItems, { "id": id });
+        console.log('Deletando item ',  _.remove(sectionItems, { "id": id })[0]);
+        setSectionsItems(sectionItems);
+        if (_.filter(sectionItems, { 'idSection': item.idSection }).length < 1 && sections.length > 1) {
+          console.log('Secção zerada sendo deletada ', _.remove(sections, { "id": item.idSection }));
+          setSections([...sections]);
         }
     }
 
     function handleSubmit(e) {
         e.preventDefault();
-        if (sections.length < 1 || sectionsItens.length / sections.length < 1) {
+        if (sections.length < 1 || sectionItems.length / sections.length < 1) {
+            console.log('Erros no formulário');
             Swal.fire({
                 title: 'Erro',
                 text: 'Confira se tem ao menos 1 secção e ao menos 1 item por secção',
@@ -117,18 +114,21 @@ export function FormAddTipoChamado({ onAdd }) {
                 showConfirmButton: true
             })
         } else {
-            var sectionsResume = _.groupBy(sectionsItens, 'idSection')
-            setData({ ...data, ['SECTIONSTYPE']: sectionsResume })
-            console.log(data)
-           /**
-            *  Swal.fire({
+            var sectionsResume = _.map(sections, (section) => ({
+                id: section.id, title: section.title, itens:
+                    _.filter(sectionItems, { 'idSection': section.id })
+            }));
+            var typeResume: ChamadoType = { title: data.CHAMADOTYPETITLE, sections: sectionsResume };
+            console.log('tipo', typeResume)
+            Swal.fire({
                 title: 'Sucesso',
                 icon: 'success',
                 html: `<p>Tipo de chamado <strong>${data.CHAMADOTYPETITLE}</strong> adicionado com sucesso</p>`,
                 showConfirmButton: true
             })
+
             onAdd(data);
-            */
+
         }
     }
 
@@ -151,17 +151,17 @@ export function FormAddTipoChamado({ onAdd }) {
                                         <input type="text" className="form-control" placeholder="ex.: Básico" required itemID={'' + index} onChange={handleChangeSection} />
                                     </InputContainer>
                                     <PrimaryButton type='button' onClick={addSectionItem} itemID={section.id} >Adicionar Item</PrimaryButton>
-                                    {sectionsItens.length > 0 ?
+                                    {sectionItems.length > 0 ?
                                         <ul id={index.toString()} style={{ marginLeft: '0', marginRight: '0', paddingLeft: '0' }}>
-                                            {_.filter(sectionsItens, { "idSection": section.id }).map((item, itemIndex) => (
+                                            {_.filter(sectionItems, { "idSection": section.id }).map((item, itemIndex) => (
                                                 <li className="item" key={itemIndex} style={{ marginLeft: '0', width: '100%', paddingLeft: '1em', display: 'flex', alignItems: 'center' }}>
                                                     <InputContainer>
                                                         <label>Descrição</label>
-                                                        <input type="text" className="form-control" placeholder="ex.: Configurar impressora" style={{ width: '90%' }} itemID={'' + itemIndex} onChange={handleChangeSectionItem} required />
+                                                        <input type="text" className="form-control" value={item.description} placeholder="ex.: Configurar impressora" style={{ width: '90%' }} itemID={item.id} onChange={handleChangeSectionItem} required />
                                                     </InputContainer>
                                                     <div>
                                                         <label>Obrigatório?</label>
-                                                        <Switch isActive={item.required} id={item.id} activation={() => handleChangeRequired(item.id)} />
+                                                        <Switch isActive={item.required} value="a" id={item.id} onClick={handleChangeRequired} activation={handleChangeRequired} />
                                                     </div>
                                                     <div>
                                                         <label>Remover</label>
@@ -187,11 +187,11 @@ export function FormAddTipoChamado({ onAdd }) {
                 </ButtonGroup>
                 <Divider></Divider>
             </InputContainer>
-                <ButtonGroup style={{ width: '90%', justifyContent: 'end' }}>
-                    <PrimaryButton type='submit'>
-                        Salvar Tipo
-                    </PrimaryButton>
-                </ButtonGroup>
+            <ButtonGroup style={{ width: '90%', justifyContent: 'end' }}>
+                <PrimaryButton type='submit'>
+                    Salvar Tipo
+                </PrimaryButton>
+            </ButtonGroup>
         </FormContainer>
     );
 }
