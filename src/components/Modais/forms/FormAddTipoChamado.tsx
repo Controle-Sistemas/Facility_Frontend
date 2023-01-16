@@ -7,47 +7,49 @@ import Divider from "@mui/material/Divider";
 import uuid from 'react-uuid';
 import Swal from "sweetalert2";
 interface ChamadoType {
-    title: string,
-    sections: Array<{
-        id: string,
-        title: string,
-        itens: Array<{
-            id: string,
-            description: string,
-            required: boolean
+    ID: string,
+    TITLE: string,
+    SECTIONS: Array<{
+        ID: string,
+        TITLE: string,
+        ITENS: Array<{
+            ID: string,
+            DESCRIPTION: string,
+            REQUIRED: boolean
         }>
     }>
 }
 
 export function FormAddTipoChamado({ onAdd }) {
     const [data, setData] = useState({
+        CHAMADOTYPEID: uuid(),
         CHAMADOTYPETITLE: "",
         SECTIONSTYPE: []
     });
 
     const [sections, setSections] = useState([{
-        id: uuid(),
-        title: ""
+        ID: uuid(),
+        TITLE: ""
     }])
     const [sectionItems, setSectionsItems] = useState([{
-        id: uuid(),
-        idSection: sections[0].id,
-        description: '',
-        required: true
+        ID: uuid(),
+        IDSECTION: sections[0].ID,
+        DESCRIPTION: '',
+        REQUIRED: true
     }])
 
     function addSection(e) {
         e.preventDefault();
-        var id = uuid();
+        var ID = uuid();
         sections.push({
-            id: id,
-            title: 'Nome da secção'
+            ID: ID,
+            TITLE: 'Nome da secção'
         })
         sectionItems.push({
-            id: uuid(),
-            idSection: id,
-            description: '',
-            required: false
+            ID: uuid(),
+            IDSECTION: ID,
+            DESCRIPTION: '',
+            REQUIRED: false
         })
         setSectionsItems([...sectionItems]);
         setSections([...sections]);
@@ -58,10 +60,10 @@ export function FormAddTipoChamado({ onAdd }) {
     function addSectionItem(e) {
         e.preventDefault();
         sectionItems.push({
-            id: uuid(),
-            idSection: e.target.attributes['itemid'].value,
-            description: '',
-            required: false
+            ID: uuid(),
+            IDSECTION: e.target.attributes['itemid'].value,
+            DESCRIPTION: '',
+            REQUIRED: false
         })
         setSectionsItems([...sectionItems]);
         console.log('Adicionando item à secção id: ' + e.target.attributes['itemid'].value)
@@ -76,29 +78,29 @@ export function FormAddTipoChamado({ onAdd }) {
     }
 
     function handleChangeRequired(e) {
-        console.log('alterando item de id ' + e +' para',( _.find(sectionItems, { "id": e }).required = !_.find(sectionItems, { "id": e }).required ) == true ? 'Obrigatório' : 'Não obrigatório')
-        setSectionsItems([...sectionItems])
+       return _.find(sectionItems, { "ID": e }).REQUIRED = !_.find(sectionItems, { "ID": e }).REQUIRED
+        //setSectionsItems([...sectionItems])
     }
 
     function handleChangeSection(e) {
         var index = parseInt(e.target.attributes.itemID.value);
-        console.log('Alterando secção',sections[index].title = e.target.value)
+        console.log('Alterando secção',sections[index].TITLE = e.target.value)
     }
     function handleChangeSectionItem(e) {
-        var idSection = e.target.attributes.itemID.value;
-        _.find(sectionItems, { "id": e.target.attributes.itemID.value }).description = e.target.value
+        var IDSECTION = e.target.attributes.itemID.value;
+        _.find(sectionItems, { "ID": e.target.attributes.itemID.value }).DESCRIPTION = e.target.value
         setSectionsItems([...sectionItems])
-        console.log('alterando item de id' + idSection)
+        console.log('alterando item de ID' + IDSECTION)
     }
 
     function handleDeleteSectionItem(e) {
         console.log(e.target.attributes.itemID.value);
         var id = e.target.attributes.itemID.value;
-        var item = _.find(sectionItems, { "id": id });
-        console.log('Deletando item ',  _.remove(sectionItems, { "id": id })[0]);
+        var item = _.find(sectionItems, { "ID": id });
+        console.log('Deletando item ',  _.remove(sectionItems, { "ID": id })[0]);
         setSectionsItems(sectionItems);
-        if (_.filter(sectionItems, { 'idSection': item.idSection }).length < 1 && sections.length > 1) {
-          console.log('Secção zerada sendo deletada ', _.remove(sections, { "id": item.idSection }));
+        if (_.filter(sectionItems, { 'IDSECTION': item.IDSECTION }).length < 1 && sections.length > 1) {
+          console.log('Secção zerada sendo deletada ', _.remove(sections, { "ID": item.IDSECTION }));
           setSections([...sections]);
         }
     }
@@ -115,20 +117,12 @@ export function FormAddTipoChamado({ onAdd }) {
             })
         } else {
             var sectionsResume = _.map(sections, (section) => ({
-                id: section.id, title: section.title, itens:
-                    _.filter(sectionItems, { 'idSection': section.id })
+                ID: section.ID, TITLE: section.TITLE, IDTYPE: data.CHAMADOTYPEID, ITENS:
+                    _.filter(sectionItems, { 'IDSECTION': section.ID })
             }));
-            var typeResume: ChamadoType = { title: data.CHAMADOTYPETITLE, sections: sectionsResume };
-            console.log('tipo', typeResume)
-            Swal.fire({
-                title: 'Sucesso',
-                icon: 'success',
-                html: `<p>Tipo de chamado <strong>${data.CHAMADOTYPETITLE}</strong> adicionado com sucesso</p>`,
-                showConfirmButton: true
-            })
-
-            onAdd(data);
-
+            var typeResume: ChamadoType = {ID: data.CHAMADOTYPEID, TITLE: data.CHAMADOTYPETITLE, SECTIONS: sectionsResume };
+            console.log('tipo', typeResume)           
+            onAdd(typeResume);
         }
     }
 
@@ -150,22 +144,22 @@ export function FormAddTipoChamado({ onAdd }) {
                                         <label>Titulo da Secção</label>
                                         <input type="text" className="form-control" placeholder="ex.: Básico" required itemID={'' + index} onChange={handleChangeSection} />
                                     </InputContainer>
-                                    <PrimaryButton type='button' onClick={addSectionItem} itemID={section.id} >Adicionar Item</PrimaryButton>
+                                    <PrimaryButton type='button' onClick={addSectionItem} itemID={section.ID} >Adicionar Item</PrimaryButton>
                                     {sectionItems.length > 0 ?
                                         <ul id={index.toString()} style={{ marginLeft: '0', marginRight: '0', paddingLeft: '0' }}>
-                                            {_.filter(sectionItems, { "idSection": section.id }).map((item, itemIndex) => (
+                                            {_.filter(sectionItems, { "IDSECTION": section.ID }).map((item, itemIndex) => (
                                                 <li className="item" key={itemIndex} style={{ marginLeft: '0', width: '100%', paddingLeft: '1em', display: 'flex', alignItems: 'center' }}>
                                                     <InputContainer>
                                                         <label>Descrição</label>
-                                                        <input type="text" className="form-control" value={item.description} placeholder="ex.: Configurar impressora" style={{ width: '90%' }} itemID={item.id} onChange={handleChangeSectionItem} required />
+                                                        <input type="text" className="form-control" value={item.DESCRIPTION} placeholder="ex.: Configurar impressora" style={{ width: '90%' }} itemID={item.ID} onChange={handleChangeSectionItem} required />
                                                     </InputContainer>
                                                     <div>
                                                         <label>Obrigatório?</label>
-                                                        <Switch isActive={item.required} value="a" id={item.id} onClick={handleChangeRequired} activation={handleChangeRequired} />
+                                                        <Switch isActive={item.REQUIRED} id={item.ID} activation={handleChangeRequired} />
                                                     </div>
                                                     <div>
                                                         <label>Remover</label>
-                                                        <DangerButton type='button' itemID={item.id} onClick={handleDeleteSectionItem}>
+                                                        <DangerButton type='button' itemID={item.ID} onClick={handleDeleteSectionItem}>
                                                             <i className="fa-solid fa-trash" />
                                                         </DangerButton>
                                                     </div>

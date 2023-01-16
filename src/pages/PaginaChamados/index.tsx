@@ -213,21 +213,19 @@ export function PaginaChamados(props) {
 			});
 	};
 
-	const onAddChamadoType = (data) => {
-		setModalTypeIsOpen(!modalTypeIsOpen)
-		/**
-	 * 	axios
-			.post(BASE_URL + '/status-chamado/', data)
+	const onAddChamadoType = (data) => { 	
+		axios
+			.post(BASE_URL + '/tipos-chamado/', data)
 			.then((res) => {
 				if (res.status === 200) {
 					Swal.fire({
-						title: 'Status Adicionado com Sucesso!',
+						title: 'Sucesso',
 						icon: 'success',
-						timer: 2000,
+						html: `<p>Tipo de chamado <strong>${data.TITLE}</strong> adicionado com sucesso</p>`,
 						showConfirmButton: true
-					});
+					})
 
-					handleOpenModalStatus();
+					handleOpenModalType();
 				}
 			})
 			.catch((err) => {
@@ -237,7 +235,6 @@ export function PaginaChamados(props) {
 					setError(true);
 				}
 			});
-	 */
 	};
 
 	function handleOpenModalChamado() {
@@ -356,6 +353,7 @@ export function PaginaChamados(props) {
 					>
 						<FormAddTipoChamado onAdd={onAddChamadoType} />
 					</ModalForm>
+
 					<ModalForm
 						isModalOpen={false}
 						isModalClosed={handleOpenModalSort}
