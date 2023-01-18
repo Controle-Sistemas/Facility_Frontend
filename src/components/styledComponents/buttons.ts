@@ -54,7 +54,7 @@ export const DangerButton = styled(Button)`
     &:hover {
 		border: 1px solid ${tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.dangerColor};
 
-        background-color: transparent;
+        background-color: white;
         color: ${tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.buttonTextHoverColorDanger};
     }
 `;

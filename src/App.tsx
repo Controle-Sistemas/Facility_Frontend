@@ -23,6 +23,7 @@ import { PaginaDocumento } from './pages/PaginaDocumento';
 import { NotFound } from './pages/ErrorPage/NotFound';
 import { PaginaTutorial } from './pages/TutoriaisUsuario/PaginaTutorial';
 import { PaginaChamados } from './pages/PaginaChamados';
+import { PaginaTiposChamado } from './pages/admin/TipoChamados';
 import { PaginaChamado } from './pages/PaginaChamado';
 import { PortalChamados } from './pages/PortalChamados';
 import { PaginaSetores } from './pages/PaginaInternos';
@@ -142,7 +143,6 @@ function App() {
 						element={
 							<ProtectedRoute>
 								<Header />
-
 								<AddMenuItem />
 							</ProtectedRoute>
 						}
@@ -203,6 +203,15 @@ function App() {
 							<ProtectedRoute>
 								<Header />
 								<PaginaTutorial />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path="/admin/tipo-chamado"
+						element={
+							<ProtectedRoute>
+								<Header />
+								<PaginaTiposChamado />
 							</ProtectedRoute>
 						}
 					/>
