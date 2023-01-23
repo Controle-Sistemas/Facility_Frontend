@@ -98,7 +98,7 @@ export function FormAddTipoChamado({ onAdd }) {
         var id = e.target.attributes.itemID.value;
         var item = _.find(sectionItems, { "ID": id });
         console.log('Deletando item ',  _.remove(sectionItems, { "ID": id })[0]);
-        setSectionsItems(sectionItems);
+        setSectionsItems([...sectionItems]);
         if (_.filter(sectionItems, { 'IDSECTION': item.IDSECTION }).length < 1 && sections.length > 1) {
           console.log('Secção zerada sendo deletada ', _.remove(sections, { "ID": item.IDSECTION }));
           setSections([...sections]);

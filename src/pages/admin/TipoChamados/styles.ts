@@ -70,5 +70,5 @@ export const ListItem = styled.li`
     }
     strong{
         color:grey;
-    }
+    }    
 `;

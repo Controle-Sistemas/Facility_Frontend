@@ -74,6 +74,7 @@ export const ChamadoStatus = styled.div`
 			margin: 0 .3rem;
 		}
 	}
+	
 `;
 
 export const ChamadoBody = styled.div`

@@ -16,6 +16,24 @@ import TextField from '@mui/material/TextField';
 import {tema,colorPallete} from '../../../coresStyled'
 import Autocomplete from '@mui/material/Autocomplete';
 
+interface ChamadoChecklistType {
+	ITEMS: Array<{
+		ID: string,
+		DESCRIPTION: string,
+		IDSECTION: string,
+		REQURED: number
+	}>,
+	SECTIONS: Array<{
+		ID: string,
+		TITLE: string,
+		IDTYPE: string
+	}>,
+	TYPES: Array<{
+		ID: string,
+		TITLE: string
+	}>
+}
+
 export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 	const [chamadoData, setChamadoData] = useState({
 		IDINTERNO: isAdmin ? '' : idUser.toString(),
@@ -30,10 +48,16 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		DATAINCLUSAO: '',
 		INTERNORECEPTOR: "",
 		DATARECORRENCIA: '',
-		TIPORECORRENCIA: '0'
+		TIPORECORRENCIA: '0',
+		TIPOCHAMADO: ''
 
 	});
 	const [statusChamado, setStatusChamado] = useState([]);
+	const [tiposChamadoData, setTiposChamadoData] = useState<ChamadoChecklistType>({
+		ITEMS: [],
+		SECTIONS: [],
+		TYPES: []
+	});
 	const [setores, setSetores] = useState([]);
 	const [hasFile, setHasFile] = useState(false);
 	const [isRecurrent, setIsRecurrent] = useState(0)
@@ -43,6 +67,9 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 	useEffect(() => {
 		axios.get(BASE_URL + '/status-chamado/').then((res) => {
 			setStatusChamado(res.data.data);
+		});
+		axios.get(BASE_URL + '/tipos-chamado/').then((res) => {
+			setTiposChamadoData(res.data.data);
 		});
 		axios.get(BASE_URL + '/setores/').then((res) => {
 			setSetores(res.data.data);
@@ -117,6 +144,7 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		};
 	});
 
+
 	const formatedInternal = internos.map(interno => {
 		if (interno.USUARIO.toLowerCase() !== 'admin') {
 			return {
@@ -135,6 +163,9 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 				<InputContainer>
 					<label htmlFor="TITULO">Titulo</label>
 					<input type="text" className="form-control" name="TITULO" onChange={handleChange} required />
+				</InputContainer>
+				<InputContainer>
+					
 				</InputContainer>
 				<InputContainer>
 					<label htmlFor="DESCRICAO">Descrição</label>
