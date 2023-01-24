@@ -48,8 +48,7 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		DATAINCLUSAO: '',
 		INTERNORECEPTOR: "",
 		DATARECORRENCIA: '',
-		TIPORECORRENCIA: '0',
-		TIPOCHAMADO: ''
+		TIPORECORRENCIA: '0'
 
 	});
 	const [statusChamado, setStatusChamado] = useState([]);

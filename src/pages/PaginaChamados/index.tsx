@@ -149,7 +149,7 @@ export function PaginaChamados(props) {
 					}
 				});
 		},
-		[idUser, isAdmin, setores]
+		[idUser, isAdmin]
 	);
 
 	const onAddChamado = (data) => {

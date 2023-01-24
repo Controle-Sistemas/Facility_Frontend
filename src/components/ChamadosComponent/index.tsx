@@ -52,12 +52,7 @@ interface ChamadosData {
 	ativo: boolean;
 }
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
-
-	const [progress, setProgress] = React.useState(0);
-	const timer = setInterval(() => {
-		setProgress((prevProgress) => (prevProgress >= props.value ? 0 : prevProgress + 10));
-	}, 800);
-
+	
 	return (
 		<Box sx={{ display: 'flex', alignItems: 'center' }}>
 			<Box sx={{ width: '100%', mr: 1 }}>
