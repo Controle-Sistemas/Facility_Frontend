@@ -33,6 +33,7 @@ import { FormAddTipoChamado } from '../../components/Modais/forms/FormAddTipoCha
 export function PaginaChamados(props) {
 	const [chamadosData, setChamadosData] = useState([]);
 	const [internalData, setInternalData] = useState([]);
+	const [chamadosItems, setItemsChamados] = useState([]);
 	const [ocorrencias, setOcorrencias] = useState([]);
 	const [setores, setSetores] = useState([]);
 	const [isModalChamadoOpen, setIsModalChamadoOpen] = useState(false);
@@ -119,13 +120,26 @@ export function PaginaChamados(props) {
 						}
 					});
 			}
-
 			axios
 				.get(BASE_URL + '/ocorrencias/')
 				.then((res) => {
 					setOcorrencias(res.data.data);
 					setLoading(false);
 					setError(false);
+					axios
+				.get(BASE_URL + '/tipos-chamado/itens')
+				.then((res) => {
+					setItemsChamados(res.data.data);
+					setLoading(false);
+					setError(false);
+				})
+				.catch((err) => {
+					if (err.res.status !== 404) {
+						console.log(err);
+						setLoading(false);
+						setError(true);
+					}
+				});
 				})
 				.catch((err) => {
 					if (err.res.status !== 404) {
@@ -321,6 +335,7 @@ export function PaginaChamados(props) {
 						order={order}
 						orderBy={orderBy}
 						ocorrencias={ocorrencias}
+						itens={chamadosItems}
 					/>
 
 					<ModalForm

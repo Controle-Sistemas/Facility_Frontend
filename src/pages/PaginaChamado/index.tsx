@@ -105,7 +105,7 @@ export function PaginaChamado() {
 						var data = res.data.data;
 						setItemsChamado(res.data.data);
 						refreshData(aux);
-						console.log('data', data);						
+						console.log('data', data);
 					});
 					axios.get(BASE_URL + '/internos/').then((res) => {
 						setInternos(res.data.data);
@@ -280,15 +280,11 @@ export function PaginaChamado() {
 	}
 
 	function onAddType(data) {
-		//data.CHAMADOTYPE = _.find(tipos.TYPES, { 'TITLE': data.CHAMADOTYPE }).ID
-		if (_.includes(itemsChamado, data.CHAMADOTYPE)) {
-			alert(data)
-		} else {
-			data.CHAMADOTYPE = _.find(tipos.TYPES, { 'TITLE': data.CHAMADOTYPE }).ID;
-			//axios.post(`${BASE_URL}/tipos-chamado/${data.CHAMADOTYPE}`, data).then(res => {
-			//	handleOpenModalType();
-			//})
-		}
+		data.CHAMADOTYPE = _.find(tipos.TYPES, { 'TITLE': data.CHAMADOTYPE }).ID;
+		axios.post(`${BASE_URL}/tipos-chamado/${data.CHAMADOTYPE}`, data).then(res => {
+			handleOpenModalType();
+			refreshData(tipos);
+		})
 	}
 
 	let dataFormatada, horaFormatada;

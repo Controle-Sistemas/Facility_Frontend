@@ -8,6 +8,7 @@ import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgres
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import axios from 'axios';
+import _ from 'lodash'
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -30,6 +31,7 @@ interface ChamadosProps {
 	orderBy: string;
 	filterBy: string;
 	ocorrencias: any[];
+	itens: any[];
 
 }
 
@@ -50,12 +52,12 @@ interface ChamadosData {
 	ativo: boolean;
 }
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
-	
+
 	const [progress, setProgress] = React.useState(0);
 	const timer = setInterval(() => {
 		setProgress((prevProgress) => (prevProgress >= props.value ? 0 : prevProgress + 10));
 	}, 800);
-	
+
 	return (
 		<Box sx={{ display: 'flex', alignItems: 'center' }}>
 			<Box sx={{ width: '100%', mr: 1 }}>
@@ -69,14 +71,14 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
 		</Box>
 	);
 }
-export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy, ocorrencias }: ChamadosProps) {
+export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy, ocorrencias, itens }: ChamadosProps) {
 	const [internos, setInternos] = useState([]);
 	const [setores, setSetores] = useState([]);
 	const [statusChamados, setStatusChamado] = useState([])
 	const [clientes, setClientes] = useState([])
 	const organizedData: ChamadosData[] = [];
 
-	
+
 
 	useEffect(() => {
 		axios.get(BASE_URL + '/internos/').then((res) => {
@@ -92,7 +94,6 @@ export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy,
 			setClientes(res.data.data)
 		})
 		//buscar resumo de chamados /resumo/geral
-		
 	}, []);
 
 	function handleChangeVistoChamado(id) {
@@ -262,9 +263,18 @@ export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy,
 												{chamado.prioridade}
 											</span>
 										</PrioritySection>
-										<Box sx={{ width: '100%' }}>
-											<LinearProgressWithLabel value={65} />
-										</Box>
+										{
+											_.filter(itens, { 'IDCHAMADO': chamado.id }).length > 0 ?
+												<Box sx={{ width: '100%' }}>
+													<LinearProgressWithLabel value={
+														(_.filter(itens, { 'IDCHAMADO': chamado.id, 'DONE':1 }).length 
+														/ 
+														_.filter(itens, { 'IDCHAMADO': chamado.id }).length) * 100
+													} />
+												</Box>
+												:
+												<></>
+										}
 										<PrioritySection status={chamado.statusId}>
 											<span>
 												<i className="fa-solid fa-circle-exclamation" />
@@ -276,7 +286,7 @@ export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy,
 										<ChamadosLabel>
 											<span>
 												{chamado.titulo}
-
+												{ _.filter(itens, { 'IDCHAMADO': chamado.id}).length > 0 ? ` [${_.filter(itens, { 'IDCHAMADO': chamado.id, 'DONE':1 }).length} / ${_.filter(itens, { 'IDCHAMADO': chamado.id}).length}]`: ''}
 											</span>
 											<OcurrencySpan>
 												{chamado.arrayOcorrencias.length}
