@@ -16,11 +16,14 @@ import { Editor } from '@tinymce/tinymce-react';
 import { formatData } from '../../../utils/Masks';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import _ from 'lodash';
+import Swal from 'sweetalert2';
 
 export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor }) {
 	const [setores, setSetores] = useState([]);
 	const [statusChamado, setStatusChamado] = useState([]);
 	const [internos, setInternos] = useState([]);
+	const [itemsChamado, setItemsChamado] = useState([]);
 	const [clientes, setClientes] = useState([]);
 
 	const date = new Date();
@@ -43,15 +46,24 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 		});
 		axios.get(`${BASE_URL}/clientes/admin`).then((res) => {
 			setClientes(res.data.data);
+		});		
+		axios.get(`${BASE_URL}/tipos-chamado/chamado/${chamado.ID}`).then((res) => {
+			setItemsChamado(res.data.data);
 		});
-	}, []);
+	}, [chamado]);
 
 	function handleChangeValues(event) {
 		const { name, value } = event.target;
-		setChamado({
-			...chamado,
-			[name]: value
-		});
+		var itensPendentes = _.filter(itemsChamado, {'REQUIRED': 1, 'DONE': 0}).length;
+		if(event.target.name === "STATUS" && event.target.value === '3' && itensPendentes > 0){
+			event.target.value = '1'
+			Swal.fire(`Ainda  ${itensPendentes > 1 ? 'existem ' + itensPendentes + ' itens obrigatórios não finalizados' : 'existe 1 item obrigatório não finalizado'}`, 'Verifique antes de fechar o chamado!', 'warning');
+		}else{
+			setChamado({
+				...chamado,
+				[name]: value
+			});
+		}		
 	}
 
 	const handleChangeText = (content, editor) => {

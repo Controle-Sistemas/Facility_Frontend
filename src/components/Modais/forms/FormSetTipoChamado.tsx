@@ -54,7 +54,7 @@ export function FormSetTipoChamado({ onAdd, chamado, tipos }) {
 					
 				/>
 			</InputContainer>
-			<TypeList style={{width:'90%'}}>
+			<TypeList style={{width:'100%', padding:'0 5%'}}>
 						{tipoChamadoData.CHAMADOTYPE != '' && _.filter(tipos.TYPES, {'TITLE': tipoChamadoData.CHAMADOTYPE}).length > 0 ?
 							_.filter(tipos.TYPES, {'TITLE': tipoChamadoData.CHAMADOTYPE}).map((type, index) => (
 								<TypeListItem>

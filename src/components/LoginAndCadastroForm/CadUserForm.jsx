@@ -178,10 +178,12 @@ export function CadUserForm() {
                 confirmButtonText: 'Fechar'
             })
         } else {
-            if (_.find(currentNoRecordClients, { "CNPJ": values.CNPJ })) {
-                values.IDCLOUD = _.find(currentNoRecordClients, { "CNPJ": values.CNPJ }).IDCLOUD;
-                values.RAMODEATIVIDADE = values.RAMODEATIVIDADE.toString()
-                postData(BASE_URL + '/clientes/', values) //Envia os dados para o banco de dados
+            values.IDCLOUD = values.CNPJ.substring(0, 6);
+            values.RAMODEATIVIDADE = values.RAMODEATIVIDADE.toString()
+            postData(BASE_URL + '/clientes/', values) //Envia os dados para o banco de dados
+            /**
+             * if (_.find(currentNoRecordClients, { "CNPJ": values.CNPJ })) {
+               
             } else {
                 Swal.fire({ //Alerta de erro
                     title: 'Desculpe',
@@ -190,6 +192,7 @@ export function CadUserForm() {
                     confirmButtonText: 'Fechar'
                 })
             }
+             */
         }
     }
 

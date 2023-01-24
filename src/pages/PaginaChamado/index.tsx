@@ -105,28 +105,32 @@ export function PaginaChamado() {
 						var data = res.data.data;
 						setItemsChamado(res.data.data);
 						refreshData(aux);
-						console.log('data', data);
 					});
 					axios.get(BASE_URL + '/internos/').then((res) => {
+						refreshData(aux);
 						setInternos(res.data.data);
 					});
 					if (internalId) {
 						axios.get(BASE_URL + '/internos/' + internalId).then(res => {
+							refreshData(aux);
 							console.log(res)
 							setInterno(res.data.data[0])
 						})
 					} else {
+						refreshData(aux);
 						interno["USUARIO"] = 'Admin'
 					}
+					refreshData(aux);
 					setLoading(false);
 				})
 				.catch((err) => {
 					console.log(err)
 					setError(true);
 					setLoading(false);
+					refreshData(aux);
 				});
 		},
-		[idInterno]
+		[]
 	);
 
 	function refreshData(tipos) {
@@ -146,14 +150,12 @@ export function PaginaChamado() {
 					DONE: item.DONE
 				}
 			)), 'IDSECTION')
-			console.log('aux', aux)
 			setFilteredItems(_.map(aux, (value, key) => {
 				return {
 					IDSECTION: key,
 					ITEMS: aux[key]
 				}
 			}))
-			console.log(filteredItems)
 			setItemsChamado(res.data.data)
 		});
 
@@ -238,14 +240,17 @@ export function PaginaChamado() {
 
 	function handleOpenModalEditChamado() {
 		setModalEditChamadoIsOpen(!modalEditChamadoIsOpen);
+		refreshData(tipos);
 	}
 
 	function handleOpenModalOcorrencia() {
 		setModalOcorrenciaIsOpen(!modalOcorrenciaIsOpen)
+		refreshData(tipos);
 	}
 
 	function handleOpenModalType() {
 		setModalModalTypeIsOpen(!modalTypeIsOpen)
+		refreshData(tipos);
 	}
 
 	function onEdit(newChamado) {
@@ -263,6 +268,7 @@ export function PaginaChamado() {
 				setChamado(res.data.data[0]);
 			});
 			handleOpenModalEditChamado()
+			refreshData(tipos);
 		});
 	}
 
@@ -271,6 +277,7 @@ export function PaginaChamado() {
 			axios.get(`${BASE_URL}/ocorrencias/chamado/${idChamado}`).then((res) => {
 				Swal.fire('Adicionada!', 'Ocorrencia adicionada com sucesso.', 'success');
 				setOcorrencias(res.data.data);
+				refreshData(tipos);
 			});
 			if (modalOcorrenciaIsOpen) {
 				handleOpenModalOcorrencia()
@@ -281,10 +288,53 @@ export function PaginaChamado() {
 
 	function onAddType(data) {
 		data.CHAMADOTYPE = _.find(tipos.TYPES, { 'TITLE': data.CHAMADOTYPE }).ID;
-		axios.post(`${BASE_URL}/tipos-chamado/${data.CHAMADOTYPE}`, data).then(res => {
-			handleOpenModalType();
-			refreshData(tipos);
-		})
+		if (_.find(itemsChamado, { 'IDCHAMADO': data.IDCHAMADO })) {
+			Swal.fire({
+				title: 'Deseja alterar o tipo deste chamado?',
+				text: 'Este chamado já tem um tipo, fazendo isso irão ser exlcuídos os itens e progressões atuais!',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#003775',
+				cancelButtonColor: '#DC354f',
+				confirmButtonText: 'Sim, alterar!'
+			}).then((result) => {
+				if (result.value) {
+					axios.delete(`${BASE_URL}/tipos-chamado/chamado/${data.IDCHAMADO}`).then((res) => {
+						if(res.status == 200){
+							axios.post(`${BASE_URL}/tipos-chamado/${data.CHAMADOTYPE}`, data).then(res => {
+								setLoading(true)
+								var date = new Date();
+								var ano = date.getFullYear();
+								var mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+								var dia = date.getDate().toString().length === 1 ? `0${date.getDate().toString()}` : date.getDate().toString()
+	
+								var hora = date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
+	
+								var ocorrencia = {
+									IDCHAMADO: chamado.ID,
+									IDINTERNO: idInterno ? Number(idInterno) : 99,
+									SETOR: setor.ID,
+									ATIVO: true,
+									STATUS: statusChamado.ID,
+									DESCRICAO: `Alterou tipo para ${_.find(tipos.TYPES, { 'ID': data.CHAMADOTYPE }).TITLE}!`,
+									DATAINCLUSAO: `${ano}-${mes}-${dia} ${hora}`
+								};
+								onAddOcorrencia(ocorrencia);
+								handleOpenModalType();
+								refreshData(tipos);
+	
+							})
+						}
+					});
+				}
+			});
+		} else {
+			axios.post(`${BASE_URL}/tipos-chamado/${data.CHAMADOTYPE}`, data).then(res => {
+				handleOpenModalType();
+				refreshData(tipos);
+			})
+		}
+
 	}
 
 	let dataFormatada, horaFormatada;
@@ -292,7 +342,8 @@ export function PaginaChamado() {
 	if (chamado.DATAINCLUSAO) {
 		const [data, hora] = chamado.DATAINCLUSAO ? chamado.DATAINCLUSAO.split(' ') : '';
 		dataFormatada = formatData(data);
-		horaFormatada = formatTime(hora);
+		horaFormatada = formatTime(hora);		
+		refreshData(tipos);
 	}
 
 	function ordernarOcorrencias(data) {
@@ -300,10 +351,14 @@ export function PaginaChamado() {
 			//Ordena os documentos pelo campo orderBy
 			if (a['DATAINCLUSAO'] > b['DATAINCLUSAO']) {
 				return -1;
+				
 			}
 			if (a['DATAINCLUSAO'] < b['DATAINCLUSAO']) {
 				return 1;
+				
 			}
+			
+			refreshData(tipos);
 			return 0;
 		});
 	}
@@ -460,9 +515,7 @@ export function PaginaChamado() {
 													}
 
 												</ChamadoHeader>
-
-											}
-											>
+											}>
 												<OcorrenciaItem>
 													<div dangerouslySetInnerHTML={{ __html: ocorrencia.DESCRICAO }}></div>
 													{isAdmin && (
@@ -480,7 +533,7 @@ export function PaginaChamado() {
 
 							</TreeViewComponent>
 						</ChamadoBody>
-						<SectionList style={{ width: '95%' }}>
+						<SectionList style={{ width: '100%' }}>
 							{
 								filteredItems.length > 0 ?
 									_.map(filteredItems, (item) => (
@@ -492,10 +545,10 @@ export function PaginaChamado() {
 														<ListItem key={itemIndex}>
 															<FormControlLabel
 																control={<Checkbox
-																	checked={item.DONE}
+																	checked={item.DONE === 1}
 																	onChange={handleChangeItemDone}
 																	inputProps={{ 'aria-label': 'controlled' }}
-																	id={item.ID}
+																	id={item.ID+''}
 																	color="success"
 																/>} label={`${item.DESCRIPTION} ${item.REQUIRED == 0 ? '' : '*'}`}
 																style={{ width: '100%' }}
@@ -544,8 +597,8 @@ export function PaginaChamado() {
 					isModalOpen={modalTypeIsOpen}
 					isModalClosed={handleOpenModalType}
 					title="Vincular Tipo Chamado"
-					height="fit-content"
-					width="fit-content">
+					height="80vh"
+					width="50%">
 					<FormSetTipoChamado tipos={tipos} chamado={chamado} onAdd={onAddType} />
 				</ModalForm>
 			</ContainerAdmin>
