@@ -161,7 +161,7 @@ export function TutorialPage() {
 					title="Cadastrar Tutorial"
 					isModalOpen={isModalAddOpen}
 					isModalClosed={handleModalAddOpen}
-					width="50%"
+					width="70%"
 					height="70vh"
 				>
 					<FormAddTutorial

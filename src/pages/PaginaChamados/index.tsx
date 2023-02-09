@@ -10,6 +10,7 @@ import { PrimaryButton } from '../../components/styledComponents/buttons';
 import Sidebar from '../../components/Sidebar/sidebar';
 import axios from 'axios';
 import { BASE_URL } from '../../utils/requests';
+import { TINYKEY } from '../../utils/keys';
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import ModalForm from '../../components/Modais/modalForm';
@@ -23,7 +24,7 @@ import SortUpIcon from '@mui/icons-material/ArrowUpward';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { FormSortChamados } from '../../components/Modais/forms/FormSortChamados';
 import { FormFilterChamados } from '../../components/Modais/forms/FormFilterChamados';
-
+import _ from 'lodash';
 import Swal from 'sweetalert2';
 import FilterComponent from '../../components/filterComponent';
 import { LoadingComponent } from '../../components/Loading';
@@ -36,6 +37,8 @@ export function PaginaChamados(props) {
 	const [chamadosItems, setItemsChamados] = useState([]);
 	const [ocorrencias, setOcorrencias] = useState([]);
 	const [setores, setSetores] = useState([]);
+	const [clientes, setClientes] = useState([]);
+	const [internos, setInternos] = useState([]);
 	const [isModalChamadoOpen, setIsModalChamadoOpen] = useState(false);
 	const [isModalStatusOpen, setIsModalStatusOpen] = useState(false);
 	const [modalSortIsOpen, setModalSortIsOpen] = useState(false);
@@ -59,9 +62,37 @@ export function PaginaChamados(props) {
 					.then((res) => {
 						if (res.status === 200) {
 							setChamadosData(res.data.data);
+							axios
+								.get(BASE_URL + '/tipos-chamado/itens')
+								.then((res) => {
+									setItemsChamados(res.data.data);
+									setLoading(false);
+									setError(false);
+								})
+								.catch((err) => {
+									if (err.res.status !== 404) {
+										console.log(err);
+										setLoading(false);
+										setError(true);
+									}
+								});
 						} else {
 							setChamadosData([]);
 						}
+						setLoading(false);
+						setError(false);
+					})
+					.catch((err) => {
+						if (err.res.status !== 404) {
+							console.log(err);
+							setLoading(false);
+							setError(true);
+						}
+					});
+				axios
+					.get(BASE_URL + '/internos/')
+					.then((res) => {
+						setInternos(res.data.data);
 						setLoading(false);
 						setError(false);
 					})
@@ -79,6 +110,24 @@ export function PaginaChamados(props) {
 							setSetores(res.data.data);
 						} else {
 							setSetores([]);
+						}
+						setLoading(false);
+						setError(false);
+					})
+					.catch((err) => {
+						if (err.res.status !== 404) {
+							console.log(err.res.status);
+							setLoading(false);
+							setError(true);
+						}
+					});
+				axios
+					.get(BASE_URL + '/clientes/')
+					.then((res) => {
+						if (res.status === 200) {
+							setClientes(res.data.data);
+						} else {
+							setClientes([]);
 						}
 						setLoading(false);
 						setError(false);
@@ -126,20 +175,7 @@ export function PaginaChamados(props) {
 					setOcorrencias(res.data.data);
 					setLoading(false);
 					setError(false);
-					axios
-				.get(BASE_URL + '/tipos-chamado/itens')
-				.then((res) => {
-					setItemsChamados(res.data.data);
-					setLoading(false);
-					setError(false);
-				})
-				.catch((err) => {
-					if (err.res.status !== 404) {
-						console.log(err);
-						setLoading(false);
-						setError(true);
-					}
-				});
+
 				})
 				.catch((err) => {
 					if (err.res.status !== 404) {
@@ -152,48 +188,86 @@ export function PaginaChamados(props) {
 		[idUser, isAdmin]
 	);
 
-	const onAddChamado = (data) => {
-		axios
-			.post(BASE_URL + '/chamados/', data)
-			.then((res) => {
-				if (res.status === 200) {
-					Swal.fire({
-						title: 'Chamado Adicionado com Sucesso!',
-						icon: 'success',
-						timer: 2000,
-						showConfirmButton: true
-					});
-					if (isAdmin) {
-						axios
-							.get(BASE_URL + '/chamados/')
-							.then((res) => {
-								if (res.status === 200) {
-									setChamadosData(res.data.data);
-								} else {
-									setChamadosData([]);
-								}
-								setLoading(false);
-							})
-							.catch((err) => {
-								setLoading(false);
-								setError(true);
+	const onAddChamado = (data: FormData) => {
+		var infoAux = { INTERNO: '', IDCHAMADO: '' }
+		var object = {
+			IDINTERNO: '',
+			SETOR: '',
+			CLIENTE: '',
+			PRIORIDADE: 1,
+			TITULO: '',
+			DESCRICAO: '',
+			PREVISAO: '',
+			STATUS: '1',
+			FILE: null,
+			DATAINCLUSAO: '',
+			INTERNORECEPTOR: '',
+			DATARECORRENCIA: '',
+			TIPORECORRENCIA: '0',
+			TIPOCHAMADO: ''
+		};
+		data.forEach((value, key) => object[key] = value);
+		var json = JSON.stringify(object);
+		console.log(object)
+		axios.post(BASE_URL + '/chamados/', data).then((res) => {
+			if (res.status === 200) {
+				var interno = _.find(internos, { 'USUARIO': object.INTERNORECEPTOR })
+				console.log('interno', interno)
+				axios.get(`${BASE_URL}/chamados/interno/usuario/${interno.USUARIO}`).then((res) => {
+					console.log('chamados interno', res.data.data)
+					if (res.status === 200) {
+						var chamadoAtual = _.find(res.data.data, {
+							'INTERNORECEPTOR': object.INTERNORECEPTOR,
+							'PREVISAO': object.PREVISAO,
+							'DESCRICAO': object.DESCRICAO,
+							'SETOR': parseInt(object.SETOR),
+							'TIPOCHAMADO': object.TIPOCHAMADO,
+							'IDCLIENTE': _.find(clientes, { 'NOME': object.CLIENTE }).ID
+						});
+						axios.post(`${BASE_URL}/tipos-chamado/${chamadoAtual.ID}`, { CHAMADOTYPE: chamadoAtual.TIPOCHAMADO, IDCHAMADO: chamadoAtual.ID }).then(res => {
+							Swal.fire({
+								title: 'Chamado Adicionado com Sucesso!',
+								icon: 'success',
+								timer: 2000,
+								showConfirmButton: true
 							});
+						})
 					} else {
-						axios
-							.get(BASE_URL + '/chamados/setor/' + setores)
-							.then((res) => {
-								setChamadosData(res.data.data);
-								setLoading(false);
-							})
-							.catch((err) => {
-								setLoading(false);
-								setError(true);
-							});
+						setChamadosData([]);
 					}
-
-					handleOpenModalChamado();
+					setLoading(false);
+				})
+				if (isAdmin) {
+					axios
+						.get(BASE_URL + '/chamados/')
+						.then((res) => {
+							if (res.status === 200) {
+								setChamadosData(res.data.data);
+							} else {
+								setChamadosData([]);
+							}
+							setLoading(false);
+						})
+						.catch((err) => {
+							setLoading(false);
+							setError(true);
+						});
+				} else {
+					axios
+						.get(BASE_URL + '/chamados/setor/' + setores)
+						.then((res) => {
+							setChamadosData(res.data.data);
+							setLoading(false);
+						})
+						.catch((err) => {
+							setLoading(false);
+							setError(true);
+						});
 				}
-			})
+
+				handleOpenModalChamado();
+			}
+		})
 			.catch((err) => {
 				if (err.res.status !== 404) {
 					console.log(err);
@@ -227,7 +301,7 @@ export function PaginaChamados(props) {
 			});
 	};
 
-	const onAddChamadoType = (data) => { 	
+	const onAddChamadoType = (data) => {
 		axios
 			.post(BASE_URL + '/tipos-chamado/', data)
 			.then((res) => {
@@ -291,17 +365,17 @@ export function PaginaChamados(props) {
 						<ButtonRow>
 							<PrimaryButton onClick={handleOpenModalChamado}>
 								<i className="fa-solid fa-plus" />
-								Abrir Chamado
+								<span style={{ marginLeft: '.2rem' }}>Chamado</span>
 							</PrimaryButton>
 							{isAdmin && (
 								<>
 									<PrimaryButton onClick={handleOpenModalStatus}>
 										<i className="fa-solid fa-plus" />
-										Adicionar Status
+										<span style={{ marginLeft: '.2rem' }}>Status</span>
 									</PrimaryButton>
 									<PrimaryButton onClick={handleOpenModalType}>
 										<i className="fa-solid fa-plus" />
-										Adicionar Tipo
+										<span style={{ marginLeft: '.2rem' }}>Tipo</span>
 									</PrimaryButton>
 								</>
 							)}
@@ -345,7 +419,7 @@ export function PaginaChamados(props) {
 						height="85vh"
 						width="50%"
 					>
-						<FormAddChamado onAdd={onAddChamado} isAdmin={isAdmin} idUser={idUser} />
+						<FormAddChamado onAdd={onAddChamado} isAdmin={isAdmin} idUser={idUser} editorKey={TINYKEY} />
 					</ModalForm>
 
 					<ModalForm
@@ -364,7 +438,7 @@ export function PaginaChamados(props) {
 						title="Adicionar Tipo"
 						height="60vh"
 						width="50%"
-						style={{marginLeft: 'auto'}}
+						style={{ marginLeft: 'auto' }}
 					>
 						<FormAddTipoChamado onAdd={onAddChamadoType} />
 					</ModalForm>

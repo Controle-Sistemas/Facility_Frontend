@@ -11,8 +11,8 @@ function ModalForm(props) {
 	const customStylesModal = {
 		overlay: {
 			position: 'fixed',
-			top: 0,
-			left: 0,
+			top: isMobile ? 0 : 40,
+			left: isMobile ? 0 : 190,
 			right: 0,
 			bottom: 0,
 			backgroundColor: props.backgroundColor || 'rgba(0, 0, 0, 0.3)'

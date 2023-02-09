@@ -10,6 +10,7 @@ import { useState } from 'react';
 import CnpjInput from '../../cnpjInput';
 import Cookies from 'js-cookie';
 import { Editor } from '@tinymce/tinymce-react';
+import { TINYKEY } from '../../../utils/keys';
 
 
 export function FormAddDocument({ handleClose, adicionar }) {
@@ -149,6 +150,7 @@ export function FormAddDocument({ handleClose, adicionar }) {
 					<InputContainer>
 						<label>Comunicado</label>
 						<Editor
+						apiKey={TINYKEY}
 						value={documento.COMUNICADO}
 						init={{
 							height: 150,

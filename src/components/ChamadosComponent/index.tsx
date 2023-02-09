@@ -20,10 +20,12 @@ import {
 	PrioritySection,
 	OcurrencySpan,
 	ChamadosLabel,
-	ChamadoFooter
+	ChamadoFooter,
+	ChamadosLabelInfo
 } from './styled';
 import { formatData, formatTime } from '../../utils/Masks';
 import './style.css';
+import { PrimaryButton } from '../styledComponents/buttons';
 interface ChamadosProps {
 	chamados: any[];
 	isAdmin: boolean;
@@ -50,30 +52,16 @@ interface ChamadosData {
 	clienteName?: string;
 	arrayOcorrencias: any[];
 	ativo: boolean;
-}
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
-	
-	return (
-		<Box sx={{ display: 'flex', alignItems: 'center' }}>
-			<Box sx={{ width: '100%', mr: 1 }}>
-				<LinearProgress variant="determinate" {...props} />
-			</Box>
-			<Box sx={{ minWidth: 35 }}>
-				<Typography variant="body2" color="black">{`${Math.round(
-					props.value,
-				)}%`}</Typography>
-			</Box>
-		</Box>
-	);
+	tipoChamado: string;
+	chamadoTypeTitle?: string;
 }
 export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy, ocorrencias, itens }: ChamadosProps) {
 	const [internos, setInternos] = useState([]);
 	const [setores, setSetores] = useState([]);
 	const [statusChamados, setStatusChamado] = useState([])
 	const [clientes, setClientes] = useState([])
+	const [tipos, setTipos] = useState([]);
 	const organizedData: ChamadosData[] = [];
-
-
 
 	useEffect(() => {
 		axios.get(BASE_URL + '/internos/').then((res) => {
@@ -88,14 +76,34 @@ export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy,
 		axios.get(BASE_URL + '/clientes/admin').then(res => {
 			setClientes(res.data.data)
 		})
+		axios.get(BASE_URL + '/tipos-chamado/').then((res) => {
+			setTipos(_.groupBy(res.data.data.TYPES, 'ID'));
+		})
 		//buscar resumo de chamados /resumo/geral
 	}, []);
+
+	function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+
+		return (
+			<Box sx={{ display: 'flex', alignItems: 'center' }}>
+				<Box sx={{ width: '100%', mr: 1 }}>
+					<LinearProgress variant="determinate" {...props} />
+				</Box>
+				<Box sx={{ minWidth: 35 }}>
+					<Typography variant="body2" color="black">{`${Math.round(
+						props.value,
+					)}%`}</Typography>
+				</Box>
+			</Box>
+		);
+	}
 
 	function handleChangeVistoChamado(id) {
 		const aux = chamados.filter(chamado => chamado.ID === id)
 		axios.patch(BASE_URL + `/chamados/${id}`, { // faz o patch para marcar como visto a notificação
 			VISTO: !aux[0].VISTO ? 1 : 1,
 		})
+
 
 	}
 
@@ -166,6 +174,7 @@ export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy,
 	const dataAtual = `${anoAtual}-${mesAtual}-${diaAtual}`; //Cria a data atual
 
 	function organizeData() {
+		console.log('Chamados atuais', chamados)
 		internos.forEach((interno) => {
 			chamados.forEach((chamado) => {
 				let aux: ChamadosData = {
@@ -181,7 +190,9 @@ export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy,
 					nomeStatus: "",
 					clienteId: chamado.IDCLIENTE,
 					arrayOcorrencias: [],
-					ativo: chamado.ATIVO
+					ativo: chamado.ATIVO,
+					tipoChamado: chamado.TIPOCHAMADO,
+					chamadoTypeTitle: chamado.CHAMADOTYPETITLE
 				};
 				const [data, hora] = chamado.DATAINCLUSAO.split(' ');
 				aux.data = formatData(data);
@@ -238,6 +249,10 @@ export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy,
 	setStatus(organizedData)
 	setClienteName(organizedData)
 	setOcorrenciasChamados(organizedData)
+
+	const filteredTitles = _.groupBy(tipos, 'ID')
+
+
 	return (
 		<ChamadosContainer>
 			<TreeViewComponent>
@@ -251,7 +266,6 @@ export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy,
 							return (
 								<ChamadoList key={chamado.id}>
 									<ChamadoHeader>
-
 										<PrioritySection prioridade={chamado.prioridade}>
 											<span>
 												<i className="fa-solid fa-circle-exclamation" />
@@ -260,13 +274,16 @@ export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy,
 										</PrioritySection>
 										{
 											_.filter(itens, { 'IDCHAMADO': chamado.id }).length > 0 ?
-												<Box sx={{ width: '100%' }}>
-													<LinearProgressWithLabel value={
-														(_.filter(itens, { 'IDCHAMADO': chamado.id, 'DONE':1 }).length 
-														/ 
-														_.filter(itens, { 'IDCHAMADO': chamado.id }).length) * 100
-													} />
-												</Box>
+												<>
+													<Box sx={{ width: '100%' }}>
+														<LinearProgressWithLabel value={
+															(_.filter(itens, { 'IDCHAMADO': chamado.id, 'DONE': 1 }).length
+																/
+																_.filter(itens, { 'IDCHAMADO': chamado.id }).length) * 100
+														} />
+													</Box>
+
+												</>
 												:
 												<></>
 										}
@@ -279,29 +296,33 @@ export function ChamadosComponent({ chamados, isAdmin, filterBy, order, orderBy,
 									</ChamadoHeader>
 									<TreeItem nodeId={chamado.id.toString()} label={(
 										<ChamadosLabel>
-											<span>
-												{chamado.titulo}
-												{ _.filter(itens, { 'IDCHAMADO': chamado.id}).length > 0 ? ` [${_.filter(itens, { 'IDCHAMADO': chamado.id, 'DONE':1 }).length} / ${_.filter(itens, { 'IDCHAMADO': chamado.id}).length}]`: ''}
-											</span>
-											<OcurrencySpan>
-												{chamado.arrayOcorrencias.length}
-											</OcurrencySpan>
-
-										</ChamadosLabel>
-									)
+											<ChamadosLabelInfo>
+												<div>
+													<span>{chamado.titulo}</span>
+													<span>{_.filter(itens, { 'IDCHAMADO': chamado.id }).length > 0 ? ` [${_.filter(itens, { 'IDCHAMADO': chamado.id, 'DONE': 1 }).length} / ${_.filter(itens, { 'IDCHAMADO': chamado.id }).length}]` : ''}</span>
+												</div>												
+												<span style={{ color: 'grey', fontWeight: 'lighter', fontSize: 'small' }}>{chamado.chamadoTypeTitle.length > 0 ? ` (${(chamado.chamadoTypeTitle)})` : ``}</span>
+											</ChamadosLabelInfo>
+											<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+												<Link to={`/${isAdmin ? "admin" : "interno"}/chamado/${chamado.id}`} style={{ textDecoration: "none", color: '#003775', marginRight: '.4em' }}>
+													<i className="fa fa-external-link" aria-hidden="true"></i>
+												</Link>
+												<OcurrencySpan>
+													{chamado.arrayOcorrencias.length}
+												</OcurrencySpan>
+											</div>
+										</ChamadosLabel>)
 									} onClick={(e) => handleChangeVistoChamado(chamado.id)} >
 										<Link to={`/${isAdmin ? "admin" : "interno"}/chamado/${chamado.id}`} style={{ textDecoration: "none" }}>
 											<ChamadoDescription>
 												<div dangerouslySetInnerHTML={{ __html: chamado.descricao }} />
 											</ChamadoDescription>
 										</Link>
-
 									</TreeItem>
 
 									<ChamadoFooter>
 										<div>
 											<span>{chamado.data}</span> - <span>{chamado.dataPrevisao}</span>
-
 										</div>
 										<ChamadoHeaderPart>
 											Cliente:<span>{chamado.clienteName}</span>

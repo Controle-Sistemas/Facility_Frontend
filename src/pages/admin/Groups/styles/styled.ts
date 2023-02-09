@@ -53,8 +53,8 @@ export const MatrizesListItem = styled.li`
     align-items: baseline;
     justify-content: space-between;
     width:100%;
-    color:  white;
-    background-color: ${colorPallete.light.buttonPrimaryBgColor};
+    color: #A84C11;
+    backgroundColor: '#efefff';
     padding: .8rem;
     box-shadow: 0.01em 0.01em 1em 0.01em grey;
     margin-bottom: .8rem;
@@ -62,7 +62,6 @@ export const MatrizesListItem = styled.li`
     transition: .2s;
     :hover {
         background-color:  white;
-        color: #A84C11;
         transform: scale(1.01);
     }
     
@@ -108,8 +107,7 @@ export const FilialListItem = styled.li`
     }
     transition: .2s;
     :hover {
-        color:  white;
-        background-color: ${colorPallete.light.buttonPrimaryBgColor};
+        backgroundColor: '#efefff';
         border-radius: .3em;
     }
 `

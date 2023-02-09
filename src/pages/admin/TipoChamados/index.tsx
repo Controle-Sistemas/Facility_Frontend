@@ -78,8 +78,8 @@ export function PaginaTiposChamado(props) {
 						setLoading(false);
 						setError(true);
 					}
-				});			
-		},[]);
+				});
+		}, []);
 
 	const onAddChamadoType = (data) => {
 		axios
@@ -109,35 +109,35 @@ export function PaginaTiposChamado(props) {
 				}
 			})
 			.catch((err) => {
-					console.log(err);
-					Swal.fire({
-						title: 'Erro',
-						icon: 'error',
-						text: `${err.response.data.message}: ${err.response.data.data.code}, Verifique por favor!`,
-						showConfirmButton: true
-					})
+				console.log(err);
+				Swal.fire({
+					title: 'Erro',
+					icon: 'error',
+					text: `${err.response.data.message}: ${err.response.data.data.code}, Verifique por favor!`,
+					showConfirmButton: true
+				})
 			});
 	};
 
-	function refreshData(){
+	function refreshData() {
 		axios.get(BASE_URL + '/tipos-chamado/')
-				.then((res) => {
-					if (res.status === 200) {
-						setChamadosType(res.data.data);
-						console.log(res.data.data);
-					}
-					setLoading(false);
-					setError(false);
+			.then((res) => {
+				if (res.status === 200) {
+					setChamadosType(res.data.data);
+					console.log(res.data.data);
+				}
+				setLoading(false);
+				setError(false);
 
-					console.log(chamadosType);
-				})
-				.catch((err) => {
-					if (err.res.status !== 404) {
-						console.log(err);
-						setLoading(false);
-						setError(true);
-					}
-				});
+				console.log(chamadosType);
+			})
+			.catch((err) => {
+				if (err.res.status !== 404) {
+					console.log(err);
+					setLoading(false);
+					setError(true);
+				}
+			});
 	}
 
 	function handleOpenModalType() {
@@ -154,7 +154,7 @@ export function PaginaTiposChamado(props) {
 
 	function handleChangeSearchedText(e) {
 	}
-	
+
 	function handleDeleteType(e) {
 		axios.delete(`${BASE_URL}/tipos-chamado/${e}`).then((res) => {
 			Swal.fire('Deletado!', 'O tipo foi deletado.', 'success')
@@ -162,10 +162,10 @@ export function PaginaTiposChamado(props) {
 		});
 	}
 
-	function handleDisplayItems(e){
+	function handleDisplayItems(e) {
 		console.log(e.target.id);
 		var li = document.getElementById(e.target.parentNode.id);
-		var x = li.children;	
+		var x = li.children;
 	}
 
 	if (loading) {
@@ -211,29 +211,35 @@ export function PaginaTiposChamado(props) {
 									<TypeListItem>
 										<TypeInfo>
 											<h4>{type.TITLE}</h4>
-											<DangerButton onClick={() =>{handleDeleteType(type.ID)}}>
+											<DangerButton onClick={() => { handleDeleteType(type.ID) }}>
 												<i className="fas fa-trash" />
 											</DangerButton>
 										</TypeInfo>
 										<Divider></Divider>
 										<SectionList>
 											{
-												_.filter(chamadosType.SECTIONS, { 'IDTYPE': type.ID }).map((section, sectionIndex) => (
-													<SectionListItem id={section.ID}>
-													<Divider></Divider>
-														<SectionInfo onClick={handleDisplayItems}><span style={{margin: '0 .4em 0', padding:'0'}}><i className="fa fa-chevron-right" aria-hidden="true"></i></span> <strong style={{marginLeft:'.2em'}}>{section.TITLE}</strong></SectionInfo>
-														<Divider></Divider>
-														<ul>
-															{
-																_.filter(chamadosType.ITEMS, { 'IDSECTION': section.ID }).map((item, itemIndex) => (
-																	<ListItem>
-																		<p><i className="fa fa-check-square-o"></i> - {item.DESCRIPTION}</p> {item.REQUIRED == 0 ? <></> : <span>(obrigatório)</span>}
-																	</ListItem>
-																))
-															}
-														</ul>
+												_.filter(chamadosType.SECTIONS, { 'IDTYPE': type.ID }).length > 1 ?
+													_.filter(chamadosType.SECTIONS, { 'IDTYPE': type.ID }).map((section, sectionIndex) => (
+														<SectionListItem id={section.ID}>
+															<Divider></Divider>
+															<SectionInfo onClick={handleDisplayItems}><span style={{ margin: '0 .4em 0', padding: '0' }}><i className="fa fa-chevron-right" aria-hidden="true"></i></span> <strong style={{ marginLeft: '.2em' }}>{section.TITLE}</strong></SectionInfo>
+															<Divider></Divider>
+															<ul>
+																{
+																	_.filter(chamadosType.ITEMS, { 'IDSECTION': section.ID }).map((item, itemIndex) => (
+																		<ListItem>
+																			<p><i className="fa fa-check-square-o"></i> - {item.DESCRIPTION}</p> {item.REQUIRED == 0 ? <></> : <span>(obrigatório)</span>}
+																		</ListItem>
+																	))
+																}
+															</ul>
+														</SectionListItem>
+													)) :
+													<SectionListItem >
+														<ListItem>
+														<p> <i className="fa fa-chevron-right" aria-hidden="true"></i> -- tipo sem checklist --</p>
+														</ListItem>
 													</SectionListItem>
-												))
 											}
 										</SectionList>
 									</TypeListItem>

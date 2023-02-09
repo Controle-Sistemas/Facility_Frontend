@@ -100,8 +100,8 @@ export function NotificationIcon() {
     return (
         <NotificationIconContainer>
             {(pendingDocuments.length > 0 || pendingChamados.length > 0) && (
-				<Popper open={isNotificationOpen} anchorEl={anchorEl}>
-					<div className="header-content-info-notification">
+				<Popper open={isNotificationOpen} anchorEl={anchorEl} >
+					<div className="header-content-info-notification" style={{marginTop:'.6em'}}>
 						<h1>{isInternal ? 'Chamados' : "Documentos"} Pendentes</h1>
 						<p>
 							<span>{isInternal ? 'Chamados' : "Documentos"}</span>

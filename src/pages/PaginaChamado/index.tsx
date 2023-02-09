@@ -38,6 +38,7 @@ import { ListItem, SectionInfo, SectionList, SectionListItem, TypeList } from '.
 import Divider from '@mui/material/Divider/Divider';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { TINYKEY } from '../../utils/keys';
 
 export function PaginaChamado() {
 	const [chamado, setChamado] = useState<any>({});
@@ -135,28 +136,35 @@ export function PaginaChamado() {
 
 	function refreshData(tipos) {
 		axios.get(BASE_URL + '/tipos-chamado/chamado/' + idChamado).then((res) => {
-			var data = res.data.data;
-			var aux = _.groupBy(data.map(item => (
-				{
-					ID: item.ID,
-					IDSECTION: tipos.ITEMS.find(e => e.ID == item.IDSECTIONITEMTYPE).IDSECTION,
-					DESCRIPTION: tipos.ITEMS.find(e => e.ID == item.IDSECTIONITEMTYPE).DESCRIPTION,
-					/**
-					 * IDSECTION: _.find(tipos.ITEMS, { 'ID': item.IDSECTIONITEMTYPE }).IDSECTION,
-					 * DESCRIPTION: _.find(tipos.ITEMS, { 'ID': item.IDSECTIONITEMTYPE }).DESCRIPTION,
-					 *
-					 */
-					REQUIRED: item.REQUIRED,
-					DONE: item.DONE
+			if(res.data.data){
+				
+				var data = res.data.data;
+				var aux = _.groupBy(data.map(item => (
+					{
+						ID: item.ID,
+						IDSECTION: tipos.ITEMS.find(e => e.ID == item.IDSECTIONITEMTYPE).IDSECTION,
+						DESCRIPTION: tipos.ITEMS.find(e => e.ID == item.IDSECTIONITEMTYPE).DESCRIPTION,
+						/**
+						 * IDSECTION: _.find(tipos.ITEMS, { 'ID': item.IDSECTIONITEMTYPE }).IDSECTION,
+						 * DESCRIPTION: _.find(tipos.ITEMS, { 'ID': item.IDSECTIONITEMTYPE }).DESCRIPTION,
+						 *
+						 */
+						REQUIRED: item.REQUIRED,
+						DONE: item.DONE
+					}
+				)), 'IDSECTION')
+				setFilteredItems(_.map(aux, (value, key) => {
+					return {
+						IDSECTION: key,
+						ITEMS: aux[key]
+					}
+				}))
+				setItemsChamado(res.data.data)
+			
+				}else{
+					setFilteredItems([]);
+					setItemsChamado([]);
 				}
-			)), 'IDSECTION')
-			setFilteredItems(_.map(aux, (value, key) => {
-				return {
-					IDSECTION: key,
-					ITEMS: aux[key]
-				}
-			}))
-			setItemsChamado(res.data.data)
 		});
 
 
@@ -187,33 +195,17 @@ export function PaginaChamado() {
 	}
 
 	function handleChangeItemDone(e) {
-		setLoading(true)
-		var date = new Date();
-		var ano = date.getFullYear();
-		var mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
-		var dia = date.getDate().toString().length === 1 ? `0${date.getDate().toString()}` : date.getDate().toString()
-
-		var hora = date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
-
-		var item = _.find(itemsChamado, { 'ID': parseInt(e.target.id) })
-		console.log('item', item)
+		var ID = parseInt(e.target.id)
+		var item = _.find(itemsChamado, { 'ID': ID })
 		item.DONE = !item.DONE;
-		var ocorrencia = {
-			IDCHAMADO: chamado.ID,
-			IDINTERNO: idInterno ? Number(idInterno) : 99,
-			SETOR: setor.ID,
-			ATIVO: true,
-			STATUS: statusChamado.ID,
-			DESCRICAO: `Alterou item ${_.find(tipos.ITEMS, { 'ID': item.IDSECTIONITEMTYPE }).DESCRIPTION} para ${item.DONE ? 'feito ' : 'pendente '}!`,
-			DATAINCLUSAO: `${ano}-${mes}-${dia} ${hora}`
-		};
-
-		axios.patch(`${BASE_URL}/tipos-chamado/item/${item.ID}`, item).then((res) => {
-			if (res.status == 200) {
-				onAddOcorrencia(ocorrencia);
+		axios.patch(BASE_URL + '/tipos-chamado/item/' + item.ID, item).then((res) => {
+			axios.get(BASE_URL + '/tipos-chamado/chamado/' + idChamado).then((res) => {
+				setItemsChamado(res.data.data);
 				refreshData(tipos);
-			}
+			});
 		});
+		Swal.fire('Atualizado!', `O item foi marcado como ${item.DONE == 1 ? 'concluído' : 'pendente'}`, 'success');
+		refreshData(tipos);
 	}
 
 
@@ -288,28 +280,62 @@ export function PaginaChamado() {
 
 	function onAddType(data) {
 		data.CHAMADOTYPE = _.find(tipos.TYPES, { 'TITLE': data.CHAMADOTYPE }).ID;
-		if (_.find(itemsChamado, { 'IDCHAMADO': data.IDCHAMADO })) {
-			Swal.fire({
-				title: 'Deseja alterar o tipo deste chamado?',
-				text: 'Este chamado já tem um tipo, fazendo isso irão ser exlcuídos os itens e progressões atuais!',
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonColor: '#003775',
-				cancelButtonColor: '#DC354f',
-				confirmButtonText: 'Sim, alterar!'
-			}).then((result) => {
-				if (result.value) {
+		console.log(data)
+		Swal.fire({
+			title: 'Deseja alterar o tipo deste chamado?',
+			text: 'Este chamado já tem um tipo, fazendo isso irão ser exlcuídos os itens e progressões atuais!',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#003775',
+			cancelButtonColor: '#DC354f',
+			confirmButtonText: 'Sim, alterar!'
+		}).then((result) => {
+			if (result.value) {
+				console.log('items',itemsChamado)
+				if (itemsChamado.length > 0) {
 					axios.delete(`${BASE_URL}/tipos-chamado/chamado/${data.IDCHAMADO}`).then((res) => {
-						if(res.status == 200){
-							axios.post(`${BASE_URL}/tipos-chamado/${data.CHAMADOTYPE}`, data).then(res => {
+						if (res.status == 200) {
+							axios.patch(`${BASE_URL}/chamados/tipo/${data.IDCHAMADO}`, data).then((res) => {
+								if (res.status == 200) {
+									axios.post(`${BASE_URL}/tipos-chamado/${data.IDCHAMADO}`, data).then(res => {
+										setLoading(true)
+										var date = new Date();
+										var ano = date.getFullYear();
+										var mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+										var dia = date.getDate().toString().length === 1 ? `0${date.getDate().toString()}` : date.getDate().toString()
+
+										var hora = date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
+
+										var ocorrencia = {
+											IDCHAMADO: chamado.ID,
+											IDINTERNO: idInterno ? Number(idInterno) : 99,
+											SETOR: setor.ID,
+											ATIVO: true,
+											STATUS: statusChamado.ID,
+											DESCRICAO: `Alterou tipo para ${_.find(tipos.TYPES, { 'ID': data.CHAMADOTYPE }).TITLE}!`,
+											DATAINCLUSAO: `${ano}-${mes}-${dia} ${hora}`
+										};
+										onAddOcorrencia(ocorrencia);
+										handleOpenModalType();
+
+									})
+								}
+							})
+						}
+					});
+				} else {
+					setFilteredItems([])
+					axios.patch(`${BASE_URL}/chamados/tipo/${data.IDCHAMADO}`, data).then(res => {
+						if (res.status == 200) {
+							axios.post(`${BASE_URL}/tipos-chamado/${data.IDCHAMADO}`, data).then(res => {
 								setLoading(true)
 								var date = new Date();
 								var ano = date.getFullYear();
 								var mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
 								var dia = date.getDate().toString().length === 1 ? `0${date.getDate().toString()}` : date.getDate().toString()
-	
+
 								var hora = date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
-	
+
 								var ocorrencia = {
 									IDCHAMADO: chamado.ID,
 									IDINTERNO: idInterno ? Number(idInterno) : 99,
@@ -321,19 +347,16 @@ export function PaginaChamado() {
 								};
 								onAddOcorrencia(ocorrencia);
 								handleOpenModalType();
+								setFilteredItems([])
 								refreshData(tipos);
-	
+
 							})
 						}
-					});
+					})
 				}
-			});
-		} else {
-			axios.post(`${BASE_URL}/tipos-chamado/${data.CHAMADOTYPE}`, data).then(res => {
-				handleOpenModalType();
-				refreshData(tipos);
-			})
-		}
+
+			}
+		});
 
 	}
 
@@ -342,7 +365,7 @@ export function PaginaChamado() {
 	if (chamado.DATAINCLUSAO) {
 		const [data, hora] = chamado.DATAINCLUSAO ? chamado.DATAINCLUSAO.split(' ') : '';
 		dataFormatada = formatData(data);
-		horaFormatada = formatTime(hora);		
+		horaFormatada = formatTime(hora);
 		refreshData(tipos);
 	}
 
@@ -351,13 +374,13 @@ export function PaginaChamado() {
 			//Ordena os documentos pelo campo orderBy
 			if (a['DATAINCLUSAO'] > b['DATAINCLUSAO']) {
 				return -1;
-				
+
 			}
 			if (a['DATAINCLUSAO'] < b['DATAINCLUSAO']) {
 				return 1;
-				
+
 			}
-			
+
 			refreshData(tipos);
 			return 0;
 		});
@@ -457,7 +480,7 @@ export function PaginaChamado() {
 										arquivosFormatados.map((file, index) =>
 										(
 											<div className="col-lg-4 mb-2">
-												<a href={`https://uploadcontrolesistemas.s3.sa-east-1.amazonaws.com/chamados/${file.url}`} target="_blank" download rel="noopener noreferrer">
+												<a href={`https://controlesistemasupload.s3.sa-east-1.amazonaws.com/chamados/${file.url}`} target="_blank" download rel="noopener noreferrer">
 
 													<ChamadoFileContainer key={index}>
 														<ImagePostIt type={0} route="chamados" />
@@ -533,7 +556,15 @@ export function PaginaChamado() {
 
 							</TreeViewComponent>
 						</ChamadoBody>
-						<SectionList style={{ width: '100%' }}>
+						{
+							filteredItems.length > 0 ?
+								<>
+									<Divider>
+										<h3>Checklist</h3>
+									</Divider>
+								</> : <></>
+						}
+						<SectionList id='section-list-view' style={{ width: '100%' }}>
 							{
 								filteredItems.length > 0 ?
 									_.map(filteredItems, (item) => (
@@ -548,7 +579,7 @@ export function PaginaChamado() {
 																	checked={item.DONE === 1}
 																	onChange={handleChangeItemDone}
 																	inputProps={{ 'aria-label': 'controlled' }}
-																	id={item.ID+''}
+																	id={item.ID + ''}
 																	color="success"
 																/>} label={`${item.DESCRIPTION} ${item.REQUIRED == 0 ? '' : '*'}`}
 																style={{ width: '100%' }}
@@ -589,9 +620,9 @@ export function PaginaChamado() {
 					isModalOpen={modalEditChamadoIsOpen}
 					isModalClosed={handleOpenModalEditChamado}
 					title="Editar Chamado"
-					height="85vh"
-					width="50%">
-					<FormEditChamado setor={setor} isAdmin={isAdmin} chamado={chamado} setChamado={setChamado} atualizar={onEdit} />
+					height="90vh"
+					width="95%">
+					<FormEditChamado setor={setor} isAdmin={isAdmin} chamado={chamado} setChamado={setChamado} atualizar={onEdit} editorKey={TINYKEY} />
 				</ModalForm>
 				<ModalForm
 					isModalOpen={modalTypeIsOpen}

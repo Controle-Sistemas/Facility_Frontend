@@ -27,6 +27,8 @@ export function FormAddTipoChamado({ onAdd }) {
         SECTIONSTYPE: []
     });
 
+    const [checkListType, setChecklistType] = useState(true)
+
     const [sections, setSections] = useState([{
         ID: uuid(),
         TITLE: ""
@@ -78,13 +80,13 @@ export function FormAddTipoChamado({ onAdd }) {
     }
 
     function handleChangeRequired(e) {
-       return _.find(sectionItems, { "ID": e }).REQUIRED = !_.find(sectionItems, { "ID": e }).REQUIRED
+        return _.find(sectionItems, { "ID": e }).REQUIRED = !_.find(sectionItems, { "ID": e }).REQUIRED
         //setSectionsItems([...sectionItems])
     }
 
     function handleChangeSection(e) {
         var index = parseInt(e.target.attributes.itemID.value);
-        console.log('Alterando secção',sections[index].TITLE = e.target.value)
+        console.log('Alterando secção', sections[index].TITLE = e.target.value)
     }
     function handleChangeSectionItem(e) {
         var IDSECTION = e.target.attributes.itemID.value;
@@ -97,12 +99,16 @@ export function FormAddTipoChamado({ onAdd }) {
         console.log(e.target.attributes.itemID.value);
         var id = e.target.attributes.itemID.value;
         var item = _.find(sectionItems, { "ID": id });
-        console.log('Deletando item ',  _.remove(sectionItems, { "ID": id })[0]);
+        console.log('Deletando item ', _.remove(sectionItems, { "ID": id })[0]);
         setSectionsItems([...sectionItems]);
         if (_.filter(sectionItems, { 'IDSECTION': item.IDSECTION }).length < 1 && sections.length > 1) {
-          console.log('Secção zerada sendo deletada ', _.remove(sections, { "ID": item.IDSECTION }));
-          setSections([...sections]);
+            console.log('Secção zerada sendo deletada ', _.remove(sections, { "ID": item.IDSECTION }));
+            setSections([...sections]);
         }
+    }
+
+    function handleChangeCheckListType() {
+        setChecklistType(!checkListType);
     }
 
     function handleSubmit(e) {
@@ -116,76 +122,92 @@ export function FormAddTipoChamado({ onAdd }) {
                 showConfirmButton: true
             })
         } else {
-            var sectionsResume = _.map(sections, (section) => ({
-                ID: section.ID, TITLE: section.TITLE, IDTYPE: data.CHAMADOTYPEID, ITENS:
-                    _.filter(sectionItems, { 'IDSECTION': section.ID })
-            }));
-            var typeResume: ChamadoType = {ID: data.CHAMADOTYPEID, TITLE: data.CHAMADOTYPETITLE, SECTIONS: sectionsResume };
-            console.log('tipo', typeResume)           
-            onAdd(typeResume);
+            if (checkListType) {
+                var sectionsResume = _.map(sections, (section) => ({
+                    ID: section.ID, TITLE: section.TITLE, IDTYPE: data.CHAMADOTYPEID, ITENS:
+                        _.filter(sectionItems, { 'IDSECTION': section.ID })
+                }));
+                var typeResume: ChamadoType = { ID: data.CHAMADOTYPEID, TITLE: data.CHAMADOTYPETITLE, SECTIONS: sectionsResume };
+                console.log('tipo', typeResume)
+                onAdd(typeResume);
+            } else {
+                var typeWithoutCheck = { ID: data.CHAMADOTYPEID, TITLE: data.CHAMADOTYPETITLE };
+                console.log('tipo', typeWithoutCheck)
+                onAdd(typeWithoutCheck);
+            }
         }
     }
 
     return (
         <FormContainer onSubmit={handleSubmit} style={{ marginBottom: '1em' }}>
             <InputContainer style={{ marginBottom: '1em' }}>
-                <label>Nome</label>
+                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', width: '100%' }}><label>Nome </label> <label>Tem checklist ? <Switch isActive={checkListType} activation={handleChangeCheckListType} /></label></div>
                 <input type="text" className="form-control" name="CHAMADOTYPETITLE" placeholder="ex.: Implantação" onChange={handleChange} required />
             </InputContainer>
             <Divider></Divider>
-            <InputContainer>
-                {<ul id="sections" style={{ marginLeft: '0', marginRight: '0', paddingLeft: '0', width: '100%' }}>
-                    {
-                        sections.map((section, index) => (
-                            <>
-                                <Divider></Divider>
-                                <li key={index} className="section" style={{ marginLeft: '0', paddingLeft: '0', margin: '1em 0', width: '100%' }}>
-                                    <InputContainer style={{ width: '100%' }}>
-                                        <label>Titulo da Secção</label>
-                                        <input type="text" className="form-control" placeholder="ex.: Básico" required itemID={'' + index} onChange={handleChangeSection} />
-                                    </InputContainer>
-                                    <PrimaryButton type='button' onClick={addSectionItem} itemID={section.ID} >Adicionar Item</PrimaryButton>
-                                    {sectionItems.length > 0 ?
-                                        <ul id={index.toString()} style={{ marginLeft: '0', marginRight: '0', paddingLeft: '0' }}>
-                                            {_.filter(sectionItems, { "IDSECTION": section.ID }).map((item, itemIndex) => (
-                                                <li className="item" key={itemIndex} style={{ marginLeft: '0', width: '100%', paddingLeft: '1em', display: 'flex', alignItems: 'center' }}>
-                                                    <InputContainer>
-                                                        <label>Descrição</label>
-                                                        <input type="text" className="form-control" value={item.DESCRIPTION} placeholder="ex.: Configurar impressora" style={{ width: '90%' }} itemID={item.ID} onChange={handleChangeSectionItem} required />
-                                                    </InputContainer>
-                                                    <div>
-                                                        <label>Obrigatório?</label>
-                                                        <Switch isActive={item.REQUIRED} id={item.ID} activation={handleChangeRequired} />
-                                                    </div>
-                                                    <div>
-                                                        <label>Remover</label>
-                                                        <DangerButton type='button' itemID={item.ID} onClick={handleDeleteSectionItem}>
-                                                            <i className="fa-solid fa-trash" />
-                                                        </DangerButton>
-                                                    </div>
-                                                </li>
+            {checkListType ?
+                <>
+                    <InputContainer>
+                        {<ul id="sections" style={{ marginLeft: '0', marginRight: '0', paddingLeft: '0', width: '100%' }}>
+                            {
+                                sections.map((section, index) => (
+                                    <>
+                                        <Divider></Divider>
+                                        <li key={index} className="section" style={{ marginLeft: '0', paddingLeft: '0', margin: '1em 0', width: '100%' }}>
+                                            <InputContainer style={{ width: '100%' }}>
+                                                <label>Titulo da Secção</label>
+                                                <input type="text" className="form-control" placeholder="ex.: Básico" required itemID={'' + index} onChange={handleChangeSection} />
+                                            </InputContainer>
+                                            <PrimaryButton type='button' onClick={addSectionItem} itemID={section.ID} >Adicionar Item</PrimaryButton>
+                                            {sectionItems.length > 0 ?
+                                                <ul id={index.toString()} style={{ marginLeft: '0', marginRight: '0', paddingLeft: '0' }}>
+                                                    {_.filter(sectionItems, { "IDSECTION": section.ID }).map((item, itemIndex) => (
+                                                        <li className="item" key={itemIndex} style={{ marginLeft: '0', width: '100%', paddingLeft: '1em', display: 'flex', alignItems: 'center' }}>
+                                                            <InputContainer>
+                                                                <label>Descrição</label>
+                                                                <input type="text" className="form-control" value={item.DESCRIPTION} placeholder="ex.: Configurar impressora" style={{ width: '90%' }} itemID={item.ID} onChange={handleChangeSectionItem} required />
+                                                            </InputContainer>
+                                                            <div>
+                                                                <label>Obrigatório?</label>
+                                                                <Switch isActive={item.REQUIRED} id={item.ID} activation={handleChangeRequired} />
+                                                            </div>
+                                                            <div>
+                                                                <label>Remover</label>
+                                                                <DangerButton type='button' itemID={item.ID} onClick={handleDeleteSectionItem}>
+                                                                    <i className="fa-solid fa-trash" />
+                                                                </DangerButton>
+                                                            </div>
+                                                        </li>
 
-                                            ))}
-                                        </ul>
-                                        : <></>
-                                    }
-                                </li>
-                            </>
-                        ))
-                    }
-                </ul>}
-                <ButtonGroup justifyContent="left">
-                    <PrimaryButton onClick={addSection}>
-                        Adicionar Secção
+                                                    ))}
+                                                </ul>
+                                                : <></>
+                                            }
+                                        </li>
+                                    </>
+                                ))
+                            }
+                        </ul>}
+                        <ButtonGroup justifyContent="left">
+                            <PrimaryButton onClick={addSection}>
+                                Adicionar Secção
+                            </PrimaryButton>
+                        </ButtonGroup>
+                        <Divider></Divider>
+                    </InputContainer>
+                    <ButtonGroup style={{ width: '90%', justifyContent: 'end' }}>
+                        <PrimaryButton type='submit'>
+                            Salvar Tipo
+                        </PrimaryButton>
+                    </ButtonGroup>
+                </>
+                :
+                <ButtonGroup style={{ width: '90%', justifyContent: 'end' }}>
+                    <PrimaryButton type='submit'>
+                        Salvar Tipo
                     </PrimaryButton>
                 </ButtonGroup>
-                <Divider></Divider>
-            </InputContainer>
-            <ButtonGroup style={{ width: '90%', justifyContent: 'end' }}>
-                <PrimaryButton type='submit'>
-                    Salvar Tipo
-                </PrimaryButton>
-            </ButtonGroup>
+            }
         </FormContainer>
     );
 }

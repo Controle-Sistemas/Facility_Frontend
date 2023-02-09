@@ -19,7 +19,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import _ from 'lodash';
 import Swal from 'sweetalert2';
 
-export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor }) {
+export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor, editorKey }) {
 	const [setores, setSetores] = useState([]);
 	const [statusChamado, setStatusChamado] = useState([]);
 	const [internos, setInternos] = useState([]);
@@ -151,6 +151,7 @@ export function FormEditChamado({ chamado, setChamado, atualizar, isAdmin, setor
 							width: '100%',
 							menubar: false
 						}}
+						apiKey={editorKey}
 						onEditorChange={handleChangeText}
 						disabled={Boolean(isAdmin) ? false : true}
 					/>

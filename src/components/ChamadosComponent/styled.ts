@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { colorPallete,tema } from '../../coresStyled';
+import { colorPallete, tema } from '../../coresStyled';
 export const ChamadosContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -17,7 +17,7 @@ export const ChamadoList = styled.ul`
 	width: 100%;
 	cursor: pointer;
 	box-shadow: 0 .1rem .2rem rgba(0, 0, 0, 0.2);
-	border:1px solid ${tema === 'light' ? colorPallete.all.borderDark :  colorPallete.all.borderLight};
+	border:1px solid ${tema === 'light' ? colorPallete.all.borderDark : colorPallete.all.borderLight};
 	border-radius: .3rem;
 	background-color: ${tema === 'light' ? colorPallete.light.bgColor : colorPallete.dark.bgColor};
 	transition: background-color .5s ease-in-out;
@@ -147,8 +147,8 @@ export const ChamadoHeaderPart = styled.div`
 export const PrioritySection = styled.div`
 	color: ${(props) =>
 		props.prioridade === 'Urgente' || props.prioridade === 'Alta' || props.status === 1 || props.status === 5
-			? tema === 'light' ?  colorPallete.light.dangerColor: colorPallete.dark.dangerColor
-			: props.prioridade === `Média` ||  props.status === 2 ? '#f5a623' : props.prioridade === 'Baixa' || props.status === 3 ? '#00a84f' : "#003775"};
+			? tema === 'light' ? colorPallete.light.dangerColor : colorPallete.dark.dangerColor
+			: props.prioridade === `Média` || props.status === 2 ? '#f5a623' : props.prioridade === 'Baixa' || props.status === 3 ? '#00a84f' : "#003775"};
 	& > span {
 		display: flex;
 		align-items:center;
@@ -170,6 +170,23 @@ export const ChamadosLabel = styled.div`
 	align-items: center;
 	justify-content: space-between;
 	width:100%;
+`
+export const ChamadosLabelInfo = styled.div`
+	display: flex;
+	flex-direction:column;
+		align-items: start;
+	width:100%;
+	@media (max-width:650px){
+		flex-direction:column;
+		align-items: start;
+	
+	}
+	& > p {
+		margin: 0;
+		margin-left .4rem;
+		padding: 0
+		align-items:baseline;
+	}
 `
 
 export const OcurrencySpan = styled.span`

@@ -19,8 +19,8 @@ interface Props {
 }
 
 export function CentralDocuments({ documents, setDocuments, isAdmin, order, orderBy, filterBy, typeOfView }: Props) {
-	const [ documentId, setDocumentId ] = useState(null); //Estado para o id do documento
-	const [ modalEditDocumentIsOpen, setModalEditDocumentIsOpen ] = useState(false); //Estado para abrir o modal de edição de documento
+	const [documentId, setDocumentId] = useState(null); //Estado para o id do documento
+	const [modalEditDocumentIsOpen, setModalEditDocumentIsOpen] = useState(false); //Estado para abrir o modal de edição de documento
 	const cnpj = localStorage.getItem('cnpj'); //Pega o cnpj do usuário logado
 	const navigation = useNavigate();
 
@@ -86,12 +86,16 @@ export function CentralDocuments({ documents, setDocuments, isAdmin, order, orde
 				//Se o usuário confirmar a exclusão
 				axios.delete(`${BASE_URL}/documentos/${ID}`).then((res) => {
 					//Deleta o documento
-					Swal.fire('Deletado!', 'O documento foi deletado.', 'success');
-					axios.get(`${BASE_URL}/documentos/`).then((res) => {
-						//Pega os documentos do usuário logado
-						setDocuments(res.data.data); //Atualiza o estado com os documentos
-					});
-				});
+					if (res.status == 200) {
+						Swal.fire('Deletado!', 'O documento foi deletado.', 'success');
+						axios.get(`${BASE_URL}/documentos/`).then((res) => {
+							//Pega os documentos do usuário logado
+							setDocuments(res.data.data); //Atualiza o estado com os documentos
+						});
+					} else {
+						Swal.fire('Erro!', res.data.message, 'error');
+					}
+				})
 			}
 		});
 	}
@@ -143,6 +147,7 @@ export function CentralDocuments({ documents, setDocuments, isAdmin, order, orde
 
 	const filterDocuments = (documents: any) => {
 		//Função para filtrar os documentos
+		console.log('Filtrando...')
 		if (filterBy === 'TODOS') {
 			//Se o filtro for TODOS, retorna todos os documentos
 			return documents;
@@ -232,7 +237,7 @@ export function CentralDocuments({ documents, setDocuments, isAdmin, order, orde
 								return (
 									<div
 										className={
-											typeOfView === 'module' ? 'col-sm-6 col-lg-4 col-xl-3 mb-4' :  'col-12 mb-2'
+											typeOfView === 'module' ? 'col-sm-6 col-lg-4 col-xl-3 mb-4' : 'col-12 mb-2'
 										}
 										key={documento.ID}
 										id={documento.ID}
@@ -280,7 +285,7 @@ export function CentralDocuments({ documents, setDocuments, isAdmin, order, orde
 													typeOfView === 'module' ? (
 														'col-sm-6 col-lg-4 col-xl-3 mb-4'
 													) : (
-														 'col-12 mb-2'
+														'col-12 mb-2'
 													)
 												}
 												key={documento.ID}
@@ -305,7 +310,7 @@ export function CentralDocuments({ documents, setDocuments, isAdmin, order, orde
 													DATAATUAL={dataAtual}
 													STATUS={documento.STATUS}
 													EMPRESA={documento.empresa}
-											typeOfView={typeOfView}
+													typeOfView={typeOfView}
 
 													handleOpenModalDeleteDocument={handleOpenModalDeleteDocument}
 													handleOpenModalEditDocument={handleOpenModalEditDocument}
@@ -318,7 +323,7 @@ export function CentralDocuments({ documents, setDocuments, isAdmin, order, orde
 									return (
 										<div
 											className={
-												typeOfView === 'module' ? 'col-sm-6 col-lg-4 col-xl-3 mb-4' :  'col-12 mb-2'
+												typeOfView === 'module' ? 'col-sm-6 col-lg-4 col-xl-3 mb-4' : 'col-12 mb-2'
 											}
 											key={documento.ID}
 											id={documento.ID}
@@ -342,7 +347,7 @@ export function CentralDocuments({ documents, setDocuments, isAdmin, order, orde
 												DATAATUAL={dataAtual}
 												STATUS={documento.STATUS}
 												EMPRESA={documento.empresa}
-											typeOfView={typeOfView}
+												typeOfView={typeOfView}
 
 												handleOpenModalDeleteDocument={handleOpenModalDeleteDocument}
 												handleOpenModalEditDocument={handleOpenModalEditDocument}

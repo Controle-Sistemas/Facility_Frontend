@@ -292,7 +292,7 @@ export const FormRowContainer = styled(FormContainer)`
 	width: 100%;
 	margin-top: .5rem;
 	padding: 0 .5rem;
-	height: 70vh;
+	height: fit-content;
 	@media (max-width: 768px) {
 		height: fit-content;
 	}

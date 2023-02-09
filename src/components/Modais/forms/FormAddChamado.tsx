@@ -15,6 +15,8 @@ import { Editor } from '@tinymce/tinymce-react';
 import TextField from '@mui/material/TextField';
 import {tema,colorPallete} from '../../../coresStyled'
 import Autocomplete from '@mui/material/Autocomplete';
+import _ from 'lodash'
+import Swal from 'sweetalert2';
 
 interface ChamadoChecklistType {
 	ITEMS: Array<{
@@ -34,7 +36,7 @@ interface ChamadoChecklistType {
 	}>
 }
 
-export function FormAddChamado({ onAdd, idUser, isAdmin }) {
+export function FormAddChamado({ onAdd, idUser, isAdmin, editorKey }) {
 	const [chamadoData, setChamadoData] = useState({
 		IDINTERNO: isAdmin ? '' : idUser.toString(),
 		SETOR: '',
@@ -48,7 +50,8 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		DATAINCLUSAO: '',
 		INTERNORECEPTOR: "",
 		DATARECORRENCIA: '',
-		TIPORECORRENCIA: '0'
+		TIPORECORRENCIA: '0',
+		TIPOCHAMADO: ''
 
 	});
 	const [statusChamado, setStatusChamado] = useState([]);
@@ -73,7 +76,6 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		axios.get(BASE_URL + '/setores/').then((res) => {
 			setSetores(res.data.data);
 		});
-
 		axios.get(BASE_URL + '/clientes/admin').then((res) => {
 			setClientes(res.data.data);
 		});
@@ -101,14 +103,11 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		const ano = date.getFullYear();
 		const mes = (date.getMonth() + 1).toString().length === 1 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
 		const dia = date.getDate().toString().length === 1 ? `0${date.getDate().toString()}` : date.getDate().toString()
-		const hora =
-			date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
+		const hora = date.getHours().toString() + ':' + date.getMinutes().toString() + ':' + date.getSeconds().toString();
 		chamadoData.DATAINCLUSAO = `${ano}-${mes}-${dia} ${hora}`;
 		if (isRecurrent) {
 			chamadoData.DATARECORRENCIA = chamadoData.DATARECORRENCIA.length > 1 ? chamadoData.DATARECORRENCIA.split('-')[2] : chamadoData.DATARECORRENCIA
 		}
-
-
 		const data = new FormData();
 		data.append('SETOR', chamadoData.SETOR);
 		data.append('CLIENTE', chamadoData.CLIENTE);
@@ -122,7 +121,8 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 		data.append('RECORRENTE', isRecurrent.toString())
 		data.append('DATARECORRENCIA', chamadoData.DATARECORRENCIA)
 		data.append('TIPORECORRENCIA',chamadoData.TIPORECORRENCIA)
-
+		data.append('TIPOCHAMADO',chamadoData.TIPOCHAMADO)
+		
 		if (!isAdmin) {
 			data.append('IDINTERNO', chamadoData.IDINTERNO);
 		}
@@ -132,10 +132,28 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 				data.append('FILE', chamadoData.FILE[i]);
 			}
 		}
+		console.log(data);		
 
-		onAdd(data);
+		if(chamadoData.DESCRICAO.length < 1 || chamadoData.TIPOCHAMADO.length < 1 || chamadoData.PREVISAO.length < 1){
+			Swal.fire({
+				title: 'Ainda restam campos vazios!',
+				text: 'Para o chamado ser aberto corretamente todos os campos devem ser preenchidos',
+				icon: 'info',
+				timer: 2000,
+				showConfirmButton: true
+			});
+		}else{
+			onAdd(data);
+		}
+		
 	}
 
+	const formatedTypes = tiposChamadoData.TYPES.map((tipo) => {
+		return {
+			label: tipo.TITLE,
+			id: tipo.ID
+		};
+	});
 
 	const formatedClient = clientes.map((cliente) => {
 		return {
@@ -177,7 +195,21 @@ export function FormAddChamado({ onAdd, idUser, isAdmin }) {
 							menubar: false
 						}}
 						onEditorChange={handleChangeText}
-
+						apiKey={editorKey}
+					/>
+				</InputContainer>
+				<InputContainer required>
+					<Autocomplete
+						id="combo-box-demo"
+						options={formatedTypes}
+						sx={{ width: '100%', marginTop: '1rem' }}
+						renderInput={(params) => <TextField {...params} label="Tipo" />}
+						isOptionEqualToValue={(option, value) => option.id === value.id}
+						inputValue={chamadoData.TIPOCHAMADO.length > 1 ? _.find(tiposChamadoData.TYPES,{'ID': chamadoData.TIPOCHAMADO}).TITLE: ''}
+						onInputChange={(event, newInputValue) => {
+							setChamadoData({ ...chamadoData, TIPOCHAMADO: _.find(tiposChamadoData.TYPES,{'TITLE': newInputValue}).ID });
+						}}
+						
 					/>
 				</InputContainer>
 				<InputContainer>

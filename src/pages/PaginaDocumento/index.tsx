@@ -13,6 +13,7 @@ import { FormEditDocument } from '../../components/Modais/forms/FormEditDocument
 import Sidebar from '../../components/Sidebar/sidebar';
 
 import Swal from 'sweetalert2';
+import { MainTitle } from '../../components/styledComponents/Texts';
 
 export function PaginaDocumento() {
 	const [ documento, setDocumento ] = useState<any>({});
@@ -121,6 +122,7 @@ export function PaginaDocumento() {
 					<Sidebar />
 				</SidebarContainer>
 				<ContainerAdminContas>
+					<MainTitle>Documento #{documentId}</MainTitle>
 					<BoletoContainer>
                         <BoletoActions>
                             {isAdmin && (
@@ -193,7 +195,7 @@ export function PaginaDocumento() {
                                     if(file !== ""){
                                         return  (
                                             <div className="col-lg-6 mb-2">
-							                    <a href={`https://uploadcontrolesistemas.s3.sa-east-1.amazonaws.com/documentos/${file}`} target="_blank" download rel="noopener noreferrer">
+							                    <a href={`https://controlesistemasupload.s3.sa-east-1.amazonaws.com/documentos/${file}`} target="_blank" download rel="noopener noreferrer">
                                                     <BoletoFileContainer key={index}>
                                                         <ImagePostIt image={documento.TIPO === 2 && file} type={documento.TIPO} route="documentos" />
                                                         <div className="text-container">

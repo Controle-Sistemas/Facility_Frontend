@@ -11,3 +11,6 @@ export const NotificationIconContainer = styled.div`
     color: #fff;
     border: 1px solid #003775;
   `
+export const NotificationInfoContainer = styled.div`
+
+`

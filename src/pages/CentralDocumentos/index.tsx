@@ -70,6 +70,7 @@ export function CentralDocumentosPageAdmin() {
 					.then((res) => {
 						setDocuments(res.data.data);
 						setLoading(false);
+						console.log('setDocs... ' , res.data.data)
 					})
 					.catch((err) => {
 						setError(true);
@@ -199,7 +200,7 @@ export function CentralDocumentosPageAdmin() {
 						</ModalForm>
 
 						<CentralDocuments
-							documents={[]}
+							documents={setDocuments}
 							setDocuments={setDocuments}
 							isAdmin={isAdmin}
 							filterBy={filterBy}

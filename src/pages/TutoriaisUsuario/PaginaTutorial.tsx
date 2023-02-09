@@ -161,7 +161,7 @@ export function PaginaTutorial() {
 										arquivosFormatados.map((file, index) => {
 											return (
 												<div className="col-lg-6 mb-2">
-													<a href={`https://uploadcontrolesistemas.s3.sa-east-1.amazonaws.com/tutoriais/${file.url}`} target="_blank" download rel="noopener noreferrer">
+													<a href={`https://controlesistemasupload.s3.sa-east-1.amazonaws.com/tutoriais/${file.url}`} target="_blank" download rel="noopener noreferrer">
 														<TutorialFileContainer key={index}>
 															<ImagePostIt type={0} route="tutoriais" />
 															<div className="text-container">
