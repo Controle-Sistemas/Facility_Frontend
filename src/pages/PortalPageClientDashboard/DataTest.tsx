@@ -22,123 +22,123 @@ interface DashboardDataType {
 class DataTest {
     getCleanJSON() {
         return {
-            "QtdeRegistros": 20,
-            "DataConsulta": "20-06-2022",
-            "TotalVendasDia": 2000.00,
-            "TicketMedio": 145.00,
-            "VendasFormaPagamento": [
+            "qtdeRegistros": 20,
+            "dataConsulta": "20-06-2022",
+            "totalVendasDia": 2000.00,
+            "ticketMedio": 145.00,
+            "vendasFormaPagamento": [
                 {
-                    "Forma": "Dinheiro",
-                    "Valor": 500.00
+                    "Forma": "dinheiro",
+                    "valor": 500.00
                 },
                 {
                     "Forma": "Cartao Credito",
-                    "Valor": 150.00
+                    "valor": 150.00
                 },
                 {
                     "Forma": "Cartao Debito",
-                    "Valor": 220.00
+                    "valor": 220.00
                 },
                 {
-                    "Forma": "PIX",
-                    "Valor": 320.00
+                    "Forma": "pIX",
+                    "valor": 320.00
                 }],
-            "TotalDiaCancelamentos": 500.00,
-            "TotalDiaDescontos": 300.00,
-            "TotalDiaTaxaServico": 150.00,
-            "TotalDiaCortesias": 10.00,
-            "RankingProdutos": [
+            "totalDiaCancelamentos": 500.00,
+            "totalDiaDescontos": 300.00,
+            "totalDiaTaxaServico": 150.00,
+            "totalDiaCortesias": 10.00,
+            "rankingProdutos": [
                 {
-                    "Produto": 'COCA COLA',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'COCA COLA',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 },
                 {
-                    "Produto": 'FANTA',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'FANTA',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 },
                 {
-                    "Produto": 'RODIZIO',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'RODIZIO',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 },
                 {
-                    "Produto": 'CERVEJA BRAHMA',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'CERVEJA BRAHMA',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 },
                 {
-                    "Produto": 'PETIT GATEAU',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'PETIT GATEAU',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 },
                 {
-                    "Produto": 'X-TUDO',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'X-TUDO',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 },
                 {
-                    "Produto": 'X-SALADA',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'X-SALADA',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 }],
-            "VendasPorHora": [
+            "vendasPorHora": [
                 {
-                    "Hora": '16:00',
-                    "Valor": 100.00
+                    "hora": '16:00',
+                    "valor": 100.00
                 },
                 {
-                    "Hora": '16:30',
-                    "Valor": 150.00
+                    "hora": '16:30',
+                    "valor": 150.00
                 },
                 {
-                    "Hora": '17:00',
-                    "Valor": 300.00
+                    "hora": '17:00',
+                    "valor": 300.00
                 },
                 {
-                    "Hora": '17:30',
-                    "Valor": 200.00
+                    "hora": '17:30',
+                    "valor": 200.00
                 },
                 {
-                    "Hora": '18:00',
-                    "Valor": 50.00
+                    "hora": '18:00',
+                    "valor": 50.00
                 }],
-            "VendasPorTipo": [
+            "vendasPorTipo": [
                 {
-                    "Tipo": "Balcao",
-                    "Valor": 3000.00
+                    "tipo": "Balcao",
+                    "valor": 3000.00
                 },
                 {
-                    "Tipo": "Delivery",
-                    "Valor": 3000.00
+                    "tipo": "delivery",
+                    "valor": 3000.00
                 },
                 {
-                    "Tipo": "Mesa/Comanda",
-                    "Valor": 3000.00
+                    "tipo": "Mesa/Comanda",
+                    "valor": 3000.00
                 }],
             "ConsumosEmAbertoQtde": 3,
             "ConsumosEmAbertoValor": 300.00,
             "EvolucaoVendasMes": [
                 {
                     "Mes": "01/2022",
-                    "Valor": 3000.00
+                    "valor": 3000.00
                 },
                 {
                     "Mes": "02/2022",
-                    "Valor": 3050.00
+                    "valor": 3050.00
                 },
                 {
                     "Mes": "03/2022",
-                    "Valor": 4500.00
+                    "valor": 4500.00
                 },
                 {
                     "Mes": "04/2022",
-                    "Valor": 6000.00
+                    "valor": 6000.00
                 },
                 {
                     "Mes": "05/2022",
-                    "Valor": 5500.00
+                    "valor": 5500.00
                 }],
         }
     }
@@ -232,139 +232,139 @@ class DataTest {
 
     getDataJSON() {
         return {
-            "QtdeRegistros": 20,
-            "DataConsulta": "20-06-2022",
-            "TotalVendasDia": 2000.00,
-            "TicketMedio": 145.00,
-            "VendasFormaPagamento": [
+            "qtdeRegistros": 20,
+            "dataConsulta": "20-06-2022",
+            "totalVendasDia": 2000.00,
+            "ticketMedio": 145.00,
+            "vendasFormaPagamento": [
                 {
-                    "Forma": "Dinheiro",
-                    "Valor": 500.00
+                    "forma": "Dinheiro",
+                    "valor": 500.00
                 },
                 {
-                    "Forma": "Cartao Credito",
-                    "Valor": 150.00
+                    "forma": "Cartao Credito",
+                    "valor": 150.00
                 },
                 {
-                    "Forma": "Cartao Debito",
-                    "Valor": 220.00
+                    "forma": "Cartao Debito",
+                    "valor": 220.00
                 },
                 {
-                    "Forma": "PIX",
-                    "Valor": 320.00
+                    "forma": "PIX",
+                    "valor": 320.00
                 }],
-            "TotalDiaCancelamentos": 500.00,
-            "TotalDiaDescontos": 300.00,
-            "TotalDiaTaxaServico": 150.00,
-            "TotalDiaCortesias": 10.00,
-            "RankingProdutos": [
+            "totalDiaCancelamentos": 500.00,
+            "totalDiaDescontos": 300.00,
+            "totalDiaTaxaServico": 150.00,
+            "totalDiaCortesias": 10.00,
+            "rankingProdutos": [
                 {
-                    "Produto": 'COCA COLA',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'COCA COLA',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 },
                 {
-                    "Produto": 'FANTA',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'FANTA',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 },
                 {
-                    "Produto": 'RODIZIO',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'RODIZIO',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 },
                 {
-                    "Produto": 'CERVEJA BRAHMA',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'CERVEJA BRAHMA',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 },
                 {
-                    "Produto": 'PETIT GATEAU',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'PETIT GATEAU',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 },
                 {
-                    "Produto": 'X-TUDO',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'X-TUDO',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 },
                 {
-                    "Produto": 'X-SALADA',
-                    "Qtde": 10,
-                    "ValorTotal": 100.00
+                    "produto": 'X-SALADA',
+                    "qtde": 10,
+                    "valorTotal": 100.00
                 }],
-            "VendasPorHora": [
+            "vendasPorHora": [
                 {
-                    "Hora": '16:00',
-                    "Valor": 100.00
+                    "hora": '16:00',
+                    "valor": 100.00
                 },
                 {
-                    "Hora": '16:30',
-                    "Valor": 150.00
+                    "hora": '16:30',
+                    "valor": 150.00
                 },
                 {
-                    "Hora": '17:00',
-                    "Valor": 300.00
+                    "hora": '17:00',
+                    "valor": 300.00
                 },
                 {
-                    "Hora": '17:30',
-                    "Valor": 200.00
+                    "hora": '17:30',
+                    "valor": 200.00
                 },
                 {
-                    "Hora": '18:00',
-                    "Valor": 50.00
+                    "hora": '18:00',
+                    "valor": 50.00
                 }],
-            "VendasPorTipo": [
+            "vendasPorTipo": [
                 {
-                    "Tipo": "Balcao",
-                    "Valor": 3000.00
+                    "tipo": "Balcao",
+                    "valor": 3000.00
                 },
                 {
-                    "Tipo": "Delivery",
-                    "Valor": 3000.00
+                    "tipo": "delivery",
+                    "valor": 3000.00
                 },
                 {
-                    "Tipo": "Mesa/Comanda",
-                    "Valor": 3000.00
+                    "tipo": "Mesa/Comanda",
+                    "valor": 3000.00
                 }],
-            "ConsumosEmAbertoQtde": 3,
-            "ConsumosEmAbertoValor": 300.00,
-            "EvolucaoVendasMes": [
+            "consumosEmAbertoQtde": 3,
+            "consumosEmAbertoValor": 300.00,
+            "evolucaoVendasMes": [
                 {
-                    "Mes": "01/2022",
-                    "Valor": 3000.00
+                    "mes": "01/2022",
+                    "valor": 3000.00
                 },
                 {
-                    "Mes": "02/2022",
-                    "Valor": 3050.00
+                    "mes": "02/2022",
+                    "valor": 3050.00
                 },
                 {
-                    "Mes": "03/2022",
-                    "Valor": 4500.00
+                    "mes": "03/2022",
+                    "valor": 4500.00
                 },
                 {
-                    "Mes": "04/2022",
-                    "Valor": 6000.00
+                    "mes": "04/2022",
+                    "valor": 6000.00
                 },
                 {
-                    "Mes": "05/2022",
-                    "Valor": 5500.00
+                    "mes": "05/2022",
+                    "valor": 5500.00
                 }],
         }
     }
 
     getSalesInAMonth() {
         return {
-            "VWSalesInAmonth": [
+            "vWSalesInAmonth": [
                 {
-                    "TotalRegistros": 24,
-                    "DataHora": "02-06-2022 19:54:59"
+                    "totalRegistros": 24,
+                    "dataHora": "02-06-2022 19:54:59"
                 }
             ],
-            "VWSalesInAmonth_D": [
+            "vWSalesInAmonth_D": [
                 {
                     "DAYOFMONTH": "01",
-                    "AWEEKDAY": "QUARTA-FEIRA",
+                    "AWEEKDAY": "qUARTA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -374,7 +374,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "02",
-                    "AWEEKDAY": "QUINTA-FEIRA",
+                    "AWEEKDAY": "qUINTA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -404,7 +404,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "07",
-                    "AWEEKDAY": "TERCA-FEIRA",
+                    "AWEEKDAY": "tERCA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -414,7 +414,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "08",
-                    "AWEEKDAY": "QUARTA-FEIRA",
+                    "AWEEKDAY": "qUARTA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -424,7 +424,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "09",
-                    "AWEEKDAY": "QUINTA-FEIRA",
+                    "AWEEKDAY": "qUINTA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -454,7 +454,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "12",
-                    "AWEEKDAY": "DOMINGO",
+                    "AWEEKDAY": "dOMINGO",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -464,7 +464,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "14",
-                    "AWEEKDAY": "TERCA-FEIRA",
+                    "AWEEKDAY": "tERCA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -474,7 +474,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "15",
-                    "AWEEKDAY": "QUARTA-FEIRA",
+                    "AWEEKDAY": "qUARTA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -484,7 +484,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "16",
-                    "AWEEKDAY": "QUINTA-FEIRA",
+                    "AWEEKDAY": "qUINTA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -514,7 +514,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "21",
-                    "AWEEKDAY": "TERCA-FEIRA",
+                    "AWEEKDAY": "tERCA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -524,7 +524,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "22",
-                    "AWEEKDAY": "QUARTA-FEIRA",
+                    "AWEEKDAY": "qUARTA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -534,7 +534,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "23",
-                    "AWEEKDAY": "QUINTA-FEIRA",
+                    "AWEEKDAY": "qUINTA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -574,7 +574,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "28",
-                    "AWEEKDAY": "TERCA-FEIRA",
+                    "AWEEKDAY": "tERCA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -584,7 +584,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "29",
-                    "AWEEKDAY": "QUARTA-FEIRA",
+                    "AWEEKDAY": "qUARTA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -594,7 +594,7 @@ class DataTest {
                 },
                 {
                     "DAYOFMONTH": "30",
-                    "AWEEKDAY": "QUINTA-FEIRA",
+                    "AWEEKDAY": "qUINTA-FEIRA",
                     "DINHEIRO": 1200.00,
                     "CARTAO": 7539.45,
                     "eWALLET": 500.00,
@@ -607,12 +607,12 @@ class DataTest {
     }
 
     getTotalSalesInAMonth() {
-        const total = _.sumBy(this.getSalesInAMonth().VWSalesInAmonth_D, "AMOUNT");
-        const cartao = _.sumBy(this.getSalesInAMonth().VWSalesInAmonth_D, "CARTAO");
-        const eWallet = _.sumBy(this.getSalesInAMonth().VWSalesInAmonth_D, "eWALLET");
-        const crediario = _.sumBy(this.getSalesInAMonth().VWSalesInAmonth_D, "CREDIARIO");
-        const cortesia = _.sumBy(this.getSalesInAMonth().VWSalesInAmonth_D, "CORTESIA");
-        const dinheiro = _.sumBy(this.getSalesInAMonth().VWSalesInAmonth_D, "AMOUNT");
+        const total = _.sumBy(this.getSalesInAMonth().vWSalesInAmonth_D, "aMOUNT");
+        const cartao = _.sumBy(this.getSalesInAMonth().vWSalesInAmonth_D, "cARTAO");
+        const eWallet = _.sumBy(this.getSalesInAMonth().vWSalesInAmonth_D, "eWALLET");
+        const crediario = _.sumBy(this.getSalesInAMonth().vWSalesInAmonth_D, "cREDIARIO");
+        const cortesia = _.sumBy(this.getSalesInAMonth().vWSalesInAmonth_D, "cORTESIA");
+        const dinheiro = _.sumBy(this.getSalesInAMonth().vWSalesInAmonth_D, "aMOUNT");
 
         return {
             "DINHEIRO": dinheiro,
@@ -627,7 +627,7 @@ class DataTest {
     getEvolutionInAMonth() {
         var sum = 0;
         var result = []
-        this.getSalesInAMonth().VWSalesInAmonth_D.map((dia) => (
+        this.getSalesInAMonth().vWSalesInAmonth_D.map((dia) => (
             sum += dia.AMOUNT | result.push({ "DIA": dia.DAYOFMONTH, "EVOLUTION": sum + dia.AMOUNT})
         ));
         

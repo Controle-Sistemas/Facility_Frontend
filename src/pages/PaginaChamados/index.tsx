@@ -416,8 +416,8 @@ export function PaginaChamados(props) {
 						isModalOpen={isModalChamadoOpen}
 						isModalClosed={handleOpenModalChamado}
 						title="Adicionar Chamado"
-						height="85vh"
-						width="50%"
+						height="90vh"
+						width="95%"
 					>
 						<FormAddChamado onAdd={onAddChamado} isAdmin={isAdmin} idUser={idUser} editorKey={TINYKEY} />
 					</ModalForm>

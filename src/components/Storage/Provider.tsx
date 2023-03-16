@@ -5,6 +5,7 @@ import useStorage from '../../utils/useStorage';
 export default function StoreProvider ({ children }){ //Cria a rota protegida
     const [token, setToken] = useStorage('token') //Cria o token
     const [admin, setAdmin] = useStorage('admin') //Cria o admin
+    const [idCloud, setIdCloud] = useStorage(undefined) //Cria o idCloud
 
     return(
         <Context.Provider value={{

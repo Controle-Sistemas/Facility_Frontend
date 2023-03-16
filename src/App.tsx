@@ -27,10 +27,11 @@ import { PaginaTiposChamado } from './pages/admin/TipoChamados';
 import { PaginaChamado } from './pages/PaginaChamado';
 import { PortalChamados } from './pages/PortalChamados';
 import { PaginaSetores } from './pages/PaginaInternos';
+import { DashProvider } from './pages/PortalPageClientDashboard/Context';
 function App() {
 	//Rotas do React
 	//As privadas impedem o acesso caso não esteja logado
-	localStorage.getItem('Tema') === undefined && localStorage.setItem('Tema','light')
+	localStorage.getItem('Tema') === undefined && localStorage.setItem('Tema', 'light')
 
 
 	return (
@@ -76,7 +77,9 @@ function App() {
 						element={
 							<ProtectedRoute>
 								<Header />
-								<PortalPageClientDashboard />
+								<DashProvider>
+									<PortalPageClientDashboard />
+								</DashProvider>
 							</ProtectedRoute>
 						}
 					/>

@@ -25,7 +25,7 @@ export const TableContainer = styled.div`
   width: 100%;
 
   table {
-    width: 100%;
+    width: 100% !important;
   }
 `;
 

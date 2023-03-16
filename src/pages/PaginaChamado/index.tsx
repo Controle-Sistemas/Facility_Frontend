@@ -204,7 +204,7 @@ export function PaginaChamado() {
 				refreshData(tipos);
 			});
 		});
-		Swal.fire('Atualizado!', `O item foi marcado como ${item.DONE == 1 ? 'concluído' : 'pendente'}`, 'success');
+		//Swal.fire('Atualizado!', `O item foi marcado como ${item.DONE == 1 ? 'concluído' : 'pendente'}`, 'success');
 		refreshData(tipos);
 	}
 

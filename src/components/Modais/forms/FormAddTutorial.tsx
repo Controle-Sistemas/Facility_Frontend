@@ -2,6 +2,7 @@ import { FormContainer, InputContainer, ButtonGroup } from '../../styledComponen
 import { PrimaryButton } from '../../styledComponents/buttons';
 import { useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import { TINYKEY } from '../../../utils/keys';
 
 export function FormAddTutorial({ handleClose, addTutorial, categorias }) {
 	const [ tutorial, setTutorial ] = useState({
@@ -84,7 +85,7 @@ export function FormAddTutorial({ handleClose, addTutorial, categorias }) {
 							width: '100%',
 							menubar: false
 						}}
-                        
+                        apiKey={TINYKEY}
 						onEditorChange={handleChangeText}
 					/>
 				</InputContainer>
