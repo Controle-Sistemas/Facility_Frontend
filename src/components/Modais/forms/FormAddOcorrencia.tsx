@@ -51,7 +51,7 @@ export function FormAddOcorrencia({ onAdd, idInterno, chamado, setor, statusCham
 				<Editor
 					value={ocorrencia.DESCRICAO}
 					init={{
-						height: 150,
+						height: 300,
 						width: '100%',
 						menubar: false
 					}}

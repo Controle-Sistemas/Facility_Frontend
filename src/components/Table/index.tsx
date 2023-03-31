@@ -199,7 +199,6 @@ export default function DefaultTable({
 																	onClick={handleOpenModalEdit.bind(this, item.ID)}
 																>
 																	<i className="fa-solid fa-edit" />
-																	Editar Interno
 																</ButtonActionTable>
 																
 															</TableCellActions>

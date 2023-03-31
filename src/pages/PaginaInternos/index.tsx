@@ -9,6 +9,7 @@ import { MainTitle } from '../../components/styledComponents/Texts';
 import Sidebar from '../../components/Sidebar/sidebar';
 import DefaultTable from '../../components/Table';
 import axios from 'axios';
+import _ from 'lodash';
 import { useState, useEffect } from 'react';
 import { BASE_URL } from '../../utils/requests';
 import Swal from 'sweetalert2';
@@ -155,6 +156,40 @@ export function PaginaSetores() {
 		setIsModalEditInternosOpen(!isModalEditInternosOpen);
 		setIdInterno(id);
 	}
+
+	async function patchAdminApi(id: string, ADMIN: boolean) {
+		//Requisição para o backend
+		// _.find interno
+		const data = _.find(internos, {"ID" : id})
+		// troca o admin
+		data.ADMIN = !data.ADMIN;
+		// faz a requisição com o admin novo
+		await axios.patch(BASE_URL + '/internos/' + data.ID, data).then((res) => {
+			setIsLoading(false)
+			if (res.status === 200) {
+				Swal.fire({
+					title: 'Interno Editado com Sucesso!',
+					icon: 'success',
+					timer: 2000,
+					showConfirmButton: true
+				});
+				axios.get(BASE_URL + '/internos/').then((res) => {
+					if (res.status === 200) {
+						setInternos(res.data.data);
+					} else {
+						setInternos([]);
+					}
+				});
+				handleOpenModalEditInterno(idInterno);
+			}
+		}).catch(err => {
+			setIsLoading(false)
+			setError(true)
+
+		})
+	}
+	
+	
 
 	let filteredItems = internos.filter((item: InternosType) => {
 		//filtra os dados

@@ -25,6 +25,7 @@ import { PaginaTutorial } from './pages/TutoriaisUsuario/PaginaTutorial';
 import { PaginaChamados } from './pages/PaginaChamados';
 import { PaginaTiposChamado } from './pages/admin/TipoChamados';
 import { PaginaChamado } from './pages/PaginaChamado';
+import { PaginaEstoque } from './pages/PaginaEstoque';
 import { PortalChamados } from './pages/PortalChamados';
 import { PaginaSetores } from './pages/PaginaInternos';
 import { DashProvider } from './pages/PortalPageClientDashboard/Context';
@@ -79,6 +80,18 @@ function App() {
 								<Header />
 								<DashProvider>
 									<PortalPageClientDashboard />
+								</DashProvider>
+							</ProtectedRoute>
+						}
+					/>
+
+					<Route
+						path="/user/estoque"
+						element={
+							<ProtectedRoute>
+								<Header />
+								<DashProvider>
+									<PaginaEstoque />
 								</DashProvider>
 							</ProtectedRoute>
 						}

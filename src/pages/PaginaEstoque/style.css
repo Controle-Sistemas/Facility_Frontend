@@ -1,0 +1,17 @@
+.fullWidith{
+	width: 100%;
+}
+.flex{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+}
+.responsiveOnMobile{
+
+}
+
+@media screen and (max-width: 620px) {
+    .responsiveOnMobile{
+        flex-direction: column;
+    }
+}

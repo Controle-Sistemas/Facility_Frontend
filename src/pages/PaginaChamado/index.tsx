@@ -136,8 +136,8 @@ export function PaginaChamado() {
 
 	function refreshData(tipos) {
 		axios.get(BASE_URL + '/tipos-chamado/chamado/' + idChamado).then((res) => {
-			if(res.data.data){
-				
+			if (res.data.data) {
+
 				var data = res.data.data;
 				var aux = _.groupBy(data.map(item => (
 					{
@@ -160,11 +160,11 @@ export function PaginaChamado() {
 					}
 				}))
 				setItemsChamado(res.data.data)
-			
-				}else{
-					setFilteredItems([]);
-					setItemsChamado([]);
-				}
+
+			} else {
+				setFilteredItems([]);
+				setItemsChamado([]);
+			}
 		});
 
 
@@ -291,7 +291,7 @@ export function PaginaChamado() {
 			confirmButtonText: 'Sim, alterar!'
 		}).then((result) => {
 			if (result.value) {
-				console.log('items',itemsChamado)
+				console.log('items', itemsChamado)
 				if (itemsChamado.length > 0) {
 					axios.delete(`${BASE_URL}/tipos-chamado/chamado/${data.IDCHAMADO}`).then((res) => {
 						if (res.status == 200) {
@@ -611,8 +611,8 @@ export function PaginaChamado() {
 					isModalOpen={modalOcorrenciaIsOpen}
 					isModalClosed={handleOpenModalOcorrencia}
 					title="Adicionar Ocorrencia"
-					height="65vh"
-					width="50%"
+					height="90vh"
+					width="95%"
 				>
 					<FormAddOcorrencia onAdd={onAddOcorrencia} idInterno={idInterno} chamado={chamado} setor={setor} statusChamado={statusChamado} />
 				</ModalForm>

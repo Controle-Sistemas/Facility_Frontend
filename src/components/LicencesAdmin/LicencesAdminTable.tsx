@@ -15,6 +15,7 @@ import {CepMask, cnpjMask} from '../../utils/Masks'
 import { FormMostrarColunas } from '../Modais/forms/FormMostrarColunas'
 import DefaultTable from '../Table'
 import cookie from 'js-cookie'
+import { Container } from '@mui/material';
 
 export function LicencesAdminTable() {
 	//variaveis de estado
@@ -209,7 +210,7 @@ export function LicencesAdminTable() {
 		})
 
 		return (
-			<>
+			<Container style={{width:'92%'}}>
 				<FilterContainer>
 					<FilterComponent
 						onFilter={(e) => setFilterText(e.target.value)}
@@ -285,7 +286,7 @@ export function LicencesAdminTable() {
 				>
 					<FormCadEmpresa isModalClosed={handleOpenModalCadEmpresa} />
 				</ModalForm>
-			</>
+			</Container>
 		);
 	}
 }

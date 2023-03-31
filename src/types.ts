@@ -117,6 +117,7 @@ export interface InternosType{
     EMAIL: string;
     SETOR: number|string;
     ATIVO: number | boolean;
+    ADMIN : boolean;
 }
 
 export interface OcorrenciasType{

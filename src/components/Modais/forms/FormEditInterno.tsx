@@ -4,17 +4,20 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../../../utils/requests';
 import { InternosType } from '../../../types';
+import Switch from '@mui/material/Switch';
+import SwitchIos from '../../SwitchComponent';
 
 export function FormEditInterno({ onEdit, idInterno }) {
-	const [ interno, setInterno ] = useState<InternosType>({
+	const [interno, setInterno] = useState<InternosType>({
 		ID: Number(idInterno),
 		NOME: '',
 		EMAIL: '',
 		USUARIO: '',
 		ATIVO: true,
-		SETOR: null
+		SETOR: null,
+		ADMIN: false
 	});
-	const [ setores, setSetores ] = useState([]);
+	const [setores, setSetores] = useState([]);
 
 	useEffect(() => {
 		axios
@@ -40,6 +43,12 @@ export function FormEditInterno({ onEdit, idInterno }) {
 		e.preventDefault();
 
 		onEdit(interno);
+	}
+
+	function handleToggleAdmin(e) {
+		setInterno({ ...interno, ADMIN: !interno.ADMIN })
+
+		console.log(interno)
 	}
 
 	return (
@@ -91,7 +100,14 @@ export function FormEditInterno({ onEdit, idInterno }) {
 			</InputContainer>
 			<InputContainer>
 				<CheckboxGroup>
-					<input
+
+					<SwitchIos isActive={interno.ATIVO === 1 ? true : false} activation={() => {
+						interno.ATIVO === 0
+							? setInterno({ ...interno, ATIVO: 1 })
+							: setInterno({ ...interno, ATIVO: 0 });
+					}} />
+					{/**
+					 * <input
 						type="checkbox"
 						name="ATIVO"
 						onChange={(event) => {
@@ -101,8 +117,13 @@ export function FormEditInterno({ onEdit, idInterno }) {
 						}}
 						checked={interno.ATIVO === 1 ? true : false}
 					/>
+					 */}
 					<label>Ativo</label>
+					<SwitchIos isActive={interno.ADMIN} id={interno.ID.toString()} activation={handleToggleAdmin} />
+					<label >Admin</label>
 				</CheckboxGroup>
+			</InputContainer>
+			<InputContainer>
 			</InputContainer>
 			<ButtonGroup justifyContent="center">
 				<PrimaryButton>Salvar Interno</PrimaryButton>

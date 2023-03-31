@@ -176,10 +176,13 @@ table{
 }
 
 .caixa-container{
-
-    box-shadow: 0 0 20px 0px black;
+    box-shadow: 0 0 8px 0px black;
     border-radius: 0.4em;
     padding: 0.6em;
+    width: 24% !important;
+    margin-right: .02em !important;
+    margin-left: .5em !important;
+    height: fit-content;
 }
 
 .caixa label{
@@ -208,6 +211,13 @@ table{
     border-radius: 50%;
 }
 
+.caixa-list{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    width: 100%;
+}
+
 .values{
     width: 100%;
     padding: 0 0 .6em 0;
@@ -226,6 +236,17 @@ table{
     padding: .2em 0;
     margin: 0;
     font-size: small;
+}
+@media screen and (max-width: 1200px) {
+    .caixa-container{
+        width: 32% !important;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .caixa-container{
+        width: 48% !important;
+    }
 }
 
 @media screen and (max-width: 800px) {
@@ -248,10 +269,13 @@ table{
         width: 50%;
     }
 
+    .caixa-container{
+        width: 100% !important;
+    }
+
     .formDateControlContainer {
         flex-direction: column;
     }
-
 
     table{
         overflow-x: hidden;
@@ -259,6 +283,6 @@ table{
 
 }
 
-@media screen and (max-width: 800px) {
-
+@media screen and (max-width: 600px) {
+    
 }

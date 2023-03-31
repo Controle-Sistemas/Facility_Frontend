@@ -154,19 +154,16 @@ export function PaginaChamados(props) {
 								setError(false);
 							})
 							.catch((err) => {
-								if (err.res.status !== 404) {
+								if (res.status !== 404) {
 									console.log(err.res.status);
 									setLoading(false);
-									setError(true);
 								}
 							});
 					})
 					.catch((err) => {
-						if (err.res.status !== 404) {
+						
 							console.log(err);
 							setLoading(false);
-							setError(true);
-						}
 					});
 			}
 			axios
@@ -178,11 +175,8 @@ export function PaginaChamados(props) {
 
 				})
 				.catch((err) => {
-					if (err.res.status !== 404) {
 						console.log(err);
 						setLoading(false);
-						setError(true);
-					}
 				});
 		},
 		[idUser, isAdmin]

@@ -23,7 +23,7 @@ import { DashProvider, useDash } from './Context';
 import { DashContext } from './Context';
 import { useContext } from 'react';
 const MONITORAMENTOTEMPOREAL = 'Monitoramento em Tempo Real';
-const REGISTRADORAS = 'Registradoras';
+const REGISTRADORAS = 'Períodos de Caixa';
 const EVOLUCAOMES = 'Evolução vendas dia a dia';
 
 export function PortalPageClientDashboard() {
@@ -41,7 +41,7 @@ export function PortalPageClientDashboard() {
 				.then((res) => {
 					var data = res.data.data
 					setGroupSelectData(data);
-					if (data.length > 0) {
+					if (data.length > 1) {
 						setLoading(false)
 						setIdCloud(_.find(res.data.data, { "TIPO": 'MATRIZ' }).IDCLOUD);
 					}
@@ -49,12 +49,26 @@ export function PortalPageClientDashboard() {
 					console.log('Matriz', _.filter(res.data.data, { "TIPO": 'MATRIZ' }))
 					console.log('Filiais', _.filter(res.data.data, { "TIPO": 'FILIAL' }))
 				}).catch(err => {
-					console.log('Não tem grupo')
-					setLoading(false)
+					console.log("Grupo não encontrado")
+					getUniqueClient(cnpj);
 				})
 		},
 		[]
 	);
+
+	async function getUniqueClient(cnpj: string){
+		await axios.get(`${BASE_URL}/clientes/usuario/${cnpj}`).then((res) => {
+			var data = res.data.data;
+			console.log('CNPJ', cnpj)
+			console.log('Idcloud', data[0].IDCLOUD)
+			setIdCloud(data[0].IDCLOUD);
+			console.log(idCloud)
+			setLoading(false);
+		}).catch(err => { 
+			console.log(err) 
+			setLoading(false)
+		});
+	}
 
 	function handleChangeIdCloud(event: SelectChangeEvent) {
 		setIdCloud(event.target.value);

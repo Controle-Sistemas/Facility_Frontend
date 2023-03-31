@@ -149,7 +149,12 @@ export function LoginUserForm() {
                 cookie.set('id', parseInt(res.data.id))
                 setToken(res.data.token) //Setando o token nos cookies
                 setAdmin(res.data.isAdmin)
-                navigate("/interno/chamados")
+                console.log("ADMIN", res.data.isAdmin)
+                if(res.data.isAdmin){ //Se for admin, redireciona para a pagina de administração
+                    navigate('/admin/portal-chamados') //Redirecionando para a página de administração
+                }else{ //Se não for admin, redireciona para a página de cliente
+                    navigate("/interno/chamados")
+                }
             }
             return { token:res.data.token} //Retornando o token
         })

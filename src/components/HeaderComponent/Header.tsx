@@ -11,17 +11,18 @@ import './header.css';
 
 
 export default function Header() {
-	const [ open, setOpen ] = useState(false); // estado para abrir e fechar a box do usuário
-	const [ user, setUser ] = useState<UserDataType>({}); // estado para armazenar o usuário logado
+	const [open, setOpen] = useState(false); // estado para abrir e fechar a box do usuário
+	const [user, setUser] = useState<UserDataType>({}); // estado para armazenar o usuário logado
+	const [internalAdmin, setInternalAdmin] = useState(false); // estado para armazenar o usuário logado
 	const [internalUser, setIntenalUser] = useState({
-		NOME:"",
-		USUARIO:"",
-		EMAIL:""
+		NOME: "",
+		USUARIO: "",
+		EMAIL: "",
+		ADMIN: false
 	})
 	const cnpj = localStorage.getItem('cnpj'); // pega o cnpj do usuário logado
 	const idUser = cookie.get('id')
 	const isInternal = window.location.pathname.includes("interno")
-	
 
 	useEffect(() => {
 		if (cnpj && !isInternal) {
@@ -37,12 +38,21 @@ export default function Header() {
 				.catch((err) => {
 					console.log(err);
 				});
-		} else if(isInternal){
+		} else if (isInternal) {
 			axios
 				.get(BASE_URL + `/internos/${idUser}`)
 				.then((res) => {
-						setIntenalUser(res.data.data[0]); // seta o 
-
+					setIntenalUser(res.data.data[0]); // seta o 
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		} else {
+			axios
+				.get(BASE_URL + `/internos/${idUser}`)
+				.then((res) => {
+					setIntenalUser(res.data.data[0]); // seta o 
+					console.log(internalUser)
 				})
 				.catch((err) => {
 					console.log(err);
@@ -60,20 +70,20 @@ export default function Header() {
 		}
 	};
 
-	
+
 	const handleLogout = () => {
 		localStorage.removeItem('cnpj'); // remove o cnpj do usuário logado
 		localStorage.removeItem('token'); // re'move o token do usuário logado
 		cookie.remove('id'); // remove o cookie do usuário logado
 	};
 
-	
+
 	return (
 		<div className="header-container">
 			<div className="header-content">
 				<div className="header-content-left" />
 				<div className="header-content-left-icons">
-						<NotificationIcon />
+					<NotificationIcon />
 					<div className="header-content-user icon-header" onClick={handleOpen}>
 						<i className="fa-solid fa-circle-user" id="user-icon" />
 					</div>
@@ -81,56 +91,71 @@ export default function Header() {
 			</div>
 			<div className="header-content-info-user" onMouseLeave={handleOpen}>
 				{isInternal ? (
-					<> 
-					<div className="header-content-info-user-icon info-icon">
-						<i className="fa-solid fa-circle-user" id="user-icon" />
-						<p>{internalUser.NOME}</p>
-					</div>
-					<span>
-						<p className="little-text">Email:</p>
-						<p>{internalUser.EMAIL}</p>
-					</span>
-					<span>
-						<p className="little-text">Usuário:</p>
-						<p>{internalUser.USUARIO}</p>
-					</span>
+					<>
+						<div className="header-content-info-user-icon info-icon">
+							<i className="fa-solid fa-circle-user" id="user-icon" />
+							<p>{internalUser.NOME}</p>
+						</div>
+						<span>
+							<p className="little-text">Email:</p>
+							<p>{internalUser.EMAIL}</p>
+						</span>
+						<span>
+							<p className="little-text">Usuário:</p>
+							<p>{internalUser.USUARIO}</p>
+						</span>
 
-				</>
-				) : (
-					<> 
-					<div className="header-content-info-user-icon info-icon">
-						<i className="fa-solid fa-circle-user" id="user-icon" />
-						<p>{user.NOME}</p>
-					</div>
-					<span>
-						<p className="little-text">Email:</p>
-						<p>{user.EMAIL}</p>
-					</span>
-					<span>
-						<p className="little-text">Usuário:</p>
-						<p>{cnpjMask(user.CNPJ)}</p>
-					</span>
-					
-				</>
-				)}
+					</>
+				) : internalUser.ADMIN ?
+					<>
+						<div className="header-content-info-user-icon info-icon">
+							<i className="fa-solid fa-circle-user" id="user-icon" />
+							<p>{internalUser.NOME}</p>
+						</div>
+						<span>
+							<p className="little-text">Email:</p>
+							<p>{internalUser.EMAIL}</p>
+						</span>
+						<span>
+							<p className="little-text">Usuário:</p>
+							<p>{internalUser.USUARIO}</p>
+						</span>
+					</>
+					: (
+						<>
+							<div className="header-content-info-user-icon info-icon">
+								<i className="fa-solid fa-circle-user" id="user-icon" />
+								<p>{user.NOME}</p>
+							</div>
+							<span>
+								<p className="little-text">Email:</p>
+								<p>{user.EMAIL}</p>
+							</span>
+							<span>
+								<p className="little-text">Usuário:</p>
+								<p>{cnpjMask(user.CNPJ)}</p>
+							</span>
+
+						</>
+					)}
 				<span>
-						{window.location.pathname.includes('/admin') ? (
-							<Link to="/admin/change-password" className="change-password" onClick={handleOpen}>
-								<i className="fa-solid fa-key" />Alterar Senha
-							</Link>
-						) : window.location.pathname.includes('/user') ? (
-							<Link to="/user/change-password" className="change-password" onClick={handleOpen}>
-								<i className="fa-solid fa-key" />Alterar Senha
-							</Link>
-						) : null}
-					</span>
-					<span className="logout">
-						<Link to="/login" className="logout" onClick={handleLogout}>
-							<i className="fa-solid fa-right-from-bracket" />Sair
+					{window.location.pathname.includes('/admin') ? (
+						<Link to="/admin/change-password" className="change-password" onClick={handleOpen}>
+							<i className="fa-solid fa-key" />Alterar Senha
 						</Link>
-					</span>
+					) : window.location.pathname.includes('/user') ? (
+						<Link to="/user/change-password" className="change-password" onClick={handleOpen}>
+							<i className="fa-solid fa-key" />Alterar Senha
+						</Link>
+					) : null}
+				</span>
+				<span className="logout">
+					<Link to="/login" className="logout" onClick={handleLogout}>
+						<i className="fa-solid fa-right-from-bracket" />Sair
+					</Link>
+				</span>
 			</div>
-				
+
 		</div>
 	);
 }
