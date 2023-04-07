@@ -48,7 +48,7 @@ export function FormEditClient(props) {
 		axios.get(`${BASE_URL}/clientes/${props.clientId}`).then((response) => {
 
 			setValues(response.data.data[0]);
-			setIdcloud(response.data.data[0].IDCLOUD);
+			setIdcloud(response.data.data[0].IDCLOUD);			
 			setNomeEmpresa(response.data.data[0].NOMEESTABELECIMENTO);
 		})
 
@@ -64,7 +64,7 @@ export function FormEditClient(props) {
 					</InputContainer>
 					<InputContainer>
 						<label htmlFor="idcloud">Id Cloud: </label>
-						<input className="form-control" placeholder={`${idcloud}`} disabled />
+						<input className="form-control" name="IDCLOUD" value={values.IDCLOUD} onChange={handleChangeValues}/>
 					</InputContainer>
 				</DisabledInputContainer>
 

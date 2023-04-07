@@ -109,14 +109,15 @@ export default function TableComponent(props) {
 		});
 	};
 
-	const onEdit = ({ ID, NOME, NOMEESTABELECIMENTO, RAMODEATIVIDADE, EMAIL }) => {
+	const onEdit = ({ ID, NOME, NOMEESTABELECIMENTO, RAMODEATIVIDADE, EMAIL, IDCLOUD }) => {
 		axios
 			.patch(`${BASE_URL}/clientes/${ID}`, {
 				ID,
 				NOME,
 				NOMEESTABELECIMENTO,
 				RAMODEATIVIDADE,
-				EMAIL
+				EMAIL,
+				IDCLOUD
 			})
 			.then((res) => {
 				Swal.fire({

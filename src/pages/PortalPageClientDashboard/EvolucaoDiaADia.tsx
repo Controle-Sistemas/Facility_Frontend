@@ -244,14 +244,14 @@ export function EvolucaoDiaADiaComponent() {
 								))}
 
 								<TableRow className='tableHeaderRow'>
-									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-coins" aria-hidden="true" style={{ color: "gold" }} ></i> <br /> Totais</TableCell>
-									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-money-bill-1" aria-hidden="true" style={{ color: "gold" }}></i><br />{getTotal('dinheiro').toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-credit-card" aria-hidden="true" style={{ color: "gold" }}></i><br />{getTotal('cartao').toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-wallet" aria-hidden="true" style={{ color: "gold" }}></i><br />{getTotal('carteiraDigital').toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true" style={{ color: "gold" }}></i><br />{getTotal('crediario').toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-gift" aria-hidden="true" style={{ color: "gold" }}></i><br />{getTotal('cortesia').toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "gold" }}></i><br />{getTotal('valorTotal').toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
-									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-coins" aria-hidden="true" style={{ color: "gold" }}></i> <br />Totais</TableCell>
+									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-coins" aria-hidden="true" style={{ color: "chocolate" }} ></i> <br /> Totais</TableCell>
+									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-money-bill-1" aria-hidden="true" style={{ color: "chocolate" }}></i><br />{getTotal('dinheiro').toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-credit-card" aria-hidden="true" style={{ color: "chocolate" }}></i><br />{getTotal('cartao').toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-wallet" aria-hidden="true" style={{ color: "chocolate" }}></i><br />{getTotal('carteiraDigital').toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-solid fa-money-check-dollar" aria-hidden="true" style={{ color: "chocolate" }}></i><br />{getTotal('crediario').toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-gift" aria-hidden="true" style={{ color: "chocolate" }}></i><br />{getTotal('cortesia').toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "chocolate" }}></i><br />{getTotal('valorTotal').toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</TableCell>
+									<TableCell align="center" style={{ backgroundColor: '#003775', color: "white", fontWeight: "bold" }}><i className="fa fa-coins" aria-hidden="true" style={{ color: "chocolate" }}></i> <br />Totais</TableCell>
 								</TableRow>
 							</TableBody>
 						</table>
@@ -267,7 +267,7 @@ export function EvolucaoDiaADiaComponent() {
 			{evolutionMonth.length > 0 ?
 				<Container style={{ backgroundColor: 'rgb(255 189 0)', color: "white", fontWeight: "bold", display: "flex", alignItems: "bottom", textAlign: "center", marginBottom: "1em", justifyContent: "space-around", padding: ".7em", height: "fit-content" }} >
 					<i className="fa fa-warning" aria-hidden="true" style={{ color: "blanchedalmond" }}></i>
-					<p style={{ color: '#ac8411', height: "fit-content", margin: '0' }}>O percentual de evolução dia a dia é calculado baseado no rendimento do dia comparado com o dia anterior</p>
+					<p style={{ color: '#ac8411', height: "fit-content", margin: '0' }}>O percentual de evolução dia a dia é calculado baseado no rendimento do dia comparado ao dia anterior</p>
 					<i className="fa fa-warning" aria-hidden="true" style={{ color: "blanchedalmond" }}></i>
 				</Container>
 				:

@@ -5,10 +5,10 @@ import 'react-spinner-animated/dist/index.css'
     
 export function LoadingComponent() {
     if(tema === 'light'){
-        return <HalfMalf text={"Loading..."} 
+        return <HalfMalf text={"Aguarde..."} 
     center={true} width={"150px"} height={"150px"}/>
     } else {
-        return <DoubleBubble text={"Loading..."} 
+        return <DoubleBubble text={"Aguarde..."} 
     center={true} width={"150px"} height={"150px"}/>
     }
 	

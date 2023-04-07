@@ -1,17 +1,159 @@
-.fullWidith{
+.fullWidth {
 	width: 100%;
 }
-.flex{
+
+.flex {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
 }
-.responsiveOnMobile{
+
+.flexColumn {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.responsiveOnMobile {}
+
+ul {
+	padding: 0;
+}
+
+/*
+
+li {
+	display: flex;
+	align-items: baseline;
+	margin: 0.1rem;
+	border: 0;
+	padding: 0;
+	background-color: lightgrey;
+	padding: .1rem;
+}
+
+li>p {
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 600;
+	font-size: small;
+}
+
+li>img {
+	margin: 5px;
+}
+
+.groupsList {
+	width: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+.group {
+	display: flex;
+	align-items: start;
+	padding: 0.4em;
+	flex-direction: column;
+	justify-content: space-evenly;
+}
+
+.group p {
+	display: flex;
+	align-items: baseline;
+	flex-direction: row;
+	width: 100%;
+	justify-content: start;
+}
+
+*/
+.product {
+	display: flex;
+	flex-direction: column;
+	align-items: self-start;
+}
+
+.product strong,
+.product small {
+	margin-right: .4em;
+}
+
+#prod-table tr {
+	cursor: pointer;
+	transition: all .2s;
+}
+
+#prod-table tbody tr:hover {
+	transform: scale(1.01);
+	color: #a84c11;
+	background-color: rgb(253, 240, 206);
 
 }
 
-@media screen and (max-width: 620px) {
-    .responsiveOnMobile{
-        flex-direction: column;
-    }
+#prod-table td {
+	display: table-cell;
+	text-align: center;
+	width: 10%;
+	font-weight: bold;
+	padding: .4em .2em;
+	border-bottom: 1px solid lightgray;
+
+}
+
+#prod-table th {
+	text-align: center !important;
+	color: #a84c11;
+}
+
+#prod-table th:nth-child(1) {
+	text-align: left !important;
+	padding-left: 1em;
+
+}
+
+#prod-table th:nth-child(2) {
+	text-align: center;
+	width: 60%;
+}
+
+#prod-table td:nth-child(2) {
+	text-align: left;
+	width: 60%;
+	font-weight: normal;
+	font-size: small;
+}
+
+#prod-table td:nth-child(4),
+#prod-table td:nth-child(1) {
+	text-align: left !important;
+
+}
+
+.relatorio-control-buttons {
+	display: flex;
+	flex-direction: column;
+	position: fixed;
+	bottom: .5em;
+	right: .5em;
+}
+
+@media screen and (max-width: 600px) {
+	.relatorio-control-buttons {
+		
+	}
+}
+
+@media screen and (max-width: 400px) {
+
+	#prod-table .codigoInterno,
+	#prod-table .precoCusto {
+		display: none;
+	}
+
+	#prod-table td:nth-child(2) {
+		width: 60%;
+	}
+
+	#prod-table td {
+		font-size: small;
+	}
 }

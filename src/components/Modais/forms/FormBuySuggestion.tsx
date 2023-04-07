@@ -2,38 +2,41 @@ import { ButtonGroup, FormContainer, InputContainer } from "../../styledComponen
 import { DangerButton, PrimaryButton } from "../../styledComponents/buttons";
 import { useState } from "react";
 interface productBuySuggestion {
-    codigo?: number,
-    desc?: string,
-    estoqueAtual?: number,
-    custo?: number,
+    codInterno?: string,
+    descricao?: string,
+    estoqueAtual?: string,
+    precoCusto?: string,
     qteCompra?: number,
-    custTotal?: string
+    custTotal?: number
 }
-export function FormBuySuggestion({ handleClose, addProduct, productSuggested }) {
+export function FormBuySuggestion({ handleClose, handleOpen, addProduct, productSuggested }) {
     const [produto, setProduto] = useState<productBuySuggestion>(productSuggested);
 
 
     function handleChange(e) {
-        setProduto({ ...produto, [e.target.name]: e.target.value });
+        setProduto(e.target.name ==='qteCompra' || e.target.name ==='custoTotal' ?
+            { ...produto, [e.target.name]: parseInt(e.target.value) } :
+            { ...produto, [e.target.name]: parseInt(e.target.value) }
+        );
     }
 
     function handleSubmit(e) {
         e.preventDefault();
         addProduct(produto);
-
+        handleClose()
     }
 
 
     return (
         <FormContainer onSubmit={handleSubmit}>
-            <InputContainer style={{width:'95%'}}>
+            <InputContainer style={{ width: '95%' }}>
                 <label>Descrição</label>
-                <input type="text" className="form-control" name="desc" onChange={handleChange} value={produto.desc} disabled />
+                <input type="text" className="form-control" name="descricao" onChange={handleChange} value={produto.descricao} disabled />
             </InputContainer>
             <div className="lineModalInputContainer">
                 <InputContainer className="inputContainer" >
                     <label>Código</label>
-                    <input type="text" className="form-control" name="codigo" onChange={handleChange} value={produto.codigo} disabled />
+                    <input type="text" className="form-control" name="codInterno" onChange={handleChange} value={produto.codInterno} disabled />
                 </InputContainer>
                 <InputContainer className="inputContainer" >
                     <label>Estoque Atual</label>
@@ -43,7 +46,7 @@ export function FormBuySuggestion({ handleClose, addProduct, productSuggested })
             <div className="lineModalInputContainer">
                 <InputContainer className="inputContainer">
                     <label>Custo (R$)</label>
-                    <input type="text" className="form-control" name="custo" onChange={handleChange} value={produto.custo} disabled />
+                    <input type="text" className="form-control" name="precoCusto" onChange={handleChange} value={produto.precoCusto} disabled />
                 </InputContainer>
                 <InputContainer className="inputContainer">
                     <label>Comprar (qte)</label>
@@ -51,10 +54,10 @@ export function FormBuySuggestion({ handleClose, addProduct, productSuggested })
                 </InputContainer>
             </div>
             <ButtonGroup justifyContent="center">
-                <PrimaryButton>
+                <PrimaryButton onClick={handleSubmit}>
                     Salvar sugestão
                 </PrimaryButton>
-                <DangerButton>
+                <DangerButton onClick={handleClose}>
                     Cancelar
                 </DangerButton>
             </ButtonGroup>
