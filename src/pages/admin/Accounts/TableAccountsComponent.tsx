@@ -74,8 +74,6 @@ export default function TableComponent(props) {
 				})
 				.catch((error) => {
 					setLoading(false);
-					setError(true);
-					setErrorMessage('Erro ao carregar os campos da tabela');
 				});
 		},
 		[ columns, idUser, props.data ]
@@ -173,14 +171,11 @@ export default function TableComponent(props) {
 					})
 					.catch((error) => {
 						setLoading(false);
-						setError(true);
-						setErrorMessage('Erro ao carregar os dados da tabela');
 					});
 			})
 			.catch((err) => {
 				console.log(err);
 				setLoading(false);
-				setError(true);
 				setErrorMessage('Erro ao atualizar os dados da tabela');
 			});
 	};
@@ -243,7 +238,6 @@ export default function TableComponent(props) {
 					})
 					.catch((error) => {
 						setLoading(false);
-						setError(true);
 						setErrorMessage('Erro ao carregar dados da tabela');
 					});
 			})
@@ -254,7 +248,6 @@ export default function TableComponent(props) {
 					icon: 'error'
 				});
 				setLoading(false);
-				setError(true);
 				setErrorMessage('Erro ao Deletar linha da tabela');
 			});
 	};
@@ -314,7 +307,6 @@ export default function TableComponent(props) {
 	
 				}).catch((error) => {
 					setLoading(false);
-					setError(true);
 					setErrorMessage("Erro ao carregar os dados da tabela");
 				})
 			})

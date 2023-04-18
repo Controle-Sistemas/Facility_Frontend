@@ -22,6 +22,7 @@ import { RealTimeDashComponent } from './RealTimeDashComponent';
 import { DashProvider, useDash } from './Context';
 import { DashContext } from './Context';
 import { useContext } from 'react';
+import zIndex from '@mui/material/styles/zIndex';
 const MONITORAMENTOTEMPOREAL = 'Monitoramento em Tempo Real';
 const REGISTRADORAS = 'Períodos de Caixa';
 const EVOLUCAOMES = 'Evolução vendas dia a dia';
@@ -32,6 +33,7 @@ export function PortalPageClientDashboard() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [dashpage, setPage] = useState(MONITORAMENTOTEMPOREAL);
+	const [clientName, setClientName] = useState('');
 	const cnpj = localStorage.getItem('cnpj');
 	const {idCloud, setIdCloud} = useDash() 
 	const [groupSelectData, setGroupSelectData] = useState([]);
@@ -44,6 +46,7 @@ export function PortalPageClientDashboard() {
 					if (data.length > 1) {
 						setLoading(false)
 						setIdCloud(_.find(res.data.data, { "TIPO": 'MATRIZ' }).IDCLOUD);
+						setClientName(_.find(res.data.data, { "TIPO": 'MATRIZ' }).NOMEESTABELECIMENTO);
 					}
 					console.log('Grupo Completo', data)
 					console.log('Matriz', _.filter(res.data.data, { "TIPO": 'MATRIZ' }))
@@ -62,6 +65,7 @@ export function PortalPageClientDashboard() {
 			console.log('CNPJ', cnpj)
 			console.log('Idcloud', data[0].IDCLOUD)
 			setIdCloud(data[0].IDCLOUD);
+			setClientName(data[0].NOMEESTABELECIMENTO);
 			console.log(idCloud)
 			setLoading(false);
 		}).catch(err => { 
@@ -141,6 +145,7 @@ export function PortalPageClientDashboard() {
 							dashpage === EVOLUCAOMES ? <EvolucaoDiaADiaComponent /> :
 								<RegistradorasComponent />
 					}
+					<h3 style={{position: 'fixed', top: '0', zIndex:'50', textAlign:'center', color:'white'}}>{clientName}</h3>
 				</ContainerAdminContas>
 			</ContainerAdmin >
 	);

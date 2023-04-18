@@ -83,7 +83,7 @@ export function RealTimeDashComponent() {
 			setLoading(false);
 		})
 	}, [idCloud, searchBodyData]);
-
+	
 	var somaProdutosDia = 0;
 	const totalProdutosDia = _.map(clientData.rankingProdutos, (value, key) => {
 		somaProdutosDia += clientData.rankingProdutos[key].ValorTotal
@@ -129,7 +129,7 @@ export function RealTimeDashComponent() {
 	}
 
 	function getFormatedTime(date: Date) {
-		return date.toTimeString().substring(0,8)
+		return date.toLocaleTimeString()
 	}
 
 	function getMeses() {
@@ -239,13 +239,14 @@ export function RealTimeDashComponent() {
 										ampmInClock={false}
 										value={searchTimeFrom}
 										onChange={(newValue) => {
-											setSearchTimeFrom(newValue);
+											console.log(new Date(newValue))
+											setSearchTimeFrom(new Date(newValue));
 										}}
 										ampm={false}
 										renderInput={(params) => <TextField {...params} />} />
 								</LocalizationProvider>
 							</div>
-							<PrimaryButton onClick={() => refreshData()}><i className="fa-solid fa-magnifying-glass" /></PrimaryButton>
+							<PrimaryButton onClick={() => refreshData()}><i className="fa fa-refresh" /></PrimaryButton>
 						</div>
 					</FormControl>
 				</InputGroupContainer>
@@ -362,7 +363,11 @@ export function RealTimeDashComponent() {
 									width="100%"
 									height="400px"
 									data={getVendasHora()}
-									options={{ title: "", chartArea: { width: "80%" }, areaOpacity: .3, colors: ['#003775'] }}
+									options={{ animation: {
+										duration: 10000,
+										easing: 'out',
+										startup:'true',
+									},title: "", chartArea: { width: "80%" }, areaOpacity: .3, colors: ['#003775'] }}
 								/>
 							</div>
 							<div className='responsiveBox'>
@@ -371,7 +376,11 @@ export function RealTimeDashComponent() {
 									width="100%"
 									height="400px"
 									data={getVendasPorTipo()}
-									options={{ title: "", pieHole: 0.4, is3D: false, chartArea: { width: "80%" }, }}
+									options={{ animation: {
+										duration: 10000,
+										easing: 'out',
+										startup:'true',
+									},title: "", pieHole: 0.4, is3D: false, chartArea: { width: "80%" }, }}
 								/> :
 									<div></div>
 								}
@@ -412,7 +421,11 @@ export function RealTimeDashComponent() {
 									width="100%"
 									height="400px"
 									data={getEvolucaoVendasMes()}
-									options={{ title: "", chartArea: { width: "80%" }, vAxis: { minValue: 0 }, areaOpacity: 0.0, pointsVisible: true, pointShape: 'diamond', pointSize: 8 }}
+									options={{ animation: {
+										duration: 10000,
+										easing: 'out',
+										startup:'true',
+									},title: "", chartArea: { width: "80%" }, vAxis: { minValue: 0 }, areaOpacity: 0.0, pointsVisible: true, pointShape: 'diamond', pointSize: 8 }}
 								/>
 							</div>
 						</div>

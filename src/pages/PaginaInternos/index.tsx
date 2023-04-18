@@ -25,15 +25,15 @@ import { LoadingComponent } from '../../components/Loading';
 import { ErrorPage } from '../ErrorPage/Error';
 
 export function PaginaSetores() {
-	const [ setores, setSetores ] = useState<SetoresType[]>([]);
-	const [ internos, setInternos ] = useState<InternosType[]>([]);
-	const [ filterText, setFilterText ] = useState('');
-	const [ error, setError ] = useState(false);
-	const [ isModalSetorOpen, setIsModalSetorOpen ] = useState(false);
-	const [ isModalInternoOpen, setIsModalInternoOpen ] = useState(false);
-	const [ isModalEditInternosOpen, setIsModalEditInternosOpen ] = useState(false);
-	const [ isLoading, setIsLoading ] = useState(true);
-	const [ idInterno, setIdInterno ] = useState(null);
+	const [setores, setSetores] = useState<SetoresType[]>([]);
+	const [internos, setInternos] = useState<InternosType[]>([]);
+	const [filterText, setFilterText] = useState('');
+	const [error, setError] = useState(false);
+	const [isModalSetorOpen, setIsModalSetorOpen] = useState(false);
+	const [isModalInternoOpen, setIsModalInternoOpen] = useState(false);
+	const [isModalEditInternosOpen, setIsModalEditInternosOpen] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+	const [idInterno, setIdInterno] = useState(null);
 
 	const idTable = 4;
 
@@ -43,7 +43,6 @@ export function PaginaSetores() {
 			setIsLoading(false)
 		}).catch(err => {
 			setIsLoading(false)
-			setError(true)
 		})
 		axios.get(BASE_URL + '/setores/').then((res) => {
 			setSetores(res.data.data);
@@ -144,7 +143,7 @@ export function PaginaSetores() {
 		})
 	};
 
-	
+
 	function handleOpenModalSetor() {
 		setIsModalSetorOpen(!isModalSetorOpen);
 	}
@@ -160,7 +159,7 @@ export function PaginaSetores() {
 	async function patchAdminApi(id: string, ADMIN: boolean) {
 		//Requisição para o backend
 		// _.find interno
-		const data = _.find(internos, {"ID" : id})
+		const data = _.find(internos, { "ID": id })
 		// troca o admin
 		data.ADMIN = !data.ADMIN;
 		// faz a requisição com o admin novo
@@ -188,8 +187,8 @@ export function PaginaSetores() {
 
 		})
 	}
-	
-	
+
+
 
 	let filteredItems = internos.filter((item: InternosType) => {
 		//filtra os dados
@@ -219,9 +218,9 @@ export function PaginaSetores() {
 			.filter((setor) => setor !== undefined);
 	});
 
-	if(isLoading){
+	if (isLoading) {
 		return <LoadingComponent />
-	} else if(error){
+	} else if (error) {
 		return <ErrorPage errorMessage="Falha ao carregar os dados dos internos" dark />
 	} else {
 		return (
@@ -250,15 +249,19 @@ export function PaginaSetores() {
 							</PrimaryButton>
 						</ButtonRow>
 					</ButtonGroup>
-	
-					<DefaultTable
-						idTable={idTable}
-						rows={rows}
-						columns={[]}
-						defaultColumns={defaultColumns}
-						handleOpenModalEdit={handleOpenModalEditInterno}
-						
-					/>
+					{
+						internos.length > 0 ?
+							<DefaultTable
+								idTable={idTable}
+								rows={rows}
+								columns={[]}
+								defaultColumns={defaultColumns}
+								handleOpenModalEdit={handleOpenModalEditInterno}
+
+							/> :
+							<h3 style={{width:'100%', textAlign:'center', marginTop:'3em'}}>Nenhum interno cadastrado</h3>
+					}
+
 				</ContainerAdminContas>
 				<ModalForm
 					isModalOpen={isModalSetorOpen}
@@ -291,5 +294,5 @@ export function PaginaSetores() {
 		);
 	}
 
-	
+
 }

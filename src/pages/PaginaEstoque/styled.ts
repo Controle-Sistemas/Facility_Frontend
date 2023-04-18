@@ -8,3 +8,17 @@ export const MainContainer = styled.div`
 	grid-row-gap: 0px;
 	width: 100%;
 `;
+export const TableContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 2rem auto;
+  max-width: 600px;
+  height: fit-content;
+  align-items: center;
+  width: 100%;
+
+  table {
+    width: 100% !important;
+  }
+`;
