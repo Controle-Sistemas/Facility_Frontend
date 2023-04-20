@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import _ from 'lodash'
 import { LoadingComponent } from '../../components/Loading';
 import { MainTitle } from '../../components/styledComponents/Texts';
-import { MenuItem, Container, OutlinedInput, InputLabel, Select, FormControl, Stack, Chip, ButtonGroup, TableCell, TableBody, TableRow, TableHead, Button, Fab, TableContainer, Tooltip } from "@mui/material";
+import { MenuItem, Container, OutlinedInput, InputLabel, Select, FormControl, Stack, Chip, ButtonGroup, TableCell, TableBody, TableRow, TableHead, Button, Fab, TableContainer } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckIcon from "@mui/icons-material/Check";
 import { PrimaryButton } from '../../components/styledComponents/buttons';
@@ -33,7 +33,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2';
 import fileDownload from 'js-file-download'
 import { Chart, ReactGoogleChartEvent } from 'react-google-charts';
-import React from 'react';
 const POSICAOESTOQUE = "Posição de Estoque";
 const SUGESTAODECOMPRA = "Sugestão de Compra";
 const CURVAABC = "Curva ABC";
@@ -164,9 +163,9 @@ export function PaginaEstoque() {
 					setGroupsFiltered([])
 					axios.post(`${BASE_URL}/dashboard/curvaABC/${data[0].IDCLOUD}`, { Dateinit: '01.01.2023', DateFinal: '01.04.2023' }).then((res) => {
 						if (res.status == 200) {
-							console.log("filtro", _.filter(res.data.data.curveABC, { classificacao: "A" }))
+							console.log(res.data.data)
 							setAbcCurveProdctsData({ resume: res.data.data.curveABC });
-							setFiltroClassificacao(_.filter(res.data.data.curveABC, { classificacao: "A" }));
+							setFiltroClassificacao(_.filter(res.data.data.curveABC, { 'classificacao': 'A' }));
 						}
 						setLoading(false)
 					});
@@ -509,11 +508,8 @@ export function PaginaEstoque() {
 									<span className='fullWidth' style={{ textAlign: 'center', justifyContent: 'center', flexWrap: 'wrap-reverse' }}>Selecione os grupos para exibição</span>
 								</div> :
 							<div>
-							{abcCurveChartDataDetails && filtroClassificacao.length > 0 ? 
 								<div className="fullWidth">
 									<div className='breakOnMobile'>
-										
-									{grupamento ?
 										<Chart
 											chartType="PieChart"
 											width="100%"
@@ -525,7 +521,6 @@ export function PaginaEstoque() {
 												vAxis: { minValue: 0 }, chartArea: { width: "100%" }, areaOpacity: 1, colors: ['#ff9900', '#a84c11', '#003775'],
 											}}
 										/>
-										: <></>}
 										{grupamento ?
 											<TableContainer>
 												<table>
@@ -552,7 +547,6 @@ export function PaginaEstoque() {
 
 											: <></>}
 									</div>
-									
 									<Chart
 										chartType="SteppedAreaChart"
 										width="100%"
@@ -564,88 +558,46 @@ export function PaginaEstoque() {
 												easing: 'out',
 												startup: true
 											},
-											vAxis: { minValue: 0, format: 'R$ #,###', scale: 'log', textSyle: { fontSize: 'small' } },
-											hAxis: { textSyle: { fontSize: 'small' } }, chartArea: { width: "80%" }, areaOpacity: .7,
+											vAxis: { minValue: 0, format: 'currency', scale: 'log', textSyle: { fontSize: 'small' } },
+											hAxis: { textSyle: { fontSize: 'small' } }, chartArea: { width: "80%" }, areaOpacity: .9,
 											colors: filtroClassificacao[0].classificacao === 'A' ? ['#ff9900'] :
 												filtroClassificacao[0].classificacao === 'B' ? ['#a84c11'] : ['#003775']
 										}}
 									/>
-									
 								</div>
-								: <>
-										<LoadingComponent/>
-									</>}
 								<div className='fullWidth' style={{marginTop:'2em'}}>
 									{
 										abcCurveProuctsData.resume.length > 0 ?
-										<TableContainer>
-										<table id='abc-prod-table'>
-											<TableHead>
-												<TableRow className='tableHeaderRow' style={{ backgroundColor: '#003775' }}>
-													<TableCell align="center" style={{ fontWeight: 'bold' }}>Código</TableCell>
-													<TableCell align="center">Descricao</TableCell>
-													<TableCell align="center">Qte</TableCell>
-													<TableCell align="center">Valor</TableCell>
-													<TableCell align="center">% Individual</TableCell>
-													<TableCell align="center" style={{ fontWeight: 'bold' }}>Classe</TableCell>
-												</TableRow>
-											</TableHead>
-											<TableBody>
-												{
-													filtroClassificacao.map((product) => (
-														<Tooltip disableHoverListener title={
-															<React.Fragment>
-																<div className="toltip">
-																	<p className='toltipItemHeader'><strong>{product.descricao}</strong>
-																	</p>
-																	<p className='toltipItem'>
-																		<strong>
-																			<i className="fa fa-barcode" aria-hidden="true" style={{ color: "chocolate" }}></i> ID
-																		</strong>
-																		{product.idProduto}
-																	</p>
-																	<p className='toltipItem'>
-																		<strong>
-																			<i className="fa-solid fa-chart-pie" aria-hidden="true" style={{ color: "chocolate" }}></i> Quantidade:
-																		</strong>
-																		{product.fracionado.toUpperCase() === "N" ? product.quantidade : parseFloat(product.quantidade).toFixed(2)}
-																	</p>
-																	<p className='toltipItem'>
-																		<strong>
-																			<i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "chocolate" }}></i> Valor:
-																		</strong>
-																		{getCurrency(parseFloat(product.valorItem))}
-																	</p>
-																	<p className='toltipItem'>
-																		<strong>
-																			<i className="fa fa-percent" aria-hidden="true" style={{ color: "chocolate" }}></i> Perc:
-																		</strong>
-																		{parseFloat(product.perc).toFixed(2)} %
-																	</p>
-																	<p className='toltipItem'>
-																		<strong>
-																			<i className="fa fa-credit-card" aria-hidden="true" style={{ color: "chocolate" }}></i> Classe:
-																		</strong>
-																		{product.classificacao}
-																	</p>
-																</div>
-															</React.Fragment>
-														} placement="top-end">
-															<TableRow>
-																<TableCell align="center" style={{ fontWeight: 'bold' }}>{product.idProduto}</TableCell>
-																<TableCell align="center">{product.descricao}</TableCell>
-																<TableCell align="center">{product.fracionado.toUpperCase() === "N" ? product.quantidade : parseFloat(product.quantidade).toFixed(2)}</TableCell>
-																<TableCell align="center">{getCurrency(parseFloat(product.valorItem))}</TableCell>
-																<TableCell align="center">{parseFloat(product.perc).toFixed(2)} %</TableCell>
-																<TableCell align="center" style={{ fontWeight: 'bold' }}>{product.classificacao}</TableCell>
-															</TableRow>
-														</Tooltip >
+											<TableContainer>
+												<table id='abc-prod-table'>
+													<TableHead>
+														<TableRow className='tableHeaderRow' style={{ backgroundColor: '#003775' }}>
+															<TableCell align="center" style={{ fontWeight: 'bold' }}>Código</TableCell>
+															<TableCell align="center">Descricao</TableCell>
+															<TableCell align="center">Qte</TableCell>
+															<TableCell align="center">Valor</TableCell>
+															<TableCell align="center">% Individual</TableCell>
+															<TableCell align="center" style={{ fontWeight: 'bold' }}>Classe</TableCell>
+														</TableRow>
+													</TableHead>
+													<TableBody>
+														{
+															filtroClassificacao.map((product) => (
 
-													))
-												}
-											</TableBody>
-										</table>
-									</TableContainer>
+																<TableRow>
+																	<TableCell align="center" style={{ fontWeight: 'bold' }}>{product.idProduto}</TableCell>
+																	<TableCell align="center">{product.descricao}</TableCell>
+																	<TableCell align="center">{product.fracionado.toUpperCase() === "N" ? product.quantidade : parseFloat(product.quantidade).toFixed(2)}</TableCell>
+																	<TableCell align="center">{getCurrency(parseFloat(product.valorItem))}</TableCell>
+																	<TableCell align="center">{parseFloat(product.perc).toFixed(2)} %</TableCell>
+																	<TableCell align="center" style={{ fontWeight: 'bold' }}>{product.classificacao}</TableCell>
+																</TableRow>
+
+															))
+														}
+													</TableBody>
+												</table>
+											</TableContainer>
 
 											/**
 											 * 
@@ -673,7 +625,7 @@ export function PaginaEstoque() {
 											 */
 
 											:
-											<span style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>Organizando dados...</span>
+											<span style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>Não há produtos para exibição</span>
 
 									}
 								</div>

@@ -145,7 +145,6 @@ export function PortalPageClientDashboard() {
 							dashpage === EVOLUCAOMES ? <EvolucaoDiaADiaComponent /> :
 								<RegistradorasComponent />
 					}
-					<h3 style={{position: 'fixed', top: '0', zIndex:'50', textAlign:'center', color:'white'}}>{clientName}</h3>
 				</ContainerAdminContas>
 			</ContainerAdmin >
 	);

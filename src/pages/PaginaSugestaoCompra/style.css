@@ -139,24 +139,6 @@ ul {
 	align-items: center;
 	padding: 0 6em 0 0;
 }
-
-.toltipItemHeader{
-    margin-bottom: .2em;
-}
-.toltip, .toltipItemHeader{    
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-.toltipItem{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;    
-    margin: .5em;
-}
 @media screen and (max-width: 900px) {
 	.relatorio-control-buttons {
 		
