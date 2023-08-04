@@ -13,7 +13,7 @@ import axios from 'axios';
 import { BASE_URL } from '../../../utils/requests';
 import { Editor } from '@tinymce/tinymce-react';
 import TextField from '@mui/material/TextField';
-import {tema,colorPallete} from '../../../coresStyled'
+import { tema, colorPallete } from '../../../coresStyled'
 import Autocomplete from '@mui/material/Autocomplete';
 import _ from 'lodash'
 import Swal from 'sweetalert2';
@@ -64,7 +64,9 @@ export function FormAddChamado({ onAdd, idUser, isAdmin, editorKey }) {
 	const [hasFile, setHasFile] = useState(false);
 	const [isRecurrent, setIsRecurrent] = useState(0)
 	const [clientes, setClientes] = useState([]);
-	const [internos, setInternos] = useState([])
+	const [internos, setInternos] = useState([]);
+	const [searchedClientes, setSearchedCliente] = useState([]);
+	const [clientSearchName, setClientSearchName] = useState('');
 
 	useEffect(() => {
 		axios.get(BASE_URL + '/status-chamado/').then((res) => {
@@ -78,14 +80,37 @@ export function FormAddChamado({ onAdd, idUser, isAdmin, editorKey }) {
 		});
 		axios.get(BASE_URL + '/clientes/admin').then((res) => {
 			setClientes(res.data.data);
+			console.log(res.data.data);
 		});
 		axios.get(BASE_URL + '/internos/').then((res) => {
 			setInternos(res.data.data);
 		});
 	}, []);
 
+	function getExternalClients() {
+		axios
+			.get(BASE_URL + `/clientes/externo/${chamadoData.CLIENTE}`)
+			.then((res) => {
+				if (res.data.data.clientControle.length > 0) {
+					var formatedData = res.data.data.clientControle.map(client => {
+						return {
+							ID: parseInt(client.id),
+							NOME: client.nome
+						}
+					});
+					formatedData = clientes.concat(formatedData);
+					console.log(_.uniq(clientes.concat(formatedData)))
+					setClientes([])
+					setClientes(_.uniq(formatedData))
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+	}
+
 	function handleChange(e) {
-		
+
 		setChamadoData({
 			...chamadoData,
 			[e.target.name]: e.target.value
@@ -120,9 +145,9 @@ export function FormAddChamado({ onAdd, idUser, isAdmin, editorKey }) {
 		data.append('INTERNORECEPTOR', chamadoData.INTERNORECEPTOR)
 		data.append('RECORRENTE', isRecurrent.toString())
 		data.append('DATARECORRENCIA', chamadoData.DATARECORRENCIA)
-		data.append('TIPORECORRENCIA',chamadoData.TIPORECORRENCIA)
-		data.append('TIPOCHAMADO',chamadoData.TIPOCHAMADO)
-		
+		data.append('TIPORECORRENCIA', chamadoData.TIPORECORRENCIA)
+		data.append('TIPOCHAMADO', chamadoData.TIPOCHAMADO)
+
 		if (!isAdmin) {
 			data.append('IDINTERNO', chamadoData.IDINTERNO);
 		}
@@ -132,9 +157,9 @@ export function FormAddChamado({ onAdd, idUser, isAdmin, editorKey }) {
 				data.append('FILE', chamadoData.FILE[i]);
 			}
 		}
-		console.log(data);		
+		console.log(data);
 
-		if(chamadoData.DESCRICAO.length < 1 || chamadoData.TIPOCHAMADO.length < 1 || chamadoData.PREVISAO.length < 1){
+		if (chamadoData.DESCRICAO.length < 1 || chamadoData.TIPOCHAMADO.length < 1 || chamadoData.PREVISAO.length < 1) {
 			Swal.fire({
 				title: 'Ainda restam campos vazios!',
 				text: 'Para o chamado ser aberto corretamente todos os campos devem ser preenchidos',
@@ -142,10 +167,10 @@ export function FormAddChamado({ onAdd, idUser, isAdmin, editorKey }) {
 				timer: 2000,
 				showConfirmButton: true
 			});
-		}else{
+		} else {
 			onAdd(data);
 		}
-		
+
 	}
 
 	const formatedTypes = tiposChamadoData.TYPES.map((tipo) => {
@@ -183,7 +208,7 @@ export function FormAddChamado({ onAdd, idUser, isAdmin, editorKey }) {
 					<input type="text" className="form-control" name="TITULO" onChange={handleChange} required />
 				</InputContainer>
 				<InputContainer>
-					
+
 				</InputContainer>
 				<InputContainer>
 					<label htmlFor="DESCRICAO">Descrição</label>
@@ -205,11 +230,11 @@ export function FormAddChamado({ onAdd, idUser, isAdmin, editorKey }) {
 						sx={{ width: '100%', marginTop: '1rem' }}
 						renderInput={(params) => <TextField {...params} label="Tipo" />}
 						isOptionEqualToValue={(option, value) => option.id === value.id}
-						inputValue={chamadoData.TIPOCHAMADO.length > 1 ? _.find(tiposChamadoData.TYPES,{'ID': chamadoData.TIPOCHAMADO}).TITLE: ''}
+						inputValue={chamadoData.TIPOCHAMADO.length > 1 ? _.find(tiposChamadoData.TYPES, { 'ID': chamadoData.TIPOCHAMADO }).TITLE : ''}
 						onInputChange={(event, newInputValue) => {
-							setChamadoData({ ...chamadoData, TIPOCHAMADO: _.find(tiposChamadoData.TYPES,{'TITLE': newInputValue}).ID });
+							setChamadoData({ ...chamadoData, TIPOCHAMADO: _.find(tiposChamadoData.TYPES, { 'TITLE': newInputValue }).ID });
 						}}
-						
+
 					/>
 				</InputContainer>
 				<InputContainer>
@@ -221,7 +246,12 @@ export function FormAddChamado({ onAdd, idUser, isAdmin, editorKey }) {
 						isOptionEqualToValue={(option, value) => option.id === value.id}
 						inputValue={chamadoData.CLIENTE}
 						onInputChange={(event, newInputValue) => {
+							if (chamadoData.CLIENTE.length > 2) {
+								setClientSearchName(chamadoData.CLIENTE)
+								getExternalClients();
+							}
 							setChamadoData({ ...chamadoData, CLIENTE: newInputValue });
+							console.log(chamadoData.CLIENTE)
 						}}
 
 					/>
@@ -255,7 +285,7 @@ export function FormAddChamado({ onAdd, idUser, isAdmin, editorKey }) {
 					<Autocomplete
 						id="combo-box-demo"
 						options={formatedInternal.filter(interno => interno.setor === Number(chamadoData.SETOR))}
-						sx={{ width: '100%', marginTop: '1rem', color:tema === 'light' ? '#000' : '#fff' }}
+						sx={{ width: '100%', marginTop: '1rem', color: tema === 'light' ? '#000' : '#fff' }}
 						renderInput={(params) => <TextField {...params} label="Interno" />}
 						isOptionEqualToValue={(option, value) => option.id === value.id}
 						inputValue={chamadoData.INTERNORECEPTOR}

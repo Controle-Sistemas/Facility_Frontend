@@ -90,38 +90,30 @@ export function PaginaChamado() {
 					axios.get(BASE_URL + '/status-chamado/' + status).then((res) => {
 						setStatusChamado(res.data.data[0]);
 					});
-					axios.get(`${BASE_URL}/ocorrencias/chamado/${idChamado}`).then((res) => {
-						setOcorrencias(res.data.data);
-					});
 					axios.get(BASE_URL + '/tipos-chamado/').then((res) => {
 						setTipos(res.data.data);
 						console.log(res.data.data);
-						aux = res.data.data;
-					}).catch((err) => {
-						console.log(err)
-						setError(true);
-						setLoading(false);
 					});
 					axios.get(BASE_URL + '/tipos-chamado/chamado/' + idChamado).then((res) => {
-						var data = res.data.data;
 						setItemsChamado(res.data.data);
+						aux = res.data.data;
+						refreshData(aux);
+					});
+					axios.get(`${BASE_URL}/ocorrencias/chamado/${idChamado}`).then((res) => {
+						setOcorrencias(res.data.data);
 						refreshData(aux);
 					});
 					axios.get(BASE_URL + '/internos/').then((res) => {
-						refreshData(aux);
 						setInternos(res.data.data);
 					});
 					if (internalId) {
 						axios.get(BASE_URL + '/internos/' + internalId).then(res => {
-							refreshData(aux);
 							console.log(res)
 							setInterno(res.data.data[0])
 						})
 					} else {
-						refreshData(aux);
 						interno["USUARIO"] = 'Admin'
 					}
-					refreshData(aux);
 					setLoading(false);
 				})
 				.catch((err) => {
@@ -129,15 +121,14 @@ export function PaginaChamado() {
 					setError(true);
 					setLoading(false);
 					refreshData(aux);
-				});
-		},
-		[]
+			});
+		},[idChamado]
 	);
 
-	function refreshData(tipos) {
-		axios.get(BASE_URL + '/tipos-chamado/chamado/' + idChamado).then((res) => {
-			if (res.data.data) {
-
+	async function refreshData(tipos) {
+		await axios.get(BASE_URL + '/tipos-chamado/chamado/' + idChamado).then((res) => {
+			if (res.data.data.length > 1) {
+				console.log(res.data.data)
 				var data = res.data.data;
 				var aux = _.groupBy(data.map(item => (
 					{
@@ -164,6 +155,7 @@ export function PaginaChamado() {
 			} else {
 				setFilteredItems([]);
 				setItemsChamado([]);
+				refreshData(tipos);
 			}
 		});
 
@@ -205,7 +197,7 @@ export function PaginaChamado() {
 			});
 		});
 		//Swal.fire('Atualizado!', `O item foi marcado como ${item.DONE == 1 ? 'concluído' : 'pendente'}`, 'success');
-		refreshData(tipos);
+		//refreshData(tipos);
 	}
 
 
@@ -232,17 +224,17 @@ export function PaginaChamado() {
 
 	function handleOpenModalEditChamado() {
 		setModalEditChamadoIsOpen(!modalEditChamadoIsOpen);
-		refreshData(tipos);
+		//refreshData(tipos);
 	}
 
 	function handleOpenModalOcorrencia() {
 		setModalOcorrenciaIsOpen(!modalOcorrenciaIsOpen)
-		refreshData(tipos);
+		//refreshData(tipos);
 	}
 
 	function handleOpenModalType() {
 		setModalModalTypeIsOpen(!modalTypeIsOpen)
-		refreshData(tipos);
+		//refreshData(tipos);
 	}
 
 	function onEdit(newChamado) {
@@ -260,7 +252,7 @@ export function PaginaChamado() {
 				setChamado(res.data.data[0]);
 			});
 			handleOpenModalEditChamado()
-			refreshData(tipos);
+			//refreshData(tipos);
 		});
 	}
 
@@ -269,7 +261,7 @@ export function PaginaChamado() {
 			axios.get(`${BASE_URL}/ocorrencias/chamado/${idChamado}`).then((res) => {
 				Swal.fire('Adicionada!', 'Ocorrencia adicionada com sucesso.', 'success');
 				setOcorrencias(res.data.data);
-				refreshData(tipos);
+			//	refreshData(tipos);
 			});
 			if (modalOcorrenciaIsOpen) {
 				handleOpenModalOcorrencia()
@@ -366,7 +358,7 @@ export function PaginaChamado() {
 		const [data, hora] = chamado.DATAINCLUSAO ? chamado.DATAINCLUSAO.split(' ') : '';
 		dataFormatada = formatData(data);
 		horaFormatada = formatTime(hora);
-		refreshData(tipos);
+		//refreshData(tipos);
 	}
 
 	function ordernarOcorrencias(data) {
@@ -381,7 +373,7 @@ export function PaginaChamado() {
 
 			}
 
-			refreshData(tipos);
+		//	refreshData(tipos);
 			return 0;
 		});
 	}
@@ -402,6 +394,9 @@ export function PaginaChamado() {
 						<div>
 							Publicado por: <span>{interno.USUARIO}</span> dia <span>{dataFormatada}</span>  as <span>{horaFormatada}</span>
 						</div>
+						<ButtonActionTable primary onClick={() => {navigate(`/${isAdmin?'admin' : 'interno'}/chamados`)}}>
+							<i className="fas fa-arrow-right" />
+						</ButtonActionTable>
 					</ChamadoHeader>
 					<ChamadoContainer>
 						<ChamadoActions>

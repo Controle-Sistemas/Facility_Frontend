@@ -7,6 +7,7 @@ import { PrimaryButton, DangerButton } from '../../styledComponents/buttons';
 import { DataGroup, InputContainer, ButtonFormGroup, FormRowContainer } from '../../styledComponents/containers';
 import CnpjInput from '../../cnpjInput';
 import './styles/Forms.css';
+import { FaFilter } from 'react-icons/fa';
 
 const initialState = () => {
 	return {
@@ -23,8 +24,11 @@ const initialState = () => {
 
 export function FormCliente(props) {
 	//Estado dos valores do formulário
-	const [ ramos, setRamos ] = useState([]);
-	const [ values, setValues ] = useState(initialState);
+	const [ramos, setRamos] = useState([]);
+	const [values, setValues] = useState(initialState);
+	const [loading, setLoading] = useState(false);
+	const [filteredClientsList, setFilteredClientsList] = useState([]);
+	const [filteredClientsPrefix, setFilteredClientsPrefix] = useState('');
 
 	//Funções para capturar os valores do formulário
 	function handleChangeValues(event) {
@@ -40,6 +44,36 @@ export function FormCliente(props) {
 	}
 	function handleChangeCNPJ(cnpj) {
 		setValues({ ...values, CNPJ: cnpj });
+	}
+	function handleChangeFilterCliente(event){
+		setFilteredClientsPrefix(event.target.value)
+		console.log(filteredClientsPrefix)
+	}
+
+	function getExternalClients() {
+		setLoading(true)
+		axios
+			.get(BASE_URL + `/clientes/externo/${filteredClientsPrefix.toLocaleUpperCase()}`)
+			.then((res) => {
+				if (res.data.data.clientControle) {
+					var formatedData = res.data.data.clientControle.map(client => {
+						return {
+							ID: parseInt(client.id),
+							IDCLOUD: parseInt(client.idCloud),
+							NOME: client.nome,
+							NOMEESTABELECIMENTO: client.nomeestabelecimento,
+							EMAIL: client.email,
+							CNPJ: client.cnpj
+						}
+					});
+					console.log(formatedData)
+					setFilteredClientsList(formatedData)	
+					setLoading(false)				
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			})
 	}
 
 	useEffect(() => {
@@ -63,6 +97,12 @@ export function FormCliente(props) {
 
 	return (
 		<FormRowContainer onSubmit={handleSubmit}>
+			<InputContainer>
+				<label>Cliente socket:</label>
+				<input className="form-control" onChange={handleChangeFilterCliente} />
+				<PrimaryButton onClick={() => getExternalClients()}><FaFilter /></PrimaryButton>
+						
+			</InputContainer>
 			<DataGroup>
 				<InputContainer>
 					<label htmlFor="nome">Nome:</label>
@@ -122,3 +162,4 @@ export function FormCliente(props) {
 		</FormRowContainer>
 	);
 }
+

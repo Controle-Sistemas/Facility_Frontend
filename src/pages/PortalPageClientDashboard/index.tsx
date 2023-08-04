@@ -35,7 +35,7 @@ export function PortalPageClientDashboard() {
 	const [dashpage, setPage] = useState(MONITORAMENTOTEMPOREAL);
 	const [clientName, setClientName] = useState('');
 	const cnpj = localStorage.getItem('cnpj');
-	const {idCloud, setIdCloud} = useDash() 
+	const { idCloud, setIdCloud } = useDash()
 	const [groupSelectData, setGroupSelectData] = useState([]);
 	useEffect( // buscar  os dados quando carregar a tela 
 		() => {
@@ -59,7 +59,7 @@ export function PortalPageClientDashboard() {
 		[]
 	);
 
-	async function getUniqueClient(cnpj: string){
+	async function getUniqueClient(cnpj: string) {
 		await axios.get(`${BASE_URL}/clientes/usuario/${cnpj}`).then((res) => {
 			var data = res.data.data;
 			console.log('CNPJ', cnpj)
@@ -68,8 +68,8 @@ export function PortalPageClientDashboard() {
 			setClientName(data[0].NOMEESTABELECIMENTO);
 			console.log(idCloud)
 			setLoading(false);
-		}).catch(err => { 
-			console.log(err) 
+		}).catch(err => {
+			console.log(err)
 			setLoading(false)
 		});
 	}
@@ -109,44 +109,44 @@ export function PortalPageClientDashboard() {
 			</ContainerAdmin>
 		)
 	} return (
-			<ContainerAdmin>
-				<SidebarContainer>
-					<Sidebar />
-				</SidebarContainer>
-				<ContainerAdminContas>
-					<MainTitle className='title'>{dashpage}</MainTitle>
-					<ButtonGroup>
-						<PrimaryButton onClick={() => prevPage()}><i className="fa-solid fa-chevron-left" /></PrimaryButton>
-						{groupSelectData.length > 1 ?
-							<FormControl sx={{ m: 1, minWidth: "fit-content" }}>
-								<InputLabel id="selectEmpresa-label">Empresa</InputLabel>
-								<Select
-									id="selectEmpresa"
-									value={idCloud}
-									onChange={handleChangeIdCloud}
-									autoWidth
-									label="IDCLOUD - EMPRESA"
-								>
-									<MenuItem value={_.find(groupSelectData, { "TIPO": "MATRIZ" }).IDCLOUD}>{_.find(groupSelectData, { "TIPO": "MATRIZ" }).NOMEESTABELECIMENTO}</MenuItem>
-									{_.filter(groupSelectData, { "TIPO": 'FILIAL' }).map((empresa) => (
-										<MenuItem value={empresa.IDCLOUD}>
-											<Tooltip title={`${empresa.IDCLOUD} - ${empresa.NOME}`} placement="right">
-												<label htmlFor="" style={{ cursor: "pointer" }}>{empresa.NOMEESTABELECIMENTO}</label>
-											</Tooltip>
-										</MenuItem>
-									))}
-								</Select>
-							</FormControl>
-							: <img src={logo} alt="logo" className='logo' />}
-						<PrimaryButton onClick={() => nextPage()}><i className="fa-solid fa-chevron-right" /></PrimaryButton>
-					</ButtonGroup>
-					{
-						dashpage === MONITORAMENTOTEMPOREAL ? <RealTimeDashComponent /> :
-							dashpage === EVOLUCAOMES ? <EvolucaoDiaADiaComponent /> :
-								<RegistradorasComponent />
-					}
-				</ContainerAdminContas>
-			</ContainerAdmin >
+		<ContainerAdmin>
+			<SidebarContainer>
+				<Sidebar />
+			</SidebarContainer>
+			<ContainerAdminContas>
+				<MainTitle className='title'>{dashpage}</MainTitle>
+				<ButtonGroup>
+					<PrimaryButton onClick={() => prevPage()}><i className="fa-solid fa-chevron-left" /></PrimaryButton>
+					{groupSelectData.length > 1 ?
+						<FormControl sx={{ m: 1, minWidth: "fit-content" }}>
+							<InputLabel id="selectEmpresa-label">Empresa</InputLabel>
+							<Select
+								id="selectEmpresa"
+								value={idCloud}
+								onChange={handleChangeIdCloud}
+								autoWidth
+								label="IDCLOUD - EMPRESA"
+							>
+								<MenuItem value={_.find(groupSelectData, { "TIPO": "MATRIZ" }).IDCLOUD}>{_.find(groupSelectData, { "TIPO": "MATRIZ" }).NOMEESTABELECIMENTO}</MenuItem>
+								{_.filter(groupSelectData, { "TIPO": 'FILIAL' }).map((empresa) => (
+									<MenuItem value={empresa.IDCLOUD}>
+										<Tooltip title={`${empresa.IDCLOUD} - ${empresa.NOME}`} placement="right">
+											<label htmlFor="" style={{ cursor: "pointer" }}>{empresa.NOMEESTABELECIMENTO}</label>
+										</Tooltip>
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+						: <img src={logo} alt="logo" className='logo' />}
+					<PrimaryButton onClick={() => nextPage()}><i className="fa-solid fa-chevron-right" /></PrimaryButton>
+				</ButtonGroup>
+				{
+					dashpage === MONITORAMENTOTEMPOREAL ? <RealTimeDashComponent /> :
+						dashpage === EVOLUCAOMES ? <EvolucaoDiaADiaComponent /> :
+							<RegistradorasComponent />
+				}
+			</ContainerAdminContas>
+		</ContainerAdmin >
 	);
 }
 

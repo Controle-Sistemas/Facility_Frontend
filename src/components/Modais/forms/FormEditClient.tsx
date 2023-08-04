@@ -11,8 +11,9 @@ import {
 } from '../../styledComponents/containers';
 import {BASE_URL} from '../../../utils/requests';
 import axios from 'axios';
+import { UserDataType } from '../../../types';
 
-export function FormEditClient(props) {
+export function FormEditClient(props ) {
 
 	const [ ramos, setRamos ] = useState([]);
 	const [ values, setValues ] = useState<any>({});
@@ -60,7 +61,7 @@ export function FormEditClient(props) {
 				<DisabledInputContainer>
 					<InputContainer>
 						<label htmlFor="empresa">Empresa:</label>
-						<input className="form-control" placeholder={`${nomeEmpresa}`} disabled />
+						<input className="form-control" placeholder={values.NOMEESTABELECIMENTO} disabled />
 					</InputContainer>
 					<InputContainer>
 						<label htmlFor="idcloud">Id Cloud: </label>
@@ -77,7 +78,7 @@ export function FormEditClient(props) {
 					<MultipleSelect
 						data={ramos}
 						setValues={setValues}
-						values={values}
+						values={values.RAMODEATIVIDADE}
 						nameSelect="Ramo do estabelecimento"
 					/>
 				</InputContainer>

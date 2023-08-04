@@ -5,6 +5,8 @@ const StoreContext = createContext({ //Cria um hook para o storage do usuário
     setToken: () => {},
     admin: null,
     setAdmin: () => {},
+    ramo: null,
+    setRamo: () => {},
 });
 
 export default StoreContext;

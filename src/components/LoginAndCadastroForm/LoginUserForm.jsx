@@ -52,7 +52,7 @@ export function LoginUserForm() {
     const [internalValues,setInternalValues] = useState(initialInternalState)
     
     //Token de autenticação
-    const { setToken,setAdmin } = useContext(StoreContext);
+    const { setToken,setAdmin, ramo, setRamo } = useContext(StoreContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -119,9 +119,9 @@ export function LoginUserForm() {
                     setAdmin(res.data.isAdmin)
                     cookie.set('id', parseInt(res.data.id))
                     if(res.data.isAdmin){ //Se for admin, redireciona para a pagina de administração
-                        navigate('/admin/portal-chamados') //Redirecionando para a página de administração
+                       navigate('/admin/portal-chamados') //Redirecionando para a página de administração
                     }else{ //Se não for admin, redireciona para a página de cliente
-                        navigate('/user/dashboard') //Redirecionando para a página de cliente
+                       navigate('/user/dashboard') //Redirecionando para a página de cliente
                     }
                     return { token:res.data.token} //Retornando o token
                 } else {

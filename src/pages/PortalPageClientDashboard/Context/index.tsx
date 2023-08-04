@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import StoreContext from "../../../components/Storage/Context";
 
 export const DashContext = createContext({});
 
@@ -9,7 +10,6 @@ const DashProvider = ({ children }: any) => {
 
 
   useEffect(() => {
-    //getPatients();
   }, [idCloud]);
 
   return (

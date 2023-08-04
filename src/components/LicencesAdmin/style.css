@@ -1,0 +1,26 @@
+.flexMobile {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+}
+.fullWidth {
+	width: 100%;
+}
+
+@media screen and (max-width: 900px) {
+	.relatorio-control-buttons {
+		
+	}
+	
+	.flexMobile{
+		flex-direction: column;
+		padding: 0;
+	}	
+}
+
+@media screen and (max-width: 450px) {
+	.flexMobile{
+		flex-direction: column;
+		padding: 0;
+	}	
+}

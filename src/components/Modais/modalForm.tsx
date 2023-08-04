@@ -6,7 +6,7 @@ import './styles/modais.css';
 function ModalForm(props) {
 	const isMobile = window.innerWidth < 768;
 	const actualWidth = isMobile ? '90%' : props.width;
-	const actualHeight = isMobile ? '55vh' : props.height;
+	const actualHeight = isMobile ? '70vh' : props.height;
 
 	const customStylesModal = {
 		overlay: {

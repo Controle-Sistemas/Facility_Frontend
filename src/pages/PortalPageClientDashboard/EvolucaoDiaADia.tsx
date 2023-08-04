@@ -39,11 +39,11 @@ interface EvolutionDay {
 
 
 
-function formatToFloat(value: string){
-	return parseFloat(value.replaceAll('.','').replaceAll(',','.'));
+function formatToFloat(value: string) {
+	return parseFloat(value.replaceAll('.', '').replaceAll(',', '.'));
 }
 
-function getCurrency(value : number){
+function getCurrency(value: number) {
 	return value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 }
 
@@ -52,8 +52,8 @@ export function EvolucaoDiaADiaComponent() {
 	const actualDateDay = actualDate.getDate();
 	const actualDateMonth = actualDate.getMonth() + 1;
 	const actualDateYear = actualDate.getFullYear();
-	const [evolutionMonthDateFrom, setEvolutionMonthDateFrom] = useState(dayjs(`${actualDateYear}-${actualDateMonth}-01`))
-	const [evolutionMonthDateTo, setEvolutionMonthDateTo] = useState(dayjs(`${actualDateYear}-${actualDateMonth}-${actualDateDay}`))
+	const [evolutionMonthDateFrom, setEvolutionMonthDateFrom] = useState(dayjs(`${actualDateYear}/${actualDateMonth}/01`))
+	const [evolutionMonthDateTo, setEvolutionMonthDateTo] = useState(dayjs(`${actualDateYear}/${actualDateMonth}/${actualDateDay}`))
 	const [evolutionMonth, setEvolutionMonthData] = useState<any>({});
 	const dataUtil = new DataTest();
 	const [loading, setLoading] = useState(true);
@@ -75,7 +75,7 @@ export function EvolucaoDiaADiaComponent() {
 
 	useEffect(() => {
 		setLoading(true);
-		axios.get(`${BASE_URL}/dashboard/daily-evolution/${idCloud}`).then((res) => {
+		axios.patch(`${BASE_URL}/dashboard/daily-evolution/${idCloud}`, searchBodyData).then((res) => {
 			setEvolutionMonthData(res.data.data)
 			refreshTotais(evolutionMonth);
 		}).catch(err => {
@@ -131,13 +131,17 @@ export function EvolucaoDiaADiaComponent() {
 	}
 
 	function getFormatedDate(date: dayjs.Dayjs) {
-		const arrayDate = date.toJSON().substring(0, 10).split('-');
-		const day = arrayDate[2];
-		const month = arrayDate[1];
-		const year = arrayDate[0];
-		const formDate = `${day}.${month}.${year}`;
-		return formDate;
+		return date.format('DD.MM.YYYY');
 	}
+
+	// function getFormatedDate(date: dayjs.Dayjs) {
+	// 	const arrayDate = date.toJSON().substring(0, 10).split('-');
+	// 	const day = arrayDate[2];
+	// 	const month = arrayDate[1];
+	// 	const year = arrayDate[0];
+	// 	const formDate = `${day}.${month}.${year}`;
+	// 	return formDate;
+	// }
 
 	function refreshData() {
 		setSearchBodyData({
@@ -156,41 +160,42 @@ export function EvolucaoDiaADiaComponent() {
 
 	return (
 		<div >
-			{/**
-		 * 
-			<InputGroupContainer style={{ display: "flex", alignItems: "center", width: "100%", flexDirection: "column" }}>
-				<FormControl>
-					<div className='formDateControlContainer'>
-						<div className='formDateControl' style={{ display: "flex" }}>
-							<LocalizationProvider dateAdapter={AdapterDayjs} >
-								<MobileDatePicker
-									label="Filtrar de"
-									value={evolutionMonthDateFrom}
-									maxDate={dayjs(`${actualDateYear}-${actualDateMonth}-${actualDateDay}`)}
-									onChange={(newValue) => {
-										setEvolutionMonthDateFrom(newValue);
-									}}
-									renderInput={(params) => <TextField {...params} />}
-								/>
-							</LocalizationProvider>
-							<LocalizationProvider dateAdapter={AdapterDayjs} >
-								<MobileDatePicker
-									label="Até"
-									value={evolutionMonthDateTo}
-									minDate={dayjs(evolutionMonthDateFrom)}
-									maxDate={dayjs(`${actualDateYear}-${actualDateMonth}-${actualDateDay}`)}
-									onChange={(newValue) => {
-										setEvolutionMonthDateTo(newValue);
-									}}
-									renderInput={(params) => <TextField {...params} />}
-								/>
-							</LocalizationProvider>
+			{
+				<InputGroupContainer style={{ display: "flex", alignItems: "center", width: "100%", flexDirection: "column" }}>
+					<FormControl>
+						<div className='formDateControlContainer'>
+							<div className='formDateControl' style={{ display: "flex" }}>
+								<LocalizationProvider dateAdapter={AdapterDayjs} >
+									<MobileDatePicker
+										label="Filtrar de"
+										inputFormat='DD/MM/YYYY'
+										value={evolutionMonthDateFrom}
+										maxDate={dayjs(`${actualDateYear}-${actualDateMonth}-${actualDateDay}`)}
+										onChange={(newValue) => {
+											setEvolutionMonthDateFrom(newValue);
+										}}
+										renderInput={(params) => <TextField {...params} />}
+									/>
+								</LocalizationProvider>
+								<LocalizationProvider dateAdapter={AdapterDayjs} >
+									<MobileDatePicker
+										label="Até"
+										inputFormat='DD/MM/YYYY'
+										value={evolutionMonthDateTo}
+										minDate={dayjs(evolutionMonthDateFrom)}
+										maxDate={dayjs(`${actualDateYear}-${actualDateMonth}-${actualDateDay}`)}
+										onChange={(newValue) => {
+											setEvolutionMonthDateTo(newValue);
+										}}
+										renderInput={(params) => <TextField {...params} />}
+									/>
+								</LocalizationProvider>
+							</div>
+							<PrimaryButton onClick={() => refreshData()}><i className="fa-solid fa-magnifying-glass" /></PrimaryButton>
 						</div>
-						<PrimaryButton onClick={() => refreshData()}><i className="fa-solid fa-magnifying-glass" /></PrimaryButton>
-					</div>
-				</FormControl>
-			</InputGroupContainer>
-		 */}
+					</FormControl>
+				</InputGroupContainer>
+			}
 			<EvolutionTableContainer className="" style={{ overflowX: "auto", width: "100" }}>
 				{
 					evolutionMonth.length > 0 ?

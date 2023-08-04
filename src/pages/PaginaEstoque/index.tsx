@@ -34,6 +34,7 @@ import Swal from 'sweetalert2';
 import fileDownload from 'js-file-download'
 import { Chart, ReactGoogleChartEvent } from 'react-google-charts';
 import React from 'react';
+import { yellow } from '@mui/material/colors';
 const POSICAOESTOQUE = "Posição de Estoque";
 const SUGESTAODECOMPRA = "Sugestão de Compra";
 const CURVAABC = "Curva ABC";
@@ -94,6 +95,10 @@ function getCurrency(value: number) {
 	return value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 }
 export function PaginaEstoque() {
+	const actualDate = new Date()
+	const actualDateDay = actualDate.getDate();
+	const actualDateMonth = actualDate.getMonth() + 1;
+	const actualDateYear = actualDate.getFullYear();
 	const [loading, setLoading] = useState(true);
 	const [exibition, setExibition] = useState(POSICAOESTOQUE);
 	const [isModalAddCategoriaOpen, setModalAddCategoriasOpen] = useState(false);
@@ -146,10 +151,7 @@ export function PaginaEstoque() {
 	useEffect(() => {
 		axios.get(`${BASE_URL}/clientes/usuario/${cnpj}`).then((res) => {
 			var data = res.data.data;
-			console.log('CNPJ', cnpj)
-			console.log('Idcloud', data[0].IDCLOUD)
 			setIdCloud(data[0].IDCLOUD);
-			console.log(idCloud)
 			setLoading(true);
 			axios.post(`${BASE_URL}/dashboard/list-products/${data[0].IDCLOUD}`, { groupID: '' }).then((res) => {
 				if (res.status == 200) {
@@ -162,9 +164,8 @@ export function PaginaEstoque() {
 					));
 					setGroups(aux)
 					setGroupsFiltered([])
-					axios.post(`${BASE_URL}/dashboard/curvaABC/${data[0].IDCLOUD}`, { Dateinit: '01.01.2023', DateFinal: '01.04.2023' }).then((res) => {
+					axios.post(`${BASE_URL}/dashboard/curvaABC/${data[0].IDCLOUD}`, { Dateinit: `01.01.${actualDateYear}`, DateFinal: `${actualDateDay}.${actualDateMonth}.${actualDateYear}`}).then((res) => {
 						if (res.status == 200) {
-							console.log("filtro", _.filter(res.data.data.curveABC, { classificacao: "A" }))
 							setAbcCurveProdctsData({ resume: res.data.data.curveABC });
 							setFiltroClassificacao(_.filter(res.data.data.curveABC, { classificacao: "A" }));
 						}
@@ -195,7 +196,6 @@ export function PaginaEstoque() {
 				exibition === CURVAABC ? setExibition(SUGESTAODECOMPRA) :
 					setExibition(POSICAOESTOQUE)
 		}
-		console.log('Página atual: ' + exibition);
 	}
 
 	function getCurrencyValue(stringValue) {
@@ -213,7 +213,7 @@ export function PaginaEstoque() {
 	function updateRelatorio(data: productBuySuggestion) {
 		var aux = productsToBuy;
 		if (_.find(aux.resume, { codInterno: data.codInterno })) {
-			_.find(aux.resume, { codInterno: data.codInterno }).qteCompra += data.qteCompra
+			_.find(aux.resume, { codInterno: data.codInterno }).qteCompra = data.qteCompra
 		} else {
 			aux.resume.push(data)
 		}
@@ -275,7 +275,6 @@ export function PaginaEstoque() {
 	function MultiSelect({ onFilter, filterValue }) {
 		const [selectedGroups, setSelectedGroups] = useState(filterValue);
 		function getSelectedItems(e) {
-			console.log(e.target.value)
 			setSelectedGroups(e.target.value.includes('TODOS') ? ['TODOS'] : e.target.value)
 		}
 		return (
@@ -345,7 +344,6 @@ export function PaginaEstoque() {
 
 	function onFilterGroups(data) {
 		setLoading(true)
-		console.log(data)
 		var aux = []
 		if (data.includes('TODOS')) {
 			console.log('Todos selecionados')
@@ -353,7 +351,6 @@ export function PaginaEstoque() {
 		} else {
 			data.map(group => aux.push(_.find(groups, { nome: group })))
 		}
-		console.log(aux)
 		setGroupsFiltered(aux)
 		setGroupsFilterValue(data)
 		setLoading(false)
@@ -362,7 +359,6 @@ export function PaginaEstoque() {
 
 
 	const grupamento = _.groupBy(abcCurveProuctsData.resume, 'classificacao');
-	console.log(grupamento)
 
 	const dataAbcCurve = _.map(grupamento, (key, value) => {
 		return [
@@ -631,7 +627,8 @@ export function PaginaEstoque() {
 																</div>
 															</React.Fragment>
 														} placement="top-end">
-															<TableRow>
+															<TableRow style={{backgroundColor: product.classificacao === 'A' ? '#8cff0021' : 
+														product.classificacao === 'B' ? '#ffff001f' : '#ff00001f'}}>
 																<TableCell align="center" style={{ fontWeight: 'bold' }}>{product.idProduto}</TableCell>
 																<TableCell align="center">{product.descricao}</TableCell>
 																<TableCell align="center">{product.fracionado.toUpperCase() === "N" ? product.quantidade : parseFloat(product.quantidade).toFixed(2)}</TableCell>

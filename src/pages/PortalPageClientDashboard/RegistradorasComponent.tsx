@@ -56,8 +56,8 @@ export function RegistradorasComponent() {
 	const actualDateMonth = actualDate.getMonth() + 1;
 	const actualDateYear = actualDate.getFullYear();
 	const [loading, setLoading] = useState(true);
-	const [searchDateFrom, setSearchDateFrom] = useState(dayjs(`${actualDateYear}-${actualDateMonth}-01`))
-	const [searchDateTo, setSearchDateTo] = useState(dayjs(`${actualDateYear}-${actualDateMonth}-${actualDateDay}`))
+	const [searchDateFrom, setSearchDateFrom] = useState(dayjs(`${actualDateYear}/${actualDateMonth}/01`))
+	const [searchDateTo, setSearchDateTo] = useState(dayjs(`${actualDateYear}/${actualDateMonth}/${actualDateDay}`))
 	const [expanded, setExpanded] = React.useState<string | false>(false);
 	const [registradorasData, setRegistradoras] = useState([]);
 	const [searchBodyData, setSearchBodyData] = useState<SearchBodyDataProps>(

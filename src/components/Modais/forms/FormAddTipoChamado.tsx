@@ -142,7 +142,7 @@ export function FormAddTipoChamado({ onAdd }) {
         <FormContainer onSubmit={handleSubmit} style={{ marginBottom: '1em' }}>
             <InputContainer style={{ marginBottom: '1em' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', width: '100%' }}><label>Nome </label> <label>Tem checklist ? <Switch isActive={checkListType} activation={handleChangeCheckListType} /></label></div>
-                <input type="text" className="form-control" name="CHAMADOTYPETITLE" placeholder="ex.: Implantação" onChange={handleChange} required />
+                <input type="text" className="form-control" name="CHAMADOTYPETITLE" placeholder="ex.: Implantação" maxLength={200} onChange={handleChange} required />
             </InputContainer>
             <Divider></Divider>
             {checkListType ?
