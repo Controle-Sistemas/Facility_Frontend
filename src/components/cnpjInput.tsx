@@ -16,7 +16,7 @@ interface Props{ //Interface para definir os tipos de propriedades que o compone
 }
 
 const MaskedInput = ({name,className,id,placeholder,onBeforeBlur,onSend,required,value}:Props) => {
-    const [state, setState] = useState(''); 
+    const [state, setState] = useState(value); 
     const [isValid, setIsValid] = useState(false); //Variável para controlar se o cnpj é válido ou não
 
     useEffect(() => {
@@ -29,16 +29,20 @@ const MaskedInput = ({name,className,id,placeholder,onBeforeBlur,onSend,required
     }
 
     function handleBlur(event) { //Função que será executada ao sair do input
-        if(state.length > 0 && !isValid) { //Se o cnpj não for válido
+        if(state != undefined && state.length > 0 && !isValid) { //Se o cnpj não for válido
             Swal.fire({
                 title: 'CNPJ inválido',
                 icon: 'warning',
                 confirmButtonText: 'Fechar'
             })
-        } onSend(state.replace(/\D/g, '')) //Remove os caracteres não numéricos do cnpj e envia o valor para o componente pai
+        }else{
+            if(isValid ){
+
+                onSend(state.replace(/\D/g, '')) //Remove os caracteres não numéricos do cnpj e envia o valor para o componente pai
+            }
+        } 
         if(onBeforeBlur){ //Se a função onBeforeBlur existir, executa a função
             onBeforeBlur(state) //Envia o valor do input para a função
-
         }
     }
 
@@ -46,7 +50,6 @@ const MaskedInput = ({name,className,id,placeholder,onBeforeBlur,onSend,required
         <input placeholder={placeholder} className={className} id={id} maxLength={19} value={cnpjMask(state)}
             onChange={handleChange}
             onBlur={handleBlur}
-            onFocus={() => console.log('Focado')}
             name={name}
             autoFocus 
             required={required} />

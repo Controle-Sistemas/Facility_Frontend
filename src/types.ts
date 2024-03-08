@@ -14,6 +14,18 @@ export type UserDataType = {
     RAMODEATIVIDADE?: string,
 }
 
+export type NewUser = {
+    IDCLOUD?: string,
+    NOME?: string,
+    NOMEESTABELECIMENTO?: string,
+    EMAIL?: string,
+    CNPJ?: string,    
+    REPRESENTANTE?: string,    
+    RAMODEATIVIDADE?: string,
+    STATUS: number,
+    ADMIN: number,
+}
+
 export type SidebarMenuType = {
     id: number,
     idPai?: number | null,

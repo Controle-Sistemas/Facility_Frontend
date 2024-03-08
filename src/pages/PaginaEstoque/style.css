@@ -91,6 +91,14 @@ ul {
 	right: .5em;
 }
 
+.products-control-buttons {
+	display: flex;
+	flex-direction: column;
+	position: fixed;
+	bottom: .5em;
+	right: .5em
+}
+
 #abc-prod-table tr {
 	cursor: pointer;
 	transition: all .2s;

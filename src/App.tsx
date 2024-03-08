@@ -29,6 +29,7 @@ import { PaginaEstoque } from './pages/PaginaEstoque';
 import { PortalChamados } from './pages/PortalChamados';
 import { PaginaSetores } from './pages/PaginaInternos';
 import { DashProvider } from './pages/PortalPageClientDashboard/Context';
+import { PaginaEdicaoProduto } from './pages/PaginaEdicaoProduto';
 function App() {
 	//Rotas do React
 	//As privadas impedem o acesso caso não esteja logado
@@ -92,6 +93,18 @@ function App() {
 								<Header />
 								<DashProvider>
 									<PaginaEstoque />
+								</DashProvider>
+							</ProtectedRoute>
+						}
+					/>
+
+					<Route
+						path="/user/produtos/editar"
+						element={
+							<ProtectedRoute>
+								<Header />
+								<DashProvider>
+									<PaginaEdicaoProduto />
 								</DashProvider>
 							</ProtectedRoute>
 						}
@@ -272,6 +285,16 @@ function App() {
 					/>
 
 					{/*Rotas de Internos*/}
+
+					<Route
+						path="/interno/change-password"
+						element={
+							<ProtectedRoute>
+								<Header />
+								<ChangePasswordPage />
+							</ProtectedRoute>
+						}
+					/>
 
 					<Route
 						path="/interno/chamados"

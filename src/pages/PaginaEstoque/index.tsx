@@ -18,7 +18,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { FaBoxes, FaFilter, FaHandHoldingUsd } from 'react-icons/fa';
+import { FaBoxes, FaEdit, FaFilter, FaHandHoldingUsd } from 'react-icons/fa';
 import { RiArrowRightSLine, RiOrganizationChart } from 'react-icons/ri';
 import { BASE_URL } from '../../utils/requests';
 import axios from 'axios';
@@ -35,6 +35,7 @@ import fileDownload from 'js-file-download'
 import { Chart, ReactGoogleChartEvent } from 'react-google-charts';
 import React from 'react';
 import { yellow } from '@mui/material/colors';
+import { useNavigate } from 'react-router-dom';
 const POSICAOESTOQUE = "Posição de Estoque";
 const SUGESTAODECOMPRA = "Sugestão de Compra";
 const CURVAABC = "Curva ABC";
@@ -146,6 +147,7 @@ export function PaginaEstoque() {
 	const [filtroClassificacao, setFiltroClassificacao] = useState(abcCurveProuctsData.resume);
 	const cnpj = localStorage.getItem('cnpj');
 
+	const navigate = useNavigate(); //Pega o navigate do react-router-dom
 
 
 	useEffect(() => {
@@ -164,7 +166,7 @@ export function PaginaEstoque() {
 					));
 					setGroups(aux)
 					setGroupsFiltered([])
-					axios.post(`${BASE_URL}/dashboard/curvaABC/${data[0].IDCLOUD}`, { Dateinit: `01.01.${actualDateYear}`, DateFinal: `${actualDateDay}.${actualDateMonth}.${actualDateYear}`}).then((res) => {
+					axios.post(`${BASE_URL}/dashboard/curvaABC/${data[0].IDCLOUD}`, { Dateinit: `01.01.${actualDateYear}`, DateFinal: `${actualDateDay}.${actualDateMonth}.${actualDateYear}` }).then((res) => {
 						if (res.status == 200) {
 							setAbcCurveProdctsData({ resume: res.data.data.curveABC });
 							setFiltroClassificacao(_.filter(res.data.data.curveABC, { classificacao: "A" }));
@@ -398,7 +400,7 @@ export function PaginaEstoque() {
 		},
 	];
 
-	function changeFilter(classificacao: string){
+	function changeFilter(classificacao: string) {
 		setFiltroClassificacao(filtroClassificacao[0].classificacao === classificacao ?
 			_.orderBy(abcCurveProuctsData.resume, 'classificacao')
 			:
@@ -422,227 +424,240 @@ export function PaginaEstoque() {
 								<img src={logo} alt="logo" className='logo' />
 						}
 					</FormControl>
-
 					<PrimaryButton onClick={nextPage} style={{ width: 'fit-content', height: 'fit-content' }}><i className="fa-solid fa-chevron-right" /></PrimaryButton>
 				</ButtonGroup>
 				{
 					loading ?
 						<Container style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 							<LoadingComponent />
-
 						</Container>
 						:
 						exibition != CURVAABC ?
-							groupsFilter.length > 0 ?
-								groupsFilter.map(group => (
-									<Accordion style={{ marginBottom: '.2em', marginTop: '0' }}>
-										<AccordionSummary
-											expandIcon={<ExpandMoreIcon style={{ color: '#a84c11' }} />}
-											aria-controls={`${group.id}-content`}
-											id={`${group.id}-header`}
-											style={{ backgroundColor: '#003775', color: 'white', boxShadow: '0 1px 20px -5px black' }}
-										>
-											<Typography style={{ display: 'flex', alignItems: 'baseline', fontWeight: 'bold' }}><RiOrganizationChart style={{ marginRight: '.4em', color: '#a84c11' }} />{group.nome}</Typography>
-										</AccordionSummary>
-										<AccordionDetails style={{ padding: '0 .4em .4em', margin: '0', backgroundColor: '212c3029' }}>
-											{
-												exibition === POSICAOESTOQUE ?
-													_.find(prouctsData.resume, function (o) { return parseInt(o.estoqueAtual) > 0 && o.grupo === group.nome }) ?
-														<table id='prod-table' style={{ backgroundColor: 'white', boxShadow: 'none' }}>
-															<tr>
-																<th className='codigoInterno'><AiOutlineBarcode /></th>
-																<th><CgRename /></th>
-																<th><FaBoxes /></th>
-																<th className='precoCusto'><FaHandHoldingUsd /></th>
-															</tr>
-															<tbody>
-																{_.filter(prouctsData.resume, function (o) { return parseInt(o.estoqueAtual) > 0 && o.grupo === group.nome }).map((product) => (
-																	<tr id={product.codInterno}>
-																		<td className='codigoInterno'><small>{product.codInterno}</small></td>
-																		<td><span>{product.descricao}</span></td>
-																		<td><span>{product.estoqueAtual}</span></td>
-																		<td className='precoCusto'><span>{getCurrencyValue(parseFloat(product.precoCusto))}</span></td>
-																	</tr>))}
-															</tbody>
-														</table>
-														:
-														<span style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>Não há produtos em estoque para exibição</span>
-													: //SUGESTAO DE COMPRA
-													_.find(prouctsData.resume, function (o) { return parseInt(o.estoqueAtual) <= 0 && o.grupo === group.nome }) ?
-														<table id='prod-table' style={{ backgroundColor: 'white', boxShadow: 'none' }}>
-															<tr>
-																<th className='codigoInterno'><AiOutlineBarcode /></th>
-																<th><CgRename /></th>
-																<th><FaBoxes /></th>
-																<th className='precoCusto'><FaHandHoldingUsd /></th>
-															</tr>
-															<tbody>
-																{_.filter(prouctsData.resume, function (o) { return parseInt(o.estoqueAtual) <= 0 && o.grupo === group.nome }).map((product) => (
-																	<tr id={product.codInterno} onClick={handleModalAddOpen}>
-																		<td id={product.codInterno} className='codigoInterno'><small>{product.codInterno}</small></td>
-																		<td id={product.codInterno}><span id={product.codInterno}>{product.descricao}</span></td>
-																		<td id={product.codInterno}>
-																			<span id={product.codInterno}>
-																				{
-																					_.find(productsToBuy.resume, { codInterno: product.codInterno }) ?
-																						`(+${_.sumBy(_.filter(productsToBuy.resume, { codInterno: product.codInterno }), 'qteCompra')})`
-																						:
-																						product.estoqueAtual
-																				}
-																			</span>
-																		</td>
-																		<td id={product.codInterno} className='precoCusto'><span id={product.codInterno}>{getCurrencyValue(parseFloat(product.precoCusto))}</span></td>
-																	</tr>))}
-															</tbody>
-														</table>
-														:
-														<span style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>Não há produtos para sugestão de compra</span>
-											}
-										</AccordionDetails>
-									</Accordion>
-								)) :
-								<div className="flex fullWidth">
-									<span className='fullWidth' style={{ textAlign: 'center', justifyContent: 'center', flexWrap: 'wrap-reverse' }}>Selecione os grupos para exibição</span>
-								</div> :
+							<>
+								{/* <Container className='products-control-buttons' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+									<PrimaryButton onClick={() => alert('asdas')} style={{ width: 'fit-content', height: 'fit-content' }}><i className="fa-solid fa-edit" /></PrimaryButton>
+								</Container> */}
+								{
+									groupsFilter.length > 0 ?
+										groupsFilter.map(group => (
+											<Accordion style={{ marginBottom: '.2em', marginTop: '0' }}>
+												<AccordionSummary
+													expandIcon={<ExpandMoreIcon style={{ color: '#a84c11' }} />}
+													aria-controls={`${group.id}-content`}
+													id={`${group.id}-header`}
+													style={{ backgroundColor: '#003775', color: 'white', boxShadow: '0 1px 20px -5px black' }}
+												>
+													<Typography style={{ display: 'flex', alignItems: 'baseline', fontWeight: 'bold' }}><RiOrganizationChart style={{ marginRight: '.4em', color: '#a84c11' }} />{group.nome}</Typography>
+												</AccordionSummary>
+												<AccordionDetails style={{ padding: '0 .4em .4em', margin: '0', backgroundColor: '212c3029' }}>
+													{
+														exibition === POSICAOESTOQUE ?
+
+															_.find(prouctsData.resume, function (o) { return parseInt(o.estoqueAtual) > 0 && o.grupo === group.nome }) ?
+																<>
+																	<table id='prod-table' style={{ backgroundColor: 'white', boxShadow: 'none' }}>
+																		<tr>
+																			<th className='codigoInterno'><AiOutlineBarcode /></th>
+																			<th><CgRename /></th>
+																			<th><FaBoxes /></th>
+																			<th className='precoCusto'><FaHandHoldingUsd /></th>
+																		</tr>
+																		<tbody>
+																			{_.filter(prouctsData.resume, function (o) { return parseInt(o.estoqueAtual) > 0 && o.grupo === group.nome }).map((product) => (
+																				<tr id={product.codInterno}>
+																					<td className='codigoInterno'><small>{product.codInterno}</small></td>
+																					<td><span>{product.descricao}</span></td>
+																					<td><span>{product.estoqueAtual}</span></td>
+																					<td className='precoCusto'><span>{getCurrencyValue(parseFloat(product.precoCusto))}</span></td>
+																				</tr>))}
+																		</tbody>
+																	</table>
+
+																</>
+																:
+																<span style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>Não há produtos em estoque para exibição</span>
+
+															: //SUGESTAO DE COMPRA
+															_.find(prouctsData.resume, function (o) { return parseInt(o.estoqueAtual) <= 0 && o.grupo === group.nome }) ?
+																<table id='prod-table' style={{ backgroundColor: 'white', boxShadow: 'none' }}>
+																	<tr>
+																		<th className='codigoInterno'><AiOutlineBarcode /></th>
+																		<th><CgRename /></th>
+																		<th><FaBoxes /></th>
+																		<th className='precoCusto'><FaHandHoldingUsd /></th>
+																	</tr>
+																	<tbody>
+																		{_.filter(prouctsData.resume, function (o) { return parseInt(o.estoqueAtual) <= 0 && o.grupo === group.nome }).map((product) => (
+																			<tr id={product.codInterno} onClick={handleModalAddOpen}>
+																				<td id={product.codInterno} className='codigoInterno'><small>{product.codInterno}</small></td>
+																				<td id={product.codInterno}><span id={product.codInterno}>{product.descricao}</span></td>
+																				<td id={product.codInterno}>
+																					<span id={product.codInterno}>
+																						{
+																							_.find(productsToBuy.resume, { codInterno: product.codInterno }) ?
+																								`(+${_.sumBy(_.filter(productsToBuy.resume, { codInterno: product.codInterno }), 'qteCompra')})`
+																								:
+																								product.estoqueAtual
+																						}
+																					</span>
+																				</td>
+																				<td id={product.codInterno} className='precoCusto'><span id={product.codInterno}>{getCurrencyValue(parseFloat(product.precoCusto))}</span></td>
+																			</tr>))}
+																	</tbody>
+																</table>
+																:
+																<span style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>Não há produtos para sugestão de compra</span>
+													}
+												</AccordionDetails>
+											</Accordion>
+										)) :
+										<div className="flex fullWidth">
+											<span className='fullWidth' style={{ textAlign: 'center', justifyContent: 'center', flexWrap: 'wrap-reverse' }}>Selecione os grupos para exibição</span>
+										</div>
+								}
+							</>
+							:
 							<div>
-							{abcCurveChartDataDetails && filtroClassificacao.length > 0 ? 
-								<div className="fullWidth">
-									<div className='breakOnMobile'>
-										
-									{grupamento ?
+								{abcCurveChartDataDetails && filtroClassificacao.length > 0 ?
+									<div className="fullWidth">
+										<div className='breakOnMobile'>
+
+											{grupamento ?
+												<Chart
+													chartType="PieChart"
+													width="100%"
+													height="300px"
+													chartEvents={chartEvents}
+													data={abcCurveChartData}
+													options={{
+														is3D: true,
+														vAxis: { minValue: 0 }, chartArea: { width: "100%" }, areaOpacity: 1, colors: ['#ff9900', '#a84c11', '#003775'],
+													}}
+												/>
+												: <></>}
+											{grupamento ?
+												<TableContainer>
+													<table>
+														<TableHead>
+															<TableRow className='tableHeaderRow' style={{ backgroundColor: '#003775' }}>
+																<TableCell align="center">Classe</TableCell>
+																<TableCell align="center">Qte</TableCell>
+															</TableRow>
+														</TableHead>
+														<TableBody>
+															{
+																_.map(grupamento, (key, value) => {
+																	return (
+																		<TableRow onClick={() => changeFilter(value)} style={{ cursor: 'pointer' }}>
+																			<TableCell align="center" style={{ fontWeight: 'bold' }}>{value}</TableCell>
+																			<TableCell align="center">{key.length} Produtos</TableCell>
+																		</TableRow>
+																	)
+																})
+															}
+														</TableBody>
+													</table>
+												</TableContainer>
+
+												: <></>}
+										</div>
+
 										<Chart
-											chartType="PieChart"
+											chartType="SteppedAreaChart"
 											width="100%"
-											height="300px"
-											chartEvents={chartEvents}
-											data={abcCurveChartData}
+											height="400px"
+											data={abcCurveChartDataDetails}
 											options={{
-												is3D: true,
-												vAxis: { minValue: 0 }, chartArea: { width: "100%" }, areaOpacity: 1, colors: ['#ff9900', '#a84c11', '#003775'],
+												is3D: true, animation: {
+													duration: 2000,
+													easing: 'out',
+													startup: true
+												},
+												vAxis: { minValue: 0, format: 'R$ #,###', scale: 'log', textSyle: { fontSize: 'small' } },
+												hAxis: { textSyle: { fontSize: 'small' } }, chartArea: { width: "80%" }, areaOpacity: .7,
+												colors: filtroClassificacao[0].classificacao === 'A' ? ['#ff9900'] :
+													filtroClassificacao[0].classificacao === 'B' ? ['#a84c11'] : ['#003775']
 											}}
 										/>
-										: <></>}
-										{grupamento ?
+
+									</div>
+									: <>
+										<LoadingComponent />
+									</>}
+								<div className='fullWidth' style={{ marginTop: '2em' }}>
+									{
+										abcCurveProuctsData.resume.length > 0 ?
 											<TableContainer>
-												<table>
+												<table id='abc-prod-table'>
 													<TableHead>
 														<TableRow className='tableHeaderRow' style={{ backgroundColor: '#003775' }}>
-															<TableCell align="center">Classe</TableCell>
+															<TableCell align="center" style={{ fontWeight: 'bold' }}>Código</TableCell>
+															<TableCell align="center">Descricao</TableCell>
 															<TableCell align="center">Qte</TableCell>
+															<TableCell align="center">Valor</TableCell>
+															<TableCell align="center">% Individual</TableCell>
+															<TableCell align="center" style={{ fontWeight: 'bold' }}>Classe</TableCell>
 														</TableRow>
 													</TableHead>
 													<TableBody>
 														{
-															_.map(grupamento, (key, value) => {
-																return (
-																	<TableRow onClick={()=> changeFilter(value)} style={{cursor:'pointer'}}>
-																		<TableCell align="center" style={{ fontWeight: 'bold' }}>{value}</TableCell>
-																		<TableCell align="center">{key.length} Produtos</TableCell>
+															filtroClassificacao.map((product) => (
+																<Tooltip disableHoverListener title={
+																	<React.Fragment>
+																		<div className="toltip">
+																			<p className='toltipItemHeader'><strong>{product.descricao}</strong>
+																			</p>
+																			<p className='toltipItem'>
+																				<strong>
+																					<i className="fa fa-barcode" aria-hidden="true" style={{ color: "chocolate" }}></i> ID
+																				</strong>
+																				{product.idProduto}
+																			</p>
+																			<p className='toltipItem'>
+																				<strong>
+																					<i className="fa-solid fa-chart-pie" aria-hidden="true" style={{ color: "chocolate" }}></i> Quantidade:
+																				</strong>
+																				{product.fracionado.toUpperCase() === "N" ? product.quantidade : parseFloat(product.quantidade).toFixed(2)}
+																			</p>
+																			<p className='toltipItem'>
+																				<strong>
+																					<i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "chocolate" }}></i> Valor:
+																				</strong>
+																				{getCurrency(parseFloat(product.valorItem))}
+																			</p>
+																			<p className='toltipItem'>
+																				<strong>
+																					<i className="fa fa-percent" aria-hidden="true" style={{ color: "chocolate" }}></i> Perc:
+																				</strong>
+																				{parseFloat(product.perc).toFixed(2)} %
+																			</p>
+																			<p className='toltipItem'>
+																				<strong>
+																					<i className="fa fa-credit-card" aria-hidden="true" style={{ color: "chocolate" }}></i> Classe:
+																				</strong>
+																				{product.classificacao}
+																			</p>
+																		</div>
+																	</React.Fragment>
+																} placement="top-end">
+																	<TableRow style={{
+																		backgroundColor: product.classificacao === 'A' ? '#8cff0021' :
+																			product.classificacao === 'B' ? '#ffff001f' : '#ff00001f'
+																	}}>
+																		<TableCell align="center" style={{ fontWeight: 'bold' }}>{product.idProduto}</TableCell>
+																		<TableCell align="center">{product.descricao}</TableCell>
+																		<TableCell align="center">{product.fracionado.toUpperCase() === "N" ? product.quantidade : parseFloat(product.quantidade).toFixed(2)}</TableCell>
+																		<TableCell align="center">{getCurrency(parseFloat(product.valorItem))}</TableCell>
+																		<TableCell align="center">{parseFloat(product.perc).toFixed(2)} %</TableCell>
+																		<TableCell align="center" style={{ fontWeight: 'bold' }}>{product.classificacao}</TableCell>
 																	</TableRow>
-																)
-															})
+																</Tooltip >
+
+															))
 														}
 													</TableBody>
 												</table>
 											</TableContainer>
-
-											: <></>}
-									</div>
-									
-									<Chart
-										chartType="SteppedAreaChart"
-										width="100%"
-										height="400px"
-										data={abcCurveChartDataDetails}
-										options={{
-											is3D: true, animation: {
-												duration: 2000,
-												easing: 'out',
-												startup: true
-											},
-											vAxis: { minValue: 0, format: 'R$ #,###', scale: 'log', textSyle: { fontSize: 'small' } },
-											hAxis: { textSyle: { fontSize: 'small' } }, chartArea: { width: "80%" }, areaOpacity: .7,
-											colors: filtroClassificacao[0].classificacao === 'A' ? ['#ff9900'] :
-												filtroClassificacao[0].classificacao === 'B' ? ['#a84c11'] : ['#003775']
-										}}
-									/>
-									
-								</div>
-								: <>
-										<LoadingComponent/>
-									</>}
-								<div className='fullWidth' style={{marginTop:'2em'}}>
-									{
-										abcCurveProuctsData.resume.length > 0 ?
-										<TableContainer>
-										<table id='abc-prod-table'>
-											<TableHead>
-												<TableRow className='tableHeaderRow' style={{ backgroundColor: '#003775' }}>
-													<TableCell align="center" style={{ fontWeight: 'bold' }}>Código</TableCell>
-													<TableCell align="center">Descricao</TableCell>
-													<TableCell align="center">Qte</TableCell>
-													<TableCell align="center">Valor</TableCell>
-													<TableCell align="center">% Individual</TableCell>
-													<TableCell align="center" style={{ fontWeight: 'bold' }}>Classe</TableCell>
-												</TableRow>
-											</TableHead>
-											<TableBody>
-												{
-													filtroClassificacao.map((product) => (
-														<Tooltip disableHoverListener title={
-															<React.Fragment>
-																<div className="toltip">
-																	<p className='toltipItemHeader'><strong>{product.descricao}</strong>
-																	</p>
-																	<p className='toltipItem'>
-																		<strong>
-																			<i className="fa fa-barcode" aria-hidden="true" style={{ color: "chocolate" }}></i> ID
-																		</strong>
-																		{product.idProduto}
-																	</p>
-																	<p className='toltipItem'>
-																		<strong>
-																			<i className="fa-solid fa-chart-pie" aria-hidden="true" style={{ color: "chocolate" }}></i> Quantidade:
-																		</strong>
-																		{product.fracionado.toUpperCase() === "N" ? product.quantidade : parseFloat(product.quantidade).toFixed(2)}
-																	</p>
-																	<p className='toltipItem'>
-																		<strong>
-																			<i className="fa fa-sack-dollar" aria-hidden="true" style={{ color: "chocolate" }}></i> Valor:
-																		</strong>
-																		{getCurrency(parseFloat(product.valorItem))}
-																	</p>
-																	<p className='toltipItem'>
-																		<strong>
-																			<i className="fa fa-percent" aria-hidden="true" style={{ color: "chocolate" }}></i> Perc:
-																		</strong>
-																		{parseFloat(product.perc).toFixed(2)} %
-																	</p>
-																	<p className='toltipItem'>
-																		<strong>
-																			<i className="fa fa-credit-card" aria-hidden="true" style={{ color: "chocolate" }}></i> Classe:
-																		</strong>
-																		{product.classificacao}
-																	</p>
-																</div>
-															</React.Fragment>
-														} placement="top-end">
-															<TableRow style={{backgroundColor: product.classificacao === 'A' ? '#8cff0021' : 
-														product.classificacao === 'B' ? '#ffff001f' : '#ff00001f'}}>
-																<TableCell align="center" style={{ fontWeight: 'bold' }}>{product.idProduto}</TableCell>
-																<TableCell align="center">{product.descricao}</TableCell>
-																<TableCell align="center">{product.fracionado.toUpperCase() === "N" ? product.quantidade : parseFloat(product.quantidade).toFixed(2)}</TableCell>
-																<TableCell align="center">{getCurrency(parseFloat(product.valorItem))}</TableCell>
-																<TableCell align="center">{parseFloat(product.perc).toFixed(2)} %</TableCell>
-																<TableCell align="center" style={{ fontWeight: 'bold' }}>{product.classificacao}</TableCell>
-															</TableRow>
-														</Tooltip >
-
-													))
-												}
-											</TableBody>
-										</table>
-									</TableContainer>
 
 											/**
 											 * 
@@ -676,12 +691,13 @@ export function PaginaEstoque() {
 								</div>
 							</div>
 				}
+
 				<ModalForm
 					title="Em implementação..."
 					isModalOpen={isModalAddCategoriaOpen}
 					isModalClosed={handleModalAddClose}
 					width="70%"
-					height="55vh"
+					height="90vh"
 				>
 					<FormBuySuggestion
 						handleOpen={handleModalAddOpen}
@@ -690,8 +706,9 @@ export function PaginaEstoque() {
 						productSuggested={productToBuy}
 					/>
 				</ModalForm>
+
 				{
-					productsToBuy.resume.length > 0 ?
+					productsToBuy.resume.length > 0 && exibition === SUGESTAODECOMPRA ? 
 						<Box className="relatorio-control-buttons">
 							<Fab color="default" style={{ color: '#003775', marginBottom: '.4em' }} onClick={cancelRelatorio}>
 								<DeleteIcon />
@@ -703,6 +720,19 @@ export function PaginaEstoque() {
 						:
 						<></>
 				}
+				{
+					productsToBuy.resume.length === 0 && exibition === POSICAOESTOQUE ?
+						<Box className="relatorio-control-buttons">
+							<Fab color="default" style={{ color: '#003775', marginBottom: '.4em' }}
+							 onClick={() => navigate('/user/produtos/editar')}>
+								<FaEdit />
+							</Fab>
+						</Box>
+						:
+						<></>
+				}
+
+
 			</ContainerAdminContas>
 		</ContainerAdmin>
 	);

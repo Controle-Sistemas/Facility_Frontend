@@ -14,8 +14,11 @@ import {
 } from '../../components/styledComponents/containers';
 import { MainTitle } from '../../components/styledComponents/Texts';
 import { Container } from './styled';
+import Cookies from 'js-cookie';
 export default function ChangePasswordPage() {
 	const cnpj = localStorage.getItem('cnpj'); // pega o cnpj do usuário logado
+	const isInternal = window.location.pathname.includes('interno');
+	const idUser = Cookies.get('id');
 
 	//Estado para armazenar as senhas do usuário
 	const [ oldPassword, setOldPassword ] = useState('');
@@ -26,8 +29,9 @@ export default function ChangePasswordPage() {
 		event.preventDefault();
 		if (password.length >= 8 && password === passwordConfirm) {
 			// verifica se a senha é maior que 8 caracteres e se é igual a confirmação
+			//verificar se é interno ou admin pela rota
 			axios
-				.patch(BASE_URL + '/clientes/change-password/' + cnpj, {
+				.patch(BASE_URL + `/${isInternal? `internos/change-password/${idUser}` : `/change-password/${cnpj}`}`, {
 					// faz a requisição para alterar a senha
 					oldPassword: oldPassword,
 					newPassword: password

@@ -60,6 +60,7 @@ export function MultipleSelect(props) {
       ...props.values,
       RAMODEATIVIDADE: ramo,
     });
+    console.log('RAMO', props.values)
   };
 
   

@@ -1,0 +1,17 @@
+.lineModalInputContainer{
+    display: flex;
+    flex-direction: row;
+}
+
+@media (max-width: 600px) {
+    
+    .lineModalInputContainer{
+        width: 100%;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .inputContainer, .imageContainer, .MuiTableContainer-root{
+        width: 100% !important; 
+    }
+  }

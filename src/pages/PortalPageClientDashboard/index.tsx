@@ -48,11 +48,7 @@ export function PortalPageClientDashboard() {
 						setIdCloud(_.find(res.data.data, { "TIPO": 'MATRIZ' }).IDCLOUD);
 						setClientName(_.find(res.data.data, { "TIPO": 'MATRIZ' }).NOMEESTABELECIMENTO);
 					}
-					console.log('Grupo Completo', data)
-					console.log('Matriz', _.filter(res.data.data, { "TIPO": 'MATRIZ' }))
-					console.log('Filiais', _.filter(res.data.data, { "TIPO": 'FILIAL' }))
 				}).catch(err => {
-					console.log("Grupo não encontrado")
 					getUniqueClient(cnpj);
 				})
 		},
@@ -62,11 +58,8 @@ export function PortalPageClientDashboard() {
 	async function getUniqueClient(cnpj: string) {
 		await axios.get(`${BASE_URL}/clientes/usuario/${cnpj}`).then((res) => {
 			var data = res.data.data;
-			console.log('CNPJ', cnpj)
-			console.log('Idcloud', data[0].IDCLOUD)
 			setIdCloud(data[0].IDCLOUD);
 			setClientName(data[0].NOMEESTABELECIMENTO);
-			console.log(idCloud)
 			setLoading(false);
 		}).catch(err => {
 			console.log(err)

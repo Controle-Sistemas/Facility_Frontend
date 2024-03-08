@@ -7,50 +7,77 @@ import { PrimaryButton, DangerButton } from '../../styledComponents/buttons';
 import { DataGroup, InputContainer, ButtonFormGroup, FormRowContainer } from '../../styledComponents/containers';
 import CnpjInput from '../../cnpjInput';
 import './styles/Forms.css';
-import { FaFilter } from 'react-icons/fa';
+import { FaFilter, FaSearch } from 'react-icons/fa';
+import { Autocomplete, Container, TextField } from '@mui/material';
+import { NewUser, UserDataType } from '../../../types';
+import _ from 'lodash';
 
 const initialState = () => {
 	return {
-		IDCLOUD: 0,
+		IDCLOUD: '',
 		EMAIL: '',
 		NOME: '',
 		NOMEESTABELECIMENTO: '',
 		CNPJ: '',
 		STATUS: 0,
 		ADMIN: 0,
-		RAMODEATIVIDADE: ''
+		RAMODEATIVIDADE: '',
+		REPRESENTANTE: ''
 	};
 };
 
 export function FormCliente(props) {
 	//Estado dos valores do formulário
 	const [ramos, setRamos] = useState([]);
-	const [values, setValues] = useState(initialState);
+	const [values, setValues] = useState<NewUser>(initialState);
 	const [loading, setLoading] = useState(false);
 	const [filteredClientsList, setFilteredClientsList] = useState([]);
+	const [filteredClient, setfilteredClient] = useState('');
 	const [filteredClientsPrefix, setFilteredClientsPrefix] = useState('');
 
 	//Funções para capturar os valores do formulário
 	function handleChangeValues(event) {
 		const { name, value } = event.target;
-		if (name === 'cnpj') {
-			setValues({ ...values, [name]: cnpjMask(value) });
-		} else {
-			setValues({
-				...values,
-				[name]: value
-			});
+		if (name != undefined) {
+			if (name === 'CNPJ') {
+				setValues({ ...values, [name]: cnpjMask(value) });
+			} else {
+				setValues({
+					...values,
+					[name]: value
+				});
+			}
 		}
+		console.log(values)
 	}
+
 	function handleChangeCNPJ(cnpj) {
 		setValues({ ...values, CNPJ: cnpj });
 	}
-	function handleChangeFilterCliente(event){
+
+	function handleChangeFilterCliente(event) {
 		setFilteredClientsPrefix(event.target.value)
-		console.log(filteredClientsPrefix)
+		setfilteredClient(event.target.value)
+	}
+
+	function handleClientSelected(clientName) {
+		let clientSelected = _.find(filteredClientsList, { NOME: clientName })
+		if (clientSelected != undefined) {
+			Object.keys(clientSelected).forEach((field) => {
+				handleChangeValues({
+					target: { name: field, value: clientSelected[field] }
+				});
+
+				console.log({ name: field, value: clientSelected[field] })
+			});
+			setValues({...clientSelected})
+			setValues({ ...clientSelected, CNPJ: cnpjMask(clientSelected.CNPJ) })
+			// console.log('att', values);
+		}
 	}
 
 	function getExternalClients() {
+		console.log(filteredClientsPrefix)
 		setLoading(true)
 		axios
 			.get(BASE_URL + `/clientes/externo/${filteredClientsPrefix.toLocaleUpperCase()}`)
@@ -66,9 +93,9 @@ export function FormCliente(props) {
 							CNPJ: client.cnpj
 						}
 					});
-					console.log(formatedData)
-					setFilteredClientsList(formatedData)	
-					setLoading(false)				
+					console.log(formatedData);
+					setFilteredClientsList(formatedData);
+					setLoading(false);
 				}
 			})
 			.catch((err) => {
@@ -85,49 +112,76 @@ export function FormCliente(props) {
 	//Função para envio dos dados do formualário
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		values.IDCLOUD = Number(values.CNPJ.replace(/\D/g, '').substring(0, 6)); //Remove os caracteres não numéricos e pega os 6 primeiros caracteres
-		values.RAMODEATIVIDADE = values.RAMODEATIVIDADE.toString();
+		// values.IDCLOUD = Number(values.CNPJ.replace(/\D/g, '').substring(0, 6)); //Remove os caracteres não numéricos e pega os 6 primeiros caracteres
+		let data : any = values;
+		data.RAMODEATIVIDADE = values.RAMODEATIVIDADE.toString();
+		data.IDCLOUD = parseInt(values.IDCLOUD);
+		delete data.ID;
+		console.log('att', data);
 
-		props.postData('http://localhost:8000/clientes/', values); //Envia os dados para o banco de dados
-		setValues(initialState()); //Limpa os campos do formulário
+		props.postData(values); //Envia os dados para o banco de dados
+		// setValues(initialState()); //Limpa os campos do formulário
 		setTimeout(() => {
 			props.isModalClosed();
 		}, 1500);
+
+		
 	};
 
 	return (
 		<FormRowContainer onSubmit={handleSubmit}>
 			<InputContainer>
-				<label>Cliente socket:</label>
-				<input className="form-control" onChange={handleChangeFilterCliente} />
-				<PrimaryButton onClick={() => getExternalClients()}><FaFilter /></PrimaryButton>
-						
+				<label>Preencher Automaticamente: (mínimo 5 letras)</label>
+				<Container style={{ padding: 0, marginTop: '1em', display: 'flex', alignItems: 'stretch', justifyContent: 'space-between' }}>
+					<Autocomplete
+						onKeyUp={handleChangeFilterCliente}
+						value={filteredClient}
+						onChange={(event: any, newValue: string | null) => {
+							handleClientSelected(newValue);
+						}}
+						disablePortal
+						id="combo-box-demo"
+						options={filteredClientsList.map((cliente: UserDataType) => cliente.NOME)}
+						sx={{ width: 300 }}
+						renderInput={(params) => <TextField {...params} label="Cliente Socket" />}
+					/>
+					{/* <input className="form-control" onChange={handleChangeFilterCliente} /> */}
+					<PrimaryButton type='button' onClick={() => getExternalClients()}><FaSearch /> Buscar</PrimaryButton>
+
+				</Container>
 			</InputContainer>
 			<DataGroup>
 				<InputContainer>
 					<label htmlFor="nome">Nome:</label>
-					<input className="form-control" name="NOME" onChange={handleChangeValues} required />
+					<input className="form-control" value={values.NOME} name="NOME" onChange={handleChangeValues} required />
 				</InputContainer>
 				<InputContainer>
 					<label htmlFor="nome-estabelecimento">Nome do estabelecimento:</label>
 					<input
 						className="form-control"
 						type="text"
+						value={values.NOMEESTABELECIMENTO}
 						name="NOMEESTABELECIMENTO"
 						onChange={handleChangeValues}
 						required
 					/>
 				</InputContainer>
+				<InputContainer>
+					<label htmlFor="idcloud">IDCLOUD:</label>
+					<input
+						className="form-control"
+						type="number"
+						value={values.IDCLOUD}
+						name="IDCLOUD"
+						onChange={handleChangeValues}
+						required
+						min={0}
+					/>
+				</InputContainer>
 
 				<InputContainer>
-					<label htmlFor="cnpj">CNPJ:</label>
-					<CnpjInput
-						name="CNPJ"
-						className="form-control"
-						onSend={handleChangeCNPJ}
-						value={values.CNPJ}
-						required
-					/>
+					<label htmlFor="cnpj">CNPJ:</label>					
+					<input placeholder={`Apenas dígitos`} name='CNPJ' className="form-control" maxLength={19} value={values.CNPJ} onChange={handleChangeValues} required />
 				</InputContainer>
 				<InputContainer>
 					<label htmlFor="">Ramo de Atividade</label>
@@ -136,11 +190,12 @@ export function FormCliente(props) {
 						setValues={setValues}
 						values={values}
 						nameSelect="Ramo do estabelecimento"
+					// value={values.RAMODEATIVIDADE}
 					/>
 				</InputContainer>
 				<InputContainer>
 					<label htmlFor="email">Email:</label>
-					<input className="form-control" type="email" name="EMAIL" onChange={handleChangeValues} required />
+					<input className="form-control" type="email" name="EMAIL" value={values.EMAIL} onChange={handleChangeValues} required />
 				</InputContainer>
 				<InputContainer>
 					<label htmlFor="representante">Representante:</label>
@@ -151,6 +206,7 @@ export function FormCliente(props) {
 						id="input-representante"
 						onChange={handleChangeValues}
 						required
+
 					/>
 				</InputContainer>
 			</DataGroup>

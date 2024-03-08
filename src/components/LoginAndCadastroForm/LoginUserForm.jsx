@@ -62,8 +62,8 @@ export function LoginUserForm() {
     async function verifyServerStatus(){
        await axios.get(BASE_URL + '/ramos')
         .then(res => {
-           console.log("O sistema está no ar, interaja através da interface!")
-           setErrorMessage('');
+            setErrorMessage(res.status == 200 ? '' : SERVER_DOWN);
+            console.log("O sistema está no ar, interaja através da interface!")
         })
         .catch(err => {
             setErrorMessage(SERVER_DOWN);

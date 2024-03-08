@@ -27,12 +27,9 @@ export function CardChamados({ title, data, totalChamados }: CardProps) {
 				{data.length > 0 &&
 					sortData(data).map((item) => {
 							const porcentagemBarra = (item.TOTAL * 100 / totalChamados).toFixed(1);
-							console.log('NOME ', item.NOME);
-							console.log('TOTAL ', item.TOTAL);
-							console.log('PERCENT ', porcentagemBarra);
 							return (
 								<div>
-									<CardStatistic status={item.NOME.trim().toUpperCase()}>
+									<CardStatistic key={item.NOME} status={item.NOME.trim().toUpperCase()}>
 										{title.toLowerCase().includes('status') ? (
 											<i className="fa-solid fa-circle-exclamation" style={{ width: '1.4rem' }} />
 										) : null}

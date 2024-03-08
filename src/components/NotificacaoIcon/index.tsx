@@ -90,11 +90,11 @@ export function NotificationIcon() {
 				setPendingDocuments(res.data.data.filter((document: { STATUS: number; }) => document.STATUS === 0)); // seta os documentos pendentes
 			})
 			.catch((err) => {
-				console.log(err);
+				// console.log(err);
 			});
 		}
 		
-	}, 1000);
+	}, 10000);
 
 
     return (

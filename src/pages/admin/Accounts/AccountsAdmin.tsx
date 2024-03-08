@@ -170,7 +170,7 @@ function AccountsPage(props) {
 	const [idCliente, setIdCliente] = useState(0);
 	const [modalEditarIsOpen, setEditIsOpen] = useState(false);
 	const [modalFormIsOpen, setFormIsOpen] = useState(false);
-	const [ modalExcluirIsOpen, setDeleteIsOpen ] = useState(false);
+	const [deleteModalIsOpen, setDeleteIsOpen] = useState(false);
 	const handleClear = () => {
 		if (filterText) {
 			setResetPaginationToggle(!resetPaginationToggle);
@@ -181,7 +181,9 @@ function AccountsPage(props) {
 
 	//Resolvendo a promise para buscar os dados
 	useEffect(() => {
+		setLoading(true);
 		getDadosApi().then((res) => {
+			setData([])
 			res.forEach((element: any) => {
 				let isActive = true;
 				//Se o status for igual a ativo, o botão deve ser ativo, se não, inativo
@@ -218,6 +220,7 @@ function AccountsPage(props) {
 				setLoading(false);
 			});
 		});
+		setLoading(false);
 	}, [refresh]);
 
 	const filteredItems = data.filter((item) => {
@@ -242,11 +245,11 @@ function AccountsPage(props) {
 	}
 
 	function handleOpenModalExcluir(id) {
-		if (!modalExcluirIsOpen) {
+		if (!deleteModalIsOpen) {
 			setIdCliente(id);
 		}
 
-		setDeleteIsOpen(!modalExcluirIsOpen);
+		setDeleteIsOpen(!deleteModalIsOpen);
 	}
 
 	function onAdd(dados: UserDataType) {
@@ -254,10 +257,13 @@ function AccountsPage(props) {
 		axios.post(`${BASE_URL}/clientes/`, dados).then((res) => {
 			Swal.fire({
 				title: 'Sucesso',
-				text: res.data.message,
+				html : `${res.data.message} <br/> Recarregue se necessário!`,
 				icon: 'success'
 			});
 			getDadosApi();
+			//setData([]);
+			toggleRefresh(!refresh)
+			setLoading(false);
 		}).catch((err) => {
 			console.log(err);
 			Swal.fire({
@@ -267,6 +273,8 @@ function AccountsPage(props) {
 				icon: 'error',
 				confirmButtonText: 'Fechar'
 			});
+			getDadosApi();
+			toggleRefresh(!refresh)
 			setLoading(false);
 		});
 		toggleRefresh(!refresh)
@@ -281,6 +289,7 @@ function AccountsPage(props) {
 				icon: 'success'
 			});
 			getDadosApi();
+			toggleRefresh(!refresh)
 		}).catch((err) => {
 			console.log(err);
 			Swal.fire({
@@ -303,6 +312,7 @@ function AccountsPage(props) {
 				icon: 'success'
 			});
 			getDadosApi();
+			toggleRefresh(!refresh);
 		}).catch((err) => {
 			console.log(err);
 			Swal.fire({
@@ -314,7 +324,9 @@ function AccountsPage(props) {
 			});
 			setLoading(false);
 		});
-		toggleRefresh(!refresh)
+
+		setDeleteIsOpen(!deleteModalIsOpen)
+
 	};
 
 	if (loading) { //se estiver carregando
@@ -363,7 +375,7 @@ function AccountsPage(props) {
 								<TableBody>
 									{
 										filteredItems.map((cliente: any) => (
-											<Tooltip placement='top-start' title={
+											<Tooltip placement='top' title={
 												<React.Fragment>
 													<h6>
 														NOME: {cliente.NOME}
@@ -382,12 +394,12 @@ function AccountsPage(props) {
 													</div>
 												</React.Fragment>
 											}>
-												<TableRow hover key={cliente.ID} style={{ cursor: "pointer" }} onClick={() => handleOpenModalEditar(cliente.ID)}>
-													<TableCell align="left">{cliente.NOMEESTABELECIMENTO}</TableCell>
-													<TableCell align="left">{cliente.EMAIL === '@' ? 'Não cadastrado' : cliente.EMAIL}</TableCell>
-													<TableCell align="left" style={{ fontWeight: 'bold' }}>{cliente.IDCLOUD}</TableCell>
+												<TableRow hover key={cliente.ID} style={{ cursor: "pointer" }} >
+													<TableCell align="left" onClick={() => handleOpenModalEditar(cliente.ID)}>{cliente.NOMEESTABELECIMENTO}</TableCell>
+													<TableCell align="left" onClick={() => handleOpenModalEditar(cliente.ID)}>{cliente.EMAIL === '@' ? 'Não cadastrado' : cliente.EMAIL}</TableCell>
+													<TableCell align="left" onClick={() => handleOpenModalEditar(cliente.ID)} style={{ fontWeight: 'bold' }}>{cliente.IDCLOUD}</TableCell>
 													{/* <TableCell align="left">{cnpjMask(cliente.CNPJ)}</TableCell> */}
-													<TableCell align="center">{cliente.RAMODEATIVIDADE}</TableCell>
+													<TableCell align="center" onClick={() => handleOpenModalEditar(cliente.ID)}>{cliente.RAMODEATIVIDADE}</TableCell>
 													<TableCell align="center">{cliente.buttonStatus} </TableCell>
 													<TableCell align="center">{cliente.buttonAdmin}</TableCell>
 												</TableRow>
@@ -422,7 +434,7 @@ function AccountsPage(props) {
 					</ModalEdit>
 
 					<ModalConfirm
-						isModalOpen={modalExcluirIsOpen}
+						isModalOpen={deleteModalIsOpen}
 						isModalClosed={handleOpenModalExcluir}
 						textHeader="Deletar"
 						width="40%"
