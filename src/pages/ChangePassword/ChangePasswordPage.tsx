@@ -44,6 +44,7 @@ export default function ChangePasswordPage() {
 						showConfirmButton: false,
 						timer: 1500
 					});
+					console.log(res)
 					// limpa os campos
 					setOldPassword('');
 					setPassword('');

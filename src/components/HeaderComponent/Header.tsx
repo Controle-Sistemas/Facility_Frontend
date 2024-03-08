@@ -147,6 +147,10 @@ export default function Header() {
 						<Link to="/user/change-password" className="change-password" onClick={handleOpen}>
 							<i className="fa-solid fa-key" />Alterar Senha
 						</Link>
+					) : window.location.pathname.includes('/interno') ? (
+						<Link to="/interno/change-password" className="change-password" onClick={handleOpen}>
+							<i className="fa-solid fa-key" />Alterar Senha
+						</Link>
 					) : null}
 				</span>
 				<span className="logout">
