@@ -1,0 +1,185 @@
+.fullWidth {
+	width: 100%;
+}
+
+.flex {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+}
+
+.flexColumn {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.responsiveOnMobile {}
+
+ul {
+	padding: 0;
+}
+
+.product {
+	display: flex;
+	flex-direction: column;
+	align-items: self-start;
+}
+
+.product strong,
+.product small {
+	margin-right: .4em;
+}
+
+#prod-table tr {
+	cursor: pointer;
+	transition: all .2s;
+}
+
+#prod-table tbody tr:hover {
+	transform: scale(1.01);
+	color: #a84c11;
+	background-color: rgb(253, 240, 206);
+
+}
+
+#prod-table td {
+	display: table-cell;
+	text-align: center;
+	width: 10%;
+	font-weight: bold;
+	padding: .4em .2em;
+	border-bottom: 1px solid lightgray;
+
+}
+
+#prod-table th {
+	text-align: center !important;
+	color: #a84c11;
+}
+
+#prod-table th:nth-child(1) {
+	text-align: left !important;
+	padding-left: 1em;
+
+}
+
+#prod-table th:nth-child(2) {
+	text-align: center;
+	width: 60%;
+}
+
+#prod-table td:nth-child(2) {
+	text-align: left;
+	width: 60%;
+	font-weight: normal;
+	font-size: small;
+}
+
+#prod-table td:nth-child(4),
+#prod-table td:nth-child(1) {
+	text-align: left !important;
+
+}
+
+.relatorio-control-buttons {
+	display: flex;
+	flex-direction: column;
+	position: fixed;
+	bottom: .5em;
+	right: .5em;
+}
+
+.products-control-buttons {
+	display: flex;
+	flex-direction: column;
+	position: fixed;
+	bottom: .5em;
+	right: .5em
+}
+
+#abc-prod-table tr {
+	cursor: pointer;
+	transition: all .2s;
+}
+
+#abc-prod-table tbody tr:hover {
+	color: #a84c11;
+}
+
+#abc-prod-table th:nth-child(1) {
+	width: 15% !important;
+
+}
+
+#abc-prod-table td:nth-child(1) {
+	text-align: center !important;
+	width: 15% !important;
+
+}
+
+#abc-prod-table th:nth-child(6),
+#abc-prod-table th:nth-child(7) {
+	text-align: center;
+	width: 15% !important;
+}
+
+#abc-prod-table td:nth-child(6),
+#abc-prod-table td:nth-child(7) {
+	text-align: center;
+	width: 15% !important;
+}
+
+#abc-prod-table th:nth-child(2) {
+	text-align: center;
+	width: 25% !important;
+}
+#abc-prod-table td:nth-child(2) {
+	text-align: center;
+	width:25% !important;
+}
+
+.breakOnMobile{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0 6em 0 0;
+}
+
+.toltipItemHeader{
+    margin-bottom: .2em;
+}
+.toltip, .toltipItemHeader{    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.toltipItem{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;    
+    margin: .5em;
+}
+@media screen and (max-width: 900px) {
+	.relatorio-control-buttons {
+		
+	}
+	
+	.breakOnMobile{
+		margin-top: 2em;
+		flex-direction: column-reverse;
+		padding: 0;
+	}	
+}
+
+@media screen and (max-width: 450px) {
+	.breakOnMobile{
+		flex-direction: column-reverse;
+		padding: 0;
+	}	
+}

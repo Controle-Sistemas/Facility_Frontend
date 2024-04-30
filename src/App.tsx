@@ -30,6 +30,7 @@ import { PortalChamados } from './pages/PortalChamados';
 import { PaginaSetores } from './pages/PaginaInternos';
 import { DashProvider } from './pages/PortalPageClientDashboard/Context';
 import { PaginaEdicaoProduto } from './pages/PaginaEdicaoProduto';
+import {LucratividadeRel} from './pages/LucratividadeRel'
 function App() {
 	//Rotas do React
 	//As privadas impedem o acesso caso não esteja logado
@@ -111,11 +112,11 @@ function App() {
 					/>
 
 					<Route
-						path="/user/relatorios/vendas"
+						path="/user/relatorios/lucratividade"
 						element={
 							<ProtectedRoute>
 								<Header />
-								<RelatoriosVendasPage />
+								<LucratividadeRel />
 							</ProtectedRoute>
 						}
 					/>
