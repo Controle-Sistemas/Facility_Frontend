@@ -31,7 +31,7 @@ export default function ChangePasswordPage() {
 			// verifica se a senha é maior que 8 caracteres e se é igual a confirmação
 			//verificar se é interno ou admin pela rota
 			axios
-				.patch(BASE_URL + `/${isInternal? `internos/change-password/${idUser}` : `/change-password/${cnpj}`}`, {
+				.patch(BASE_URL + `/${isInternal? `internos/change-password/${idUser}` : `clientes/change-password/${cnpj}`}`, {
 					// faz a requisição para alterar a senha
 					oldPassword: oldPassword,
 					newPassword: password

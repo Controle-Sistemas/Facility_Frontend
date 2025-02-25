@@ -25,6 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import { LocalizationProvider, MobileDatePicker, MobileDateTimePicker, MobileTimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import { func } from 'prop-types';
 
 
 interface productsDataType {
@@ -90,8 +91,10 @@ export function LucratividadeRel() {
 	const [groupsFilter, setGroupsFiltered] = useState(groups);
 	const [groupFilterValue, setGroupsFilterValue] = useState([]);
 	const [idCloud, setIdCloud] = useState();
-	const [searchDateFrom, setSearchDateFrom] = useState(dayjs(`${actualDateYear}/${actualDateMonth}/${actualDateDay} 06:00:00`))
-	const [searchDateTo, setsearchDateTo] = useState(dayjs(`${actualDateYear}/${actualDateMonth}/${actualDateDay} 23:59:00`))
+	const [searchDateFrom, setSearchDateFrom] = useState(dayjs(`${actualDateYear}/${actualDateMonth}/${actualDateDay}`))
+	const [searchDateTo, setSearchDateTo] = useState(dayjs(`${actualDateYear}/${actualDateMonth}/${actualDateDay}`))
+	const [searchTimeFrom, setSearchTimeFrom] = useState(new Date(`${actualDateYear}/${actualDateMonth}/${actualDateDay} 06:00:00`));
+	const [searchTimeTo, setSearchTimeTo] = useState(new Date(`${actualDateYear}/${actualDateMonth}/${actualDateDay} 23:59:00`))
 	const cnpj = localStorage.getItem('cnpj');
 
 	const navigate = useNavigate(); //Pega o navigate do react-router-dom
@@ -102,18 +105,12 @@ export function LucratividadeRel() {
 			var data = res.data.data;
 			setIdCloud(data[0].IDCLOUD);
 			setLoading(true);
-			axios.post(`${BASE_URL}/dashboard/list-products/${data[0].IDCLOUD}`, { groupID: '' }).then((res) => {
-				if (res.status == 200) {
-					setProdctsData({ resume: res.data.data });
-					var x = _.uniq(Object.values(_.mapValues(res.data.data, 'grupo')));
-					var index = 1;
-					var aux = [];
-					var iterates = x.map(group => (
-						aux.push({ id: index++, nome: group })
-					));
-					setGroups(aux)
-					setGroupsFiltered([])
-				}
+			axios.get(`${BASE_URL}/dashboard/grupos/${data[0].IDCLOUD}`).then((res) => {
+				setGroups(res.data.data)
+				setGroupsFiltered([])
+				setLoading(false)
+			}).catch(err => {
+				console.log(err)
 				setLoading(false)
 			});
 		}).catch(err => {
@@ -121,52 +118,6 @@ export function LucratividadeRel() {
 			setLoading(false)
 		});
 	}, []);
-
-	function cancelRelatorio() {
-		Swal.fire({
-			title: 'Deseja limpar o relatório?',
-			text: 'Você não poderá reverter isso!',
-			icon: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#003775',
-			cancelButtonColor: '#DC354f',
-			confirmButtonText: 'Limpar'
-		}).then((result) => {
-		});
-	}
-
-	function getPdf() {
-		Swal.fire({
-			title: 'Deseja gerar o relatório?',
-			text: 'Pode levar alguns segundos, aguarde.',
-			icon: 'info',
-			showCancelButton: true,
-			confirmButtonColor: '#003775',
-			cancelButtonColor: '#DC354f',
-			confirmButtonText: 'Gerar!'
-		}).then((result) => {
-			if (result.isConfirmed)
-				setLoading(true)
-			let data;
-			axios.post(`${BASE_URL}/relatorios/lucratividadeProdutos`, data, {
-				responseType: 'blob'
-			}).then((res) => {
-				fileDownload(res.data, "RelatorioEstoque.pdf");
-				setLoading(false)
-				Swal.fire({
-					title: 'Relatório gerado com sucesso!',
-					icon: 'success',
-				})
-			}).catch(err => {
-				Swal.fire({
-					title: 'Ops!',
-					text: 'Não foi possível geral o relatório. Tente novamente mais tarde',
-					icon: 'error',
-				})
-			})
-		});
-	}
-
 
 	function MultiSelect({ onFilter, filterValue }) {
 		const [selectedGroups, setSelectedGroups] = useState(filterValue);
@@ -224,11 +175,11 @@ export function LucratividadeRel() {
 						groups.map((group) => (
 							<MenuItem
 								key={group.id}
-								value={group.nome}
+								value={group.descricao}
 								sx={{ justifyContent: "space-between" }}
 							>
-								{group.nome}
-								{selectedGroups.includes(group.nome) ? <CheckIcon color="info" /> : null}
+								{group.descricao}
+								{selectedGroups.includes(group.descricao) ? <CheckIcon color="info" /> : null}
 							</MenuItem>
 						))
 					}
@@ -242,14 +193,153 @@ export function LucratividadeRel() {
 		setLoading(true)
 		var aux = []
 		if (data.includes('TODOS')) {
-			console.log('Todos selecionados')
 			aux = groups;
 		} else {
-			data.map(group => aux.push(_.find(groups, { nome: group })))
+			data.map(group => aux.push(_.find(groups, { descricao: group })))
 		}
-		setGroupsFiltered(aux)
-		setGroupsFilterValue(data)
-		setLoading(false)
+		let count = 0;
+		let auxData = getFormatedData("0")
+		let pdfData = {
+			groups: [],
+			dateInit: auxData.DateInit.replaceAll('.','/'),
+			dateFinal: auxData.DateFinal.replaceAll('.','/'),
+			timeInit: auxData.TimeInit,
+			timeFinal: auxData.TimeFinal,
+			empresa: "Lander Lancher",
+		}
+		setGroupsFilterValue([])
+		if (aux.length > 0) {
+			Swal.fire({
+				title: 'Aguarde',
+				html: 'Status: <b></b> ',
+				showCloseButton: true,
+				cancelButtonText: 'OK',
+				icon: 'info',
+				timerProgressBar: true,
+				didOpen: () => {
+					Swal.showLoading();
+					const b = Swal.getHtmlContainer().querySelector('b');
+					b.textContent = count == aux.length ? 'Dados recuperados com sucesso!' : `Recuperando dados dos grupos: ${count}/${aux.length}...`
+					aux.map(async grupo => {
+						await axios.post(`${BASE_URL}/dashboard/lucratividade/${idCloud}`, getFormatedData(grupo.id))
+							.then((res) => {
+								console.log(res)
+								groupFilterValue.push(grupo.descricao);
+								setGroupsFilterValue([...groupFilterValue])
+								pdfData.groups.push(getPdfFormatedGroupDate(res.data.data))
+								count++
+							})
+							.catch((err) => {
+								setLoading(false);
+								console.log(err);
+							});
+						b.textContent = `Recuperando dados dos grupos: ${count}/${aux.length}...`;
+						if (count == aux.length) {
+							setGroupsFilterValue([])
+							Swal.stopTimer();
+							Swal.hideLoading();
+							Swal.fire({
+								closeButtonAriaLabel: 'Fechar',
+								showCloseButton: true,
+								icon: "success",
+								title: 'Pronto!',
+								html: 'Os dados para gerar o relatório estão prontos. Prossiga para baixar o pdf',
+								showCancelButton: true,
+								confirmButtonColor: '#003775',
+								cancelButtonColor: '#DC354f',
+								confirmButtonText: 'Gerar!'
+							}).then((result) => {
+								if (result.isConfirmed)
+									console.log(pdfData)
+								setLoading(false)
+								axios.post(`${BASE_URL}/relatorios/lucratividadeProdutos`, pdfData, {
+									responseType: 'blob'
+								}).then((res) => {
+									fileDownload(res.data, "RelatorioEstoque.pdf");
+									setLoading(false)
+									Swal.fire({
+										title: 'Relatório gerado com sucesso!',
+										icon: 'success',
+									})
+									console.log(res)
+								}).catch(err => {
+									Swal.fire({
+										title: 'Ops!',
+										text: 'Não foi possível geral o relatório. Tente novamente mais tarde',
+										icon: 'error',
+										footer: err.message
+									})
+									console.log(err)
+								})
+							})
+							setLoading(false)
+						}
+					})
+				}
+			})
+		} else {
+			Swal.fire({
+				icon: 'error',
+				title: 'Erro',
+				text: 'Selecione ao menos um grupo para gerar o relatório!',
+				showConfirmButton: false,
+				timer: 3000
+			})
+			setLoading(false)
+		}
+	}
+
+	function getPdfFormatedGroupDate(data: any) {
+		console.log(data)
+		let aux = { nome: data[0].grupo, products: [], totaisDoGrupo: {} };
+		console.log(data[0])
+		data.map(item => aux.products.push({
+			produto: item.produto,
+			qtdeVendida: parseFloat(item.qtdeVendida.replace('.', '').replace(',', '.')),
+			valorTotal: parseFloat(item.valorTotal.replace('.', '').replace(',', '.')),
+			precoMedio: parseFloat(item.precoMedio.replace('.', '').replace(',', '.')),
+			lucroMedio: parseFloat(item.lucroMedio.replace('.', '').replace(',', '.')),
+			custoMedio: parseFloat(item.custoMedio.replace('.', '').replace(',', '.')),
+			lucroTotal: parseFloat(item.lucroTotal.replace('.', '').replace(',', '.')),
+			lucroMedioPerc: parseFloat(item.lucroMedioPerc.replace('.', '').replace(',', '.')),
+			lucroTotalPerc: parseFloat(item.lucroTotalPerc.replace('.', '').replace(',', '.')),
+			custoTotal: parseFloat(item.custoTotal.replace('.', '').replace(',', '.')),
+		}))
+		let auxSize = aux.products.length;
+		aux.totaisDoGrupo = {
+			qtdeVendida: _.sumBy(aux.products, 'qtdeVendida').toFixed(2).replace('.',','),
+			valorTotal: _.sumBy(aux.products, 'valorTotal').toFixed(2).replace('.',','),
+			precoMedio: (_.sumBy(aux.products, 'precoMedio') / auxSize).toFixed(2).replace('.',','),
+			lucroMedio: (_.sumBy(aux.products, 'lucroMedio') / auxSize).toFixed(2).replace('.',','),
+			custoMedio: (_.sumBy(aux.products, 'custoMedio') / auxSize).toFixed(2).replace('.',','),
+			lucroTotal: _.sumBy(aux.products, 'lucroTotal').toFixed(2).replace('.',','),
+			lucroMedioPerc: `${(_.sumBy(aux.products, 'lucroMedioPerc') / auxSize).toFixed(2).replace('.',',')}%`,
+			lucroTotalPerc: `${_.sumBy(aux.products, 'lucroTotalPerc').toFixed(2).replace('.',',')}%`,
+			custoTotal: _.sumBy(aux.products, 'custoTotal').toFixed(2).replace('.',','),
+		}
+		return aux;
+	}
+
+	function getCurrency(number: string) {
+
+	}
+
+	function getFormatedDate(date: dayjs.Dayjs) {
+		return date.format('DD.MM.YYYY');
+	}
+
+	function getFormatedTime(date: Date) {
+		return date.toLocaleTimeString().substring(0, 5)
+	}
+
+	function getFormatedData(grupo: any) {
+		return {
+			DateInit: getFormatedDate(searchDateFrom),
+			DateFinal: getFormatedDate(searchDateTo),
+			TimeInit: getFormatedTime(searchTimeFrom),
+			TimeFinal: getFormatedTime(searchTimeTo),
+			GroupID: grupo
+		}
 	}
 
 
@@ -265,12 +355,12 @@ export function LucratividadeRel() {
 						<>
 							<ButtonGroup className='flex '>
 								<FormControl className='fullWidth flex responsiveOnMobile' style={{ alignItems: 'center' }}>
-									<div className='formDateControlContainer'>
+									<div className='formDateControlContainer' style={{ display: "flex", flexDirection: 'column', alignItems: 'center' }}>
 										<div className='formDateControl' style={{ display: "flex" }}>
 											<LocalizationProvider dateAdapter={AdapterDayjs} >
-												<MobileDateTimePicker
+												<MobileDatePicker
 													label="Filtrar de"
-													inputFormat='DD/MM/YYYY - hh:mm'
+													inputFormat='DD/MM/YYYY'
 													value={searchDateFrom}
 													maxDate={dayjs(`${actualDateYear}/${actualDateMonth}/${actualDateDay}`)}
 													onChange={(newValue) => {
@@ -278,45 +368,49 @@ export function LucratividadeRel() {
 													}}
 													renderInput={(params) => <TextField {...params} />}
 												/>
-												<MobileDateTimePicker
-													label="Até"
-													inputFormat='DD/MM/YYYY - hh:mm'
+												<MobileTimePicker
+													label='A partir de'
+													ampmInClock={false}
+													value={searchTimeFrom}
+													onChange={(newValue) => {
+														setSearchTimeFrom(new Date(newValue));
+													}}
+													ampm={false}
+													renderInput={(params) => <TextField {...params} />} />
+											</LocalizationProvider>
+										</div>
+										<div className='formDateControl' style={{ display: "flex", marginTop: '1em' }}>
+											<LocalizationProvider dateAdapter={AdapterDayjs} >
+												<MobileDatePicker
+													label="Filtrar até"
+													inputFormat='DD/MM/YYYY'
 													value={searchDateTo}
 													maxDate={dayjs(`${actualDateYear}/${actualDateMonth}/${actualDateDay}`)}
 													onChange={(newValue) => {
-														setsearchDateTo(newValue);
+														setSearchDateTo(newValue);
 													}}
 													renderInput={(params) => <TextField {...params} />}
 												/>
+												<MobileTimePicker
+													label='Até'
+													ampmInClock={false}
+													value={searchTimeTo}
+													onChange={(newValue) => {
+														setSearchTimeTo(new Date(newValue));
+													}}
+													ampm={false}
+													renderInput={(params) => <TextField {...params} />} />
 											</LocalizationProvider>
 										</div>
+										<MultiSelect onFilter={onFilterGroups} filterValue={groupFilterValue}></MultiSelect>
 									</div>
-									<MultiSelect onFilter={onFilterGroups} filterValue={groupFilterValue}></MultiSelect>
 								</FormControl>
 							</ButtonGroup>
-							<div>
-								<span>{groupFilterValue}</span>
-							</div>
-							{
-								groupFilterValue.length > 0 ?
-									<Box className="relatorio-control-buttons">
-										<Fab color="default" onClick={() => setGroupsFilterValue([])} style={{ color: '#003775', marginBottom: '.4em' }} >
-											<DeleteIcon />
-										</Fab>
-										<Fab color="error" onClick={getPdf}>
-											<PictureAsPdfIcon />
-										</Fab>
-									</Box>
-									:
-									<></>
-							}
-
 						</>
 						:
 						<>
 							<LoadingComponent />
 							<br />
-							Buscando grupos...
 						</>
 				}
 			</ContainerAdminContas>

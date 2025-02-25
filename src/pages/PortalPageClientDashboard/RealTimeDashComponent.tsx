@@ -281,7 +281,6 @@ export function RealTimeDashComponent() {
 										ampmInClock={false}
 										value={searchTimeFrom}
 										onChange={(newValue) => {
-											console.log(new Date(newValue))
 											setSearchTimeFrom(new Date(newValue));
 										}}
 										ampm={false}
